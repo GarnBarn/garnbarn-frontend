@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - 16
+
+git:
+  depth: 1
+
+# Install Dependencies
+install:
+  - npm i -g yarn
+  - yarn install --frozen-lockfile
+
+# Run Test
+script:
+  - yarn test:unit
