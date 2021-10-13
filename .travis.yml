@@ -10,6 +10,11 @@ install:
   - npm i -g yarn
   - yarn install --frozen-lockfile
 
-# Run Test
+# Run Test and coverage
 script:
   - yarn test:unit
+  - yarn test:coverage
+
+# Submit Coverage result
+after_script:
+  - codecov
