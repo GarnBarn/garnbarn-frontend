@@ -1,19 +1,18 @@
 <template>
-  <div>
-    <md-app class="full-height">
-      <md-app-toolbar
-        :md-elevation="config.toolBarElevation"
-        class="md-primary"
-      >
-        <div class="logo">
-          <p style="font-size: 30px">GarnBarn</p>
-        </div>
-        <div class="itemBar">
-          <md-button>Assignment</md-button>
-          <md-button>Tag</md-button>
-          <md-button class="md-icon-button">
-            <md-icon>account_circle</md-icon>
-          </md-button>
+  <div class="page-container">
+    <md-app md-mode="fixed" class="full-height">
+      <md-app-toolbar :md-elevation="config.toolBarElevation" class="nav-bar">
+        <div class="md-toolbar-row">
+          <div class="logo">
+            <p style="font-size: 30px">GarnBarn</p>
+          </div>
+          <div class="itemBar">
+            <md-button>Assignment</md-button>
+            <md-button>Tag</md-button>
+            <md-button class="md-icon-button">
+              <md-icon>account_circle</md-icon>
+            </md-button>
+          </div>
         </div>
       </md-app-toolbar>
       <md-app-content>
@@ -39,6 +38,15 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+.page-container {
+  height: 100%;
+  width: 100%;
+}
+
+.full-height {
+  height: 100%;
+}
+
 .logo {
   flex: 1;
   text-align: left;
@@ -49,5 +57,9 @@ export default Vue.extend({
 .itemBar {
   flex: 1;
   text-align: right;
+}
+
+.nav-bar {
+  background-color: #f9f9f9;
 }
 </style>
