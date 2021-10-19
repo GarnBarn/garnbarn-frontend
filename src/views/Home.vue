@@ -5,15 +5,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import Layout from "@/layouts/Main.vue";
 import DateWithAssignment from "@/components/DateWithAssignment.vue";
+import { Component, Vue } from "vue-property-decorator";
 
-export default Vue.extend({
-  name: "Home",
+@Component({
   components: {
     Layout,
     DateWithAssignment,
   },
-});
+})
+export default class Home extends Vue {}
 </script>

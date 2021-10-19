@@ -3,9 +3,7 @@
     <md-app md-mode="fixed" class="full-height">
       <md-app-toolbar :md-elevation="config.toolBarElevation" class="nav-bar">
         <div class="md-toolbar-row">
-          <div class="logo">
-            <p style="font-size: 30px">GarnBarn</p>
-          </div>
+          <div class="logo">GarnBarn</div>
           <div class="itemBar">
             <md-button>Assignment</md-button>
             <md-button>Tag</md-button>
@@ -23,18 +21,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { Component, Vue } from "vue-property-decorator";
 
-export default Vue.extend({
-  name: "Layout",
-  data: () => {
-    return {
-      config: {
-        toolBarElevation: 1,
-      },
-    };
-  },
-});
+@Component
+export default class Layout extends Vue {
+  config = {
+    toolBarElevation: 1,
+  };
+}
 </script>
 
 <style scoped>
@@ -51,7 +45,7 @@ export default Vue.extend({
   flex: 1;
   text-align: left;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 30px;
 }
 
 .itemBar {
