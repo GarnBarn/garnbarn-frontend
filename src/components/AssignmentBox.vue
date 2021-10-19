@@ -2,7 +2,7 @@
   <div class="box">
     <md-card class="md-primary assignment-card">
       <md-card-header>
-        <div class="md-title assignment-content">Read about Agile</div>
+        <div class="md-title assignment-content">{{ assignment.name }}</div>
       </md-card-header>
       <md-card-content>
         <div class="md-subhead assignment-content">Read #2, #4, #16 tips</div>
@@ -12,10 +12,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { Assignment } from "@/types/garnbarn/Assignment";
 
 @Component
-export default class AssignmentBox extends Vue {}
+export default class AssignmentBox extends Vue {
+  @Prop({ required: true }) readonly assignment!: Assignment;
+}
 </script>
 
 <style scoped>

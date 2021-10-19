@@ -1,6 +1,11 @@
 <template>
   <layout>
-    <DateWithAssignment v-for="i in 10" :key="i"></DateWithAssignment>
+    <DateWithAssignment
+      v-for="assignmentInDay in assignments.dateWithAssignments"
+      :key="assignments.dateWithAssignments.indexOf(assignmentInDay)"
+      :dateString="assignmentInDay.date"
+      :assignments="assignmentInDay.assignments"
+    ></DateWithAssignment>
   </layout>
 </template>
 
@@ -8,6 +13,7 @@
 import Layout from "@/layouts/Main.vue";
 import DateWithAssignment from "@/components/DateWithAssignment.vue";
 import { Component, Vue } from "vue-property-decorator";
+import { DateWithAssignments } from "@/types/garnbarn/Assignment";
 
 @Component({
   components: {
@@ -15,5 +21,49 @@ import { Component, Vue } from "vue-property-decorator";
     DateWithAssignment,
   },
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  assignments: DateWithAssignments = {
+    dateWithAssignments: [
+      {
+        date: "12 Sep.",
+        assignments: [
+          {
+            id: "1",
+            name: "Test 1",
+          },
+          {
+            id: "2",
+            name: "Test 2",
+          },
+        ],
+      },
+      {
+        date: "20 Oct.",
+        assignments: [
+          {
+            id: "3",
+            name: "Test 3",
+          },
+        ],
+      },
+      {
+        date: "30 Oct.",
+        assignments: [
+          {
+            id: "4",
+            name: "Test 4",
+          },
+          {
+            id: "5",
+            name: "Test 5",
+          },
+          {
+            id: "6",
+            name: "Test 6",
+          },
+        ],
+      },
+    ],
+  };
+}
 </script>
