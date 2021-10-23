@@ -30,6 +30,11 @@ export default class Home extends Vue {
           {
             id: "1",
             name: "Test 1",
+            tag: {
+              id: "1",
+              name: "Test Tag",
+              color: "#111111",
+            },
           },
           {
             id: "2",
