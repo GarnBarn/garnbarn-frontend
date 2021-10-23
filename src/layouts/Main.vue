@@ -23,6 +23,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { getAuth, Auth } from "firebase/auth";
+import initFirebase from "@/Services/InitFirebaseApp";
 
 @Component
 export default class Layout extends Vue {
@@ -32,6 +33,9 @@ export default class Layout extends Vue {
   firebaseAuthInstance: Auth = getAuth();
 
   beforeMount() {
+    initFirebase();
+    this.firebaseAuthInstance = getAuth();
+
     this.firebaseAuthInstance.onAuthStateChanged((user) => {
       // If user is not signed in yet.
       if (!user) {
