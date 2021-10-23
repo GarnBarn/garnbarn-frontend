@@ -1,14 +1,21 @@
 <template>
-  <div class="box">
+  <div class="box" @click="navigateToAssignmentPage(assignment.id)">
     <md-card
       class="md-primary assignment-card"
       :style="`--background-color: ${boxColor}; --font-color: ${fontColor}`"
     >
       <md-card-header>
-        <div class="md-title assignment-content">{{ assignment.name }}</div>
+        <div class="md-title assignment-content">
+          {{ assignment.name }}
+        </div>
       </md-card-header>
       <md-card-content>
-        <div class="md-subhead assignment-content">Read #2, #4, #16 tips</div>
+        <div class="md-subhead assignment-content" v-if="tagName !== ''">
+          {{ tagName }}
+        </div>
+        <div class="md-subhead assignment-content" v-else>
+          <i>No tag</i>
+        </div>
       </md-card-content>
     </md-card>
   </div>
@@ -23,10 +30,14 @@ export default class AssignmentBox extends Vue {
   @Prop({ required: true }) readonly assignment!: Assignment;
   boxColor = "#f9f9f9";
   fontColor = "#000000";
+  tagName = "";
 
   beforeMount(): void {
     if (this.assignment.tag?.color) {
       this.boxColor = this.assignment.tag.color;
+    }
+    if (this.assignment.tag) {
+      this.tagName = this.assignment.tag?.name;
     }
     const rgbOfBoxColor: Array<number> = this.hexToRgb(this.boxColor);
     this.fontColor = this.getFontColor(rgbOfBoxColor);
@@ -46,6 +57,12 @@ export default class AssignmentBox extends Vue {
       return "#ffffff";
     }
   }
+
+  navigateToAssignmentPage(assignmentId: string) {
+    // TODO: Route to assignment page
+    // this.$router.push(`/assignment/${assignmentId}`);
+    console.log("Route to " + assignmentId);
+  }
 }
 </script>
 
@@ -62,5 +79,11 @@ export default class AssignmentBox extends Vue {
   border-radius: 20px;
   background-color: var(--background-color);
   color: var(--font-color);
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.assignment-card:hover {
+  transform: scale(1.01);
 }
 </style>
