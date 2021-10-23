@@ -7,14 +7,14 @@ import * as firebase from "firebase/app";
 import axios, { AxiosResponse } from "axios";
 
 let firebaseConfig: any;
-const DEVELOPMENT_MODE = process.env.NODE_ENV;
-if (DEVELOPMENT_MODE === "development") {
-  // In Development Mode, We should get the credential from Local File.
+
+try {
+  // If the file firebaseConfig.json is found. Use the config from local.
   firebaseConfig = require("@/firebaseConfig.json");
   firebase.initializeApp(firebaseConfig);
-} else {
-  // In GarnBarn Production Environment, We can fetch the credential
-  // directly from Firebase Hosting.
+} catch (e) {
+  // If config file not found. Fetch it from GarnBarn Production Environment.
+  // We can fetch it directly from Firebase Hosting.
   axios.get("/__/firebase/init.json").then((response: AxiosResponse) => {
     firebase.initializeApp(JSON.parse(response.data as string));
   });
