@@ -13,3 +13,6 @@ A frontend static page showing a list of asssignment, and a backend API for call
 ### Acceptance Criteria
 1. All static pages display correctly on deployed web.
 2. API are callable and passed all the tests.
+
+### Task Board
+[Iteration 1 Task Board](https://trello.com/b/k6xMDKLm/iteration-1)
