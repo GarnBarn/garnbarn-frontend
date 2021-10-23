@@ -31,7 +31,7 @@ export default class Layout extends Vue {
     toolBarElevation: 1,
   };
 
-  beforeMount() {
+  beforeMount(): void {
     let firebaseAuthInstance: firebase.auth.Auth = firebase.auth();
     firebaseAuthInstance.onAuthStateChanged((user) => {
       // If user is not signed in yet.

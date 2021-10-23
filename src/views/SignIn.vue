@@ -16,14 +16,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import firebase from "firebase";
 import "firebase/auth";
 import * as firebaseUi from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
+import { Component, Vue } from "vue-property-decorator";
 
-export default Vue.extend({
-  mounted() {
+@Component
+export default class SignIn extends Vue {
+  mounted(): void {
     let firebaseAuthInstance: firebase.auth.Auth = firebase.auth();
     let uiConfig: any = {
       signInSuccessUrl: "/home",
@@ -32,8 +33,8 @@ export default Vue.extend({
     };
     let ui = new firebaseUi.auth.AuthUI(firebaseAuthInstance);
     ui.start("#firebaseui-auth-container", uiConfig);
-  },
-});
+  }
+}
 </script>
 
 <style scoped>
