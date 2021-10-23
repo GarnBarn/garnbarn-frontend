@@ -29,10 +29,10 @@ export default class Layout extends Vue {
   config = {
     toolBarElevation: 1,
   };
-  firebaseAuthInstance: firebase.auth.Auth = firebase.auth();
 
   beforeMount() {
-    this.firebaseAuthInstance.onAuthStateChanged((user) => {
+    let firebaseAuthInstance: firebase.auth.Auth = firebase.auth();
+    firebaseAuthInstance.onAuthStateChanged((user) => {
       // If user is not signed in yet.
       if (!user) {
         // TODO: Show message box and redirect user back to index page

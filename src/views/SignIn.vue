@@ -23,14 +23,13 @@ import "firebaseui/dist/firebaseui.css";
 
 @Component
 export default class SignIn extends Vue {
-  firebaseAuthInstance: firebase.auth.Auth = firebase.auth();
-
   mounted() {
+    let firebaseAuthInstance: firebase.auth.Auth = firebase.auth();
     let uiConfig: any = {
       signInSuccessUrl: "/home",
       signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
     };
-    let ui = new firebaseUi.auth.AuthUI(this.firebaseAuthInstance);
+    let ui = new firebaseUi.auth.AuthUI(firebaseAuthInstance);
     ui.start("#firebaseui-auth-container", uiConfig);
   }
 }
