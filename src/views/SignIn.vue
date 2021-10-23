@@ -17,24 +17,18 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { getAuth, Auth, GoogleAuthProvider } from "firebase/auth";
+import firebase from "firebase";
 import * as firebaseUi from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
-import initFirebase from "@/Services/InitFirebaseApp";
 
 @Component
 export default class SignIn extends Vue {
-  firebaseAuthInstance: Auth = getAuth();
-
-  beforeMount() {
-    initFirebase();
-    this.firebaseAuthInstance = getAuth();
-  }
+  firebaseAuthInstance: firebase.auth.Auth = firebase.auth();
 
   mounted() {
     let uiConfig: any = {
       signInSuccessUrl: "/home",
-      signInOptions: [GoogleAuthProvider.PROVIDER_ID],
+      signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
     };
     let ui = new firebaseUi.auth.AuthUI(this.firebaseAuthInstance);
     ui.start("#firebaseui-auth-container", uiConfig);
