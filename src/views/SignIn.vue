@@ -12,12 +12,6 @@
         </md-card-actions>
       </md-card-media-actions>
     </md-card>
-    <!-- <md-card class="signInCard">
-      <img src="@/assets/garnbarn-logo.png" class="garnbarnLogo" />
-      <hr class="rounded" />
-      <h3>Sign in to GarnBarn</h3>
-      <section id="firebaseui-auth-container"></section>
-    </md-card> -->
   </div>
 </template>
 
