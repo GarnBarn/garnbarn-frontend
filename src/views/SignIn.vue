@@ -18,6 +18,7 @@
 <script lang="ts">
 import Vue from "vue";
 import firebase from "firebase";
+import "firebase/auth";
 import * as firebaseUi from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 
