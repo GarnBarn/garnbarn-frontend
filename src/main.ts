@@ -8,7 +8,6 @@ import axios, { AxiosResponse } from "axios";
 
 let firebaseConfig: any;
 const DEVELOPMENT_MODE = process.env.NODE_ENV;
-console.log(process.env);
 if (DEVELOPMENT_MODE === "development") {
   // In Development Mode, We should get the credential from Local File.
   firebaseConfig = require("@/firebaseConfig.json");

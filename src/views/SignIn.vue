@@ -25,12 +25,11 @@ import "firebaseui/dist/firebaseui.css";
 export default class SignIn extends Vue {
   firebaseAuthInstance: Auth = getAuth();
 
-  beforeMount() {
+  mounted() {
     let uiConfig: any = {
       signInSuccessUrl: "/home",
       signInOptions: [GoogleAuthProvider.PROVIDER_ID],
     };
-    console.log("Here");
     let ui = new firebaseUi.auth.AuthUI(this.firebaseAuthInstance);
     ui.start("#firebaseui-auth-container", uiConfig);
   }
@@ -40,8 +39,6 @@ export default class SignIn extends Vue {
 <style scoped>
 .signInBox {
   padding-top: 5%;
-  /* padding-left: 30%;
-  padding-right: 30%; */
   padding-top: 5%;
 }
 
