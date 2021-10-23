@@ -10,7 +10,7 @@ let firebaseConfig: firebase.FirebaseOptions;
 
 try {
   // If the file firebaseConfig.json is found. Use the config from local.
-  firebaseConfig = require("@/firebaseConfig.json") as firebase.FirebaseOptions;
+  firebaseConfig = require("@/firebaseConfig.json");
   firebase.initializeApp(firebaseConfig);
 } catch (e) {
   // If config file not found. Fetch it from GarnBarn Production Environment.
