@@ -16,6 +16,7 @@ try {
   // If config file not found. Fetch it from GarnBarn Production Environment.
   // We can fetch it directly from Firebase Hosting.
   axios.get("/__/firebase/init.json").then((response: AxiosResponse) => {
+    console.log(response.data);
     firebase.initializeApp(JSON.parse(response.data as string));
   });
 }
