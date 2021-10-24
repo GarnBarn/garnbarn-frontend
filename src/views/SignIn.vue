@@ -3,7 +3,7 @@
     <md-card class="signInCard">
       <md-card-media-actions>
         <md-card-media>
-          <img src="@/assets/garnbarn-logo.png" class="garnbarnLogo" />
+          <img src="@/assets/images/garnbarn-logo.png" class="garnbarnLogo" />
         </md-card-media>
 
         <md-card-actions>
