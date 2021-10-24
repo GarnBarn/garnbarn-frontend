@@ -13,18 +13,6 @@
         <div class="md-subhead assignment-content">
           <tag-box :tag="assignment.tag" v-if="assignment.tag"></tag-box>
         </div>
-        <div class="md-subhead assignment-content">
-          Description: 
-        </div>
-        <div class="md-subhead assignment-content">
-          Read about tips #2, #4, #16
-        </div>
-        <div class="md-subhead assignment-content">
-          Submission time:
-        </div>
-        <div class="md-subhead assignment-content">
-          <span class="">18:00</span>
-        </div>
       </md-card-content>
     </md-card>
   </div>
@@ -105,13 +93,24 @@ export default class AssignmentBox extends Vue {
 }
 
 .assignment-card {
-  border-radius: 50px;
+  border-radius: 20px;
   background-color: var(--background-color);
   color: var(--font-color);
   transition: 0.2s;
   cursor: pointer;
-  height: 400px;
-  width: 300px;
+  padding: 10px;
+  min-width: 250px;
+  height: auto;
+  max-height: 500px;
+}
+
+@media only screen and (max-width: 800px) {
+  .big-text {
+    font-size: 2.5rem !important;
+  }
+  .assignment-card {
+    margin: 20px;
+  }
 }
 
 .assignment-card:hover {
