@@ -3,11 +3,13 @@
     <div class="date">
       <h1>{{ dateString }}</h1>
     </div>
-    <assignment-box
-      v-for="assignment in assignments"
-      :key="assignments.indexOf(assignment)"
-      :assignment="assignment"
-    ></assignment-box>
+    <div class="assignment-list">
+      <assignment-box
+        v-for="assignment in assignments"
+        :key="assignments.indexOf(assignment)"
+        :assignment="assignment"
+      ></assignment-box>
+    </div>
   </div>
 </template>
 
@@ -32,6 +34,19 @@ export default class DateWithAssignment extends Vue {
   flex: 1 1 0%;
   flex-direction: column;
   padding: 30px 0px 0px 30px;
+}
+
+.assignment-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 400px);
+  row-gap: 30px;
+  transition: 0.1s;
+}
+
+@media only screen and (max-width: 800px) {
+  .assignment-list {
+    display: contents;
+  }
 }
 
 .date {

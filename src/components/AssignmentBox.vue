@@ -1,17 +1,25 @@
 <template>
-  <div class="box" @click="navigateToAssignmentPage(assignment.id)">
+  <div @click="navigateToAssignmentPage(assignment.id)">
     <md-card
-      class="assignment-card"
+      class="assignment-card flex"
       :style="`--background-color: ${boxColor}; --font-color: ${fontColor}`"
     >
-      <md-card-header>
-        <div class="md-title assignment-content">
+      <md-card-header class="flex">
+        <div class="md-title assignment-content big-text">
           {{ assignment.name }}
         </div>
       </md-card-header>
-      <md-card-content>
-        <div class="md-subhead assignment-content">
-          <tag-box :tag="assignment.tag" v-if="assignment.tag"></tag-box>
+      <md-card-content class="flex">
+        <div class="assignment-content">
+          <tag-box
+            class="assignment-tag"
+            :tag="assignment.tag"
+            v-if="assignment.tag"
+          ></tag-box>
+
+          <div class="submission-time">
+            <md-icon>watch_later</md-icon> Submission Time: 19:00
+          </div>
         </div>
       </md-card-content>
     </md-card>
@@ -73,12 +81,23 @@ export default class AssignmentBox extends Vue {
 </script>
 
 <style scoped>
-.assignment-content {
-  text-align: left;
+.flex {
+  flex: 1 1 0%;
+  flex-direction: column;
 }
 
-.box {
-  margin: 30px 0px;
+.fit-content {
+  width: fit-content;
+  height: fit-content;
+}
+
+.big-text {
+  font-size: 3rem !important;
+  height: fit-content;
+}
+
+.assignment-content {
+  text-align: left;
 }
 
 .assignment-card {
@@ -87,9 +106,31 @@ export default class AssignmentBox extends Vue {
   color: var(--font-color);
   transition: 0.2s;
   cursor: pointer;
+  padding: 10px;
+  min-width: 250px;
+  height: auto;
+  max-height: 500px;
+}
+
+@media only screen and (max-width: 800px) {
+  .big-text {
+    font-size: 2.5rem !important;
+  }
+  .assignment-card {
+    margin: 20px;
+  }
+}
+
+.assignment-tag {
+  opacity: 54%;
+}
+
+.submission-time {
+  color: var(--font-color);
+  font-size: 1.2rem;
 }
 
 .assignment-card:hover {
-  transform: scale(1.01);
+  transform: scale(1.05);
 }
 </style>
