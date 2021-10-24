@@ -91,7 +91,7 @@ export default class Layout extends Vue {
 }
 
 .itemBar {
-  flex: 1;
+  flex: 2;
   text-align: right;
 }
 
