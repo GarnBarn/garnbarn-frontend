@@ -17,8 +17,9 @@
             v-if="assignment.tag"
           ></tag-box>
 
-          <div class="submission-time">
-            <md-icon>watch_later</md-icon> Submission Time: 19:00
+          <div class="submission-time inline-flex">
+            <md-icon>watch_later</md-icon>
+            <p>Submission Time: 19:00</p>
           </div>
         </div>
       </md-card-content>
@@ -86,9 +87,8 @@ export default class AssignmentBox extends Vue {
   flex-direction: column;
 }
 
-.fit-content {
-  width: fit-content;
-  height: fit-content;
+.inline-flex {
+  display: inline-flex;
 }
 
 .big-text {
@@ -122,12 +122,16 @@ export default class AssignmentBox extends Vue {
 }
 
 .assignment-tag {
-  opacity: 54%;
+  opacity: 0.54;
 }
 
 .submission-time {
   color: var(--font-color);
   font-size: 1.2rem;
+}
+
+.submission-time p {
+  margin-left: 5px;
 }
 
 .assignment-card:hover {
