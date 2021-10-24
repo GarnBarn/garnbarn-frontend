@@ -10,8 +10,16 @@
         </div>
       </md-card-header>
       <md-card-content class="flex">
-        <div class="md-subhead assignment-content">
-          <tag-box :tag="assignment.tag" v-if="assignment.tag"></tag-box>
+        <div class="assignment-content">
+          <tag-box
+            class="assignment-tag"
+            :tag="assignment.tag"
+            v-if="assignment.tag"
+          ></tag-box>
+
+          <div class="submission-time">
+            <md-icon>watch_later</md-icon> Submission Time: 19:00
+          </div>
         </div>
       </md-card-content>
     </md-card>
@@ -113,7 +121,16 @@ export default class AssignmentBox extends Vue {
   }
 }
 
+.assignment-tag {
+  opacity: 54%;
+}
+
+.submission-time {
+  color: var(--font-color);
+  font-size: 1.2rem;
+}
+
 .assignment-card:hover {
-  transform: scale(1.01);
+  transform: scale(1.05);
 }
 </style>

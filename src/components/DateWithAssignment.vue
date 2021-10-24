@@ -38,8 +38,8 @@ export default class DateWithAssignment extends Vue {
 
 .assignment-list {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, 400px);
+  row-gap: 30px;
   transition: 0.1s;
 }
 

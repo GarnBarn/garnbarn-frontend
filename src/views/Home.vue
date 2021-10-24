@@ -81,6 +81,10 @@ export default class Home extends Vue {
             id: "6",
             name: "Test 6",
           },
+          {
+            id: "7",
+            name: "Test 7",
+          },
         ],
       },
     ],

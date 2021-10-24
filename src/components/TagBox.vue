@@ -1,6 +1,9 @@
 <template>
   <div>
-    <md-card class="tag-box zero-x-margin" v-bind:style="{backgroundColor:  tagColor }">
+    <md-card
+      class="tag-box zero-x-margin"
+      v-bind:style="{ backgroundColor: tagColor }"
+    >
       <div class="tag-box-content h2">{{ tag.name }}</div>
     </md-card>
   </div>
@@ -24,7 +27,7 @@ export default class TagBox extends Vue {
 
 .tag-box {
   width: fit-content;
-  border-radius: 20px;
+  border-radius: 30px;
 }
 
 .tag-box-content {
