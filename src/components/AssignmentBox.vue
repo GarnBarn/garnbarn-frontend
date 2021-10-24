@@ -84,7 +84,7 @@ export default class AssignmentBox extends Vue {
 }
 
 .big-text {
-  font-size: 3.75rem !important;
+  font-size: 3rem !important;
   height: fit-content;
 }
 
