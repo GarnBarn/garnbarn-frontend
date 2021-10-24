@@ -1,0 +1,16 @@
+.md-dialog-container.md-theme-default {
+  background-color: #fff;
+  background-color: var(--md-theme-default-background, #fff);
+  color: rgba(0, 0, 0, 0.87);
+  color: var(
+    --md-theme-default-text-primary-on-background,
+    rgba(0, 0, 0, 0.87)
+  );
+  border-radius: 10px;
+}
+
+.md-button.md-primary {
+  background-color: #448aff;
+  background-color: var(--md-theme-default-primary, #448aff);
+  color: white;
+}

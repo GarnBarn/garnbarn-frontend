@@ -1,4 +1,5 @@
 export type Tag = {
   id: string;
-  color: string;
+  name: string;
+  color?: string;
 };

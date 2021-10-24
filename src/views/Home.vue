@@ -30,10 +30,20 @@ export default class Home extends Vue {
           {
             id: "1",
             name: "Test 1",
+            tag: {
+              id: "1",
+              name: "Test Tag",
+              color: "#30475E",
+            },
           },
           {
             id: "2",
             name: "Test 2",
+            tag: {
+              id: "2",
+              name: "Tag 2",
+              color: "#ff9e59",
+            },
           },
         ],
       },
@@ -43,6 +53,11 @@ export default class Home extends Vue {
           {
             id: "3",
             name: "Test 3",
+            tag: {
+              id: "3",
+              name: "Tag 3",
+              color: "#ffbf59",
+            },
           },
         ],
       },
@@ -52,6 +67,11 @@ export default class Home extends Vue {
           {
             id: "4",
             name: "Test 4",
+            tag: {
+              id: "3",
+              name: "Tag 3",
+              color: "#CBAF87",
+            },
           },
           {
             id: "5",

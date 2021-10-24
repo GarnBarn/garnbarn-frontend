@@ -5,7 +5,7 @@ export type Assignment = {
   name: string;
   description?: string;
   dueDate?: number;
-  tagId?: Tag;
+  tag?: Tag;
 };
 
 export type AssignmentsInDay = {
