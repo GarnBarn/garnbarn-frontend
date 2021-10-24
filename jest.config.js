@@ -6,4 +6,5 @@ module.exports = {
     "!src/main.ts",
     "!src/router/index.ts",
   ],
+  coverageReporters: ["html"],
 };
