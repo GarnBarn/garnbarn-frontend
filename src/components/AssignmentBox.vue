@@ -10,11 +10,8 @@
         </div>
       </md-card-header>
       <md-card-content>
-        <div class="md-subhead assignment-content" v-if="tagName !== ''">
-          {{ tagName }}
-        </div>
-        <div class="md-subhead assignment-content" v-else>
-          <i>No tag</i>
+        <div class="md-subhead assignment-content">
+          <tag-box :tag="assignment.tag" v-if="assignment.tag"></tag-box>
         </div>
       </md-card-content>
     </md-card>
@@ -36,15 +33,11 @@ export default class AssignmentBox extends Vue {
   @Prop({ required: true }) readonly assignment!: Assignment;
   boxColor = "#f9f9f9";
   fontColor = "#000000";
-  tagName = "";
   informDialogBox = new DialogBox("informDialogBox");
 
   beforeMount(): void {
     if (this.assignment.tag?.color) {
       this.boxColor = this.assignment.tag.color;
-    }
-    if (this.assignment.tag) {
-      this.tagName = this.assignment.tag?.name;
     }
     const rgbOfBoxColor: Array<number> = this.hexToRgb(this.boxColor);
     this.fontColor = this.getFontColor(rgbOfBoxColor);

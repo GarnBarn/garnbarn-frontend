@@ -15,13 +15,7 @@ import { Tag } from "@/types/garnbarn/Tag";
 @Component
 export default class TagBox extends Vue {
   @Prop({ required: true }) readonly tag!: Tag;
-  tagColor = "#f9f9f9";
-
-  beforeMount() {
-    if (this.tag.color) {
-      this.tagColor = this.tag.color;
-    }
-  }
+  tagColor = "#000000";
 }
 </script>
 
