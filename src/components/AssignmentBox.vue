@@ -18,8 +18,8 @@
           ></tag-box>
 
           <div class="submission-time inline-flex">
-              <md-icon>watch_later</md-icon> 
-              <p>Submission Time: 19:00</p>
+            <md-icon>watch_later</md-icon>
+            <p>Submission Time: 19:00</p>
           </div>
         </div>
       </md-card-content>
@@ -122,7 +122,7 @@ export default class AssignmentBox extends Vue {
 }
 
 .assignment-tag {
-  opacity: 54%;
+  opacity: 0.54;
 }
 
 .submission-time {
@@ -130,7 +130,7 @@ export default class AssignmentBox extends Vue {
   font-size: 1.2rem;
 }
 
-.submission-time p{
+.submission-time p {
   margin-left: 5px;
 }
 
