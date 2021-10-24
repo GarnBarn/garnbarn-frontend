@@ -1,17 +1,29 @@
 <template>
-  <div class="box" @click="navigateToAssignmentPage(assignment.id)">
+  <div @click="navigateToAssignmentPage(assignment.id)">
     <md-card
-      class="assignment-card"
+      class="assignment-card flex"
       :style="`--background-color: ${boxColor}; --font-color: ${fontColor}`"
     >
-      <md-card-header>
-        <div class="md-title assignment-content">
+      <md-card-header class="flex">
+        <div class="md-title assignment-content big-text">
           {{ assignment.name }}
         </div>
       </md-card-header>
-      <md-card-content>
+      <md-card-content class="flex">
         <div class="md-subhead assignment-content">
           <tag-box :tag="assignment.tag" v-if="assignment.tag"></tag-box>
+        </div>
+        <div class="md-subhead assignment-content">
+          Description: 
+        </div>
+        <div class="md-subhead assignment-content">
+          Read about tips #2, #4, #16
+        </div>
+        <div class="md-subhead assignment-content">
+          Submission time:
+        </div>
+        <div class="md-subhead assignment-content">
+          <span class="">18:00</span>
         </div>
       </md-card-content>
     </md-card>
@@ -73,20 +85,33 @@ export default class AssignmentBox extends Vue {
 </script>
 
 <style scoped>
+.flex {
+  flex: 1 1 0%;
+  flex-direction: column;
+}
+
+.fit-content {
+  width: fit-content;
+  height: fit-content;
+}
+
+.big-text {
+  font-size: 3.75rem !important;
+  height: fit-content;
+}
+
 .assignment-content {
   text-align: left;
 }
 
-.box {
-  margin: 30px 0px;
-}
-
 .assignment-card {
-  border-radius: 20px;
+  border-radius: 50px;
   background-color: var(--background-color);
   color: var(--font-color);
   transition: 0.2s;
   cursor: pointer;
+  height: 400px;
+  width: 300px;
 }
 
 .assignment-card:hover {
