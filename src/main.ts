@@ -5,12 +5,11 @@ import VueMaterial from "vue-material";
 import "vue-material/dist/vue-material.min.css";
 import "@/assets/css/light-theme.css";
 import firebase from "firebase";
-
-Vue.use(VueMaterial);
-let firebaseConfig: any;
 // Please create the file firebaseConfig.json that contain
 // the firebase config. You can get it from firebase project.
-firebaseConfig = require("@/firebaseConfig.json");
+import firebaseConfig from "@/firebaseConfig.json";
+
+Vue.use(VueMaterial);
 firebase.initializeApp(firebaseConfig);
 
 Vue.config.productionTip = false;
