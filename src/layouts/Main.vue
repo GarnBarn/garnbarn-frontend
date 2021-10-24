@@ -62,11 +62,7 @@ export default class Layout extends Vue {
     firebaseAuthInstance.onAuthStateChanged((user) => {
       // If user is not signed in yet.
       if (!user) {
-        // TODO: Show message box and redirect user back to index page
-        console.log("No user signed in");
-      } else {
-        // TODO: Remove this line before merge into Master
-        console.log(user);
+        this.$router.push("/signIn");
       }
     });
   }
