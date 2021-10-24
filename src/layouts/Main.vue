@@ -17,19 +17,45 @@
         <slot></slot>
       </md-app-content>
     </md-app>
+    <dialog-box-component
+      :dialogBoxId="'loadingDialogBox'"
+      :isCustomDialogBox="true"
+    >
+      <md-dialog-title>Loading </md-dialog-title>
+      <md-dialog-content>
+        Grabing the data from GarnBarn. Please wait. . .
+        <md-progress-spinner
+          style="vertical-align: middle; margin-left: 10px"
+          md-mode="indeterminate"
+          :md-diameter="30"
+          :md-stroke="3"
+        ></md-progress-spinner>
+      </md-dialog-content>
+    </dialog-box-component>
+    <dialog-box-component
+      :dialogBoxId="'informDialogBox'"
+      :isCustomDialogBox="false"
+    >
+    </dialog-box-component>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import firebase from "firebase";
+import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import "firebase/auth";
 
-@Component
+@Component({
+  components: {
+    DialogBoxComponent,
+  },
+})
 export default class Layout extends Vue {
   config = {
     toolBarElevation: 1,
   };
+  showDialog = true;
 
   beforeMount(): void {
     let firebaseAuthInstance: firebase.auth.Auth = firebase.auth();

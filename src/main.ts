@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import VueMaterial from "vue-material";
 import "vue-material/dist/vue-material.min.css";
+import "@/assets/css/light-theme.css";
 import firebase from "firebase";
 import axios, { AxiosResponse } from "axios";
 

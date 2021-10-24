@@ -1,7 +1,7 @@
 <template>
   <div class="box" @click="navigateToAssignmentPage(assignment.id)">
     <md-card
-      class="md-primary assignment-card"
+      class="assignment-card"
       :style="`--background-color: ${boxColor}; --font-color: ${fontColor}`"
     >
       <md-card-header>
@@ -24,6 +24,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Assignment } from "@/types/garnbarn/Assignment";
+import { DialogBox } from "@/components/DialogBox/DialogBox";
 
 @Component
 export default class AssignmentBox extends Vue {
@@ -31,6 +32,7 @@ export default class AssignmentBox extends Vue {
   boxColor = "#f9f9f9";
   fontColor = "#000000";
   tagName = "";
+  informDialogBox = new DialogBox("informDialogBox");
 
   beforeMount(): void {
     if (this.assignment.tag?.color) {
@@ -58,10 +60,16 @@ export default class AssignmentBox extends Vue {
     }
   }
 
-  navigateToAssignmentPage(assignmentId: string) {
+  navigateToAssignmentPage(assignmentId: string): void {
     // TODO: Route to assignment page
     // this.$router.push(`/assignment/${assignmentId}`);
     console.log("Route to " + assignmentId);
+    this.informDialogBox.show({
+      dialogBoxContent: {
+        title: "Routed",
+        content: "Routed to " + assignmentId,
+      },
+    });
   }
 }
 </script>
