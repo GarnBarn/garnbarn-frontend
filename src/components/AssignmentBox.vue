@@ -68,15 +68,7 @@ export default class AssignmentBox extends Vue {
   }
 
   navigateToAssignmentPage(assignmentId: string): void {
-    // TODO: Route to assignment page
-    // this.$router.push(`/assignment/${assignmentId}`);
-    console.log("Route to " + assignmentId);
-    this.informDialogBox.show({
-      dialogBoxContent: {
-        title: "Routed",
-        content: "Routed to " + assignmentId,
-      },
-    });
+    this.$router.push(`/assignment/${assignmentId}`);
   }
 }
 </script>
