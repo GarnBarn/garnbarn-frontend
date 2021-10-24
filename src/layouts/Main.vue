@@ -55,7 +55,6 @@ export default class Layout extends Vue {
   config = {
     toolBarElevation: 1,
   };
-  showDialog = true;
 
   beforeMount(): void {
     let firebaseAuthInstance: firebase.auth.Auth = firebase.auth();
