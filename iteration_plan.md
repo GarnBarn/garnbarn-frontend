@@ -13,3 +13,11 @@ A frontend static page showing a list of asssignment, and a backend API for call
 ### Acceptance Criteria
 1. All static pages display correctly on deployed web.
 2. API are callable and passed all the tests.
+
+## Iteration 2 Plan
+
+### Goals
+
+### Features
+
+### Acceptance Criteria
