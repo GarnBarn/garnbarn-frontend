@@ -20,7 +20,7 @@ function createWrapper(
 
 describe("Test TagBox", () => {
     const tag: Tag = {
-        id: "1",
+        id: 1,
         name: "Do Test",
         color: "Aquamarine"
     };

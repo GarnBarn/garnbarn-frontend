@@ -28,7 +28,7 @@ describe("Test AssignmentBox", () => {
   test("Test font color picker", () => {
     // The getFontColor will re
     const assignment: Assignment = {
-      id: "1",
+      id: 1,
       name: "Hello Assignment",
     };
     const wrapper = createWrapper(assignment);
@@ -55,7 +55,7 @@ describe("Test AssignmentBox", () => {
   });
   test("Test assignment without Tag", () => {
     const assignment: Assignment = {
-      id: "1",
+      id: 1,
       name: "Hello Assignment",
     };
     const wrapper = createWrapper(assignment);
@@ -66,10 +66,10 @@ describe("Test AssignmentBox", () => {
 
   test("Test assignment with Tag", () => {
     const assignment: Assignment = {
-      id: "1",
+      id: 1,
       name: "Hello Assignment",
       tag: {
-        id: "1",
+        id: 1,
         name: "This is a Tag",
         color: "#111111",
       },
@@ -90,7 +90,7 @@ describe("Test AssignmentBox", () => {
 
   test("Click component to navigate to assignment page", async () => {
     const assignment: Assignment = {
-      id: "1",
+      id: 1,
       name: "Hello Assignment",
     };
     const wrapper = createWrapper(assignment);
