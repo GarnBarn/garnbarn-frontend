@@ -1,18 +1,12 @@
-import { api } from "./api";
+import { api, ApiSpecError } from "./api";
 import firebase from "firebase";
-import { Assignment } from "@/types/garnbarn/Assignment";
 import { AxiosPromise, AxiosResponse, AxiosStatic } from "axios";
+import { AssignmentApi } from "@/types/garnbarn/AssignmentApi";
 
 export class AssignmentApis extends api {
-  private _assignment: Assignment | undefined;
   API_BASE_URL = "/api/v1/assignment";
-  constructor(
-    firebaseUser: firebase.User,
-    assignment?: Assignment,
-    axios?: AxiosStatic
-  ) {
+  constructor(firebaseUser: firebase.User, axios?: AxiosStatic) {
     super(firebaseUser, axios);
-    this._assignment = assignment;
   }
 
   /**
@@ -21,16 +15,8 @@ export class AssignmentApis extends api {
    *
    * @returns AxiosPromise for the request in pending state.
    */
-  get(): Promise<AxiosPromise> {
-    if (!this._assignment) {
-      throw Error(
-        "To get assignment, The assignment object with assignment id must be specified."
-      );
-    }
-    return this.sendRequest(
-      "GET",
-      `${this.API_BASE_URL}/${this._assignment.id}/`
-    );
+  get(id: number): Promise<AxiosPromise> {
+    return this.sendRequest("GET", `${this.API_BASE_URL}/${id}/`);
   }
 
   /**
@@ -39,8 +25,14 @@ export class AssignmentApis extends api {
    *
    * @returns AxiosPromise for the request in pending state.
    */
-  create(): Promise<AxiosPromise> {
-    return this.sendRequest("POST", this.API_BASE_URL, this._assignment);
+  create(assignmentData: AssignmentApi): Promise<AxiosPromise> {
+    if (typeof assignmentData.id !== "undefined") {
+      throw new ApiSpecError("You can't set the assignment id");
+    }
+    if (typeof assignmentData.name === "undefined") {
+      throw new ApiSpecError("You can't create an assignment without a name");
+    }
+    return this.sendRequest("POST", `${this.API_BASE_URL}/`, assignmentData);
   }
 
   /**
@@ -49,23 +41,11 @@ export class AssignmentApis extends api {
    *
    * @returns AxiosPromise for the request in pending state.
    */
-  update(): Promise<AxiosPromise> {
-    if (!this._assignment) {
-      throw Error(
-        "To update assignment, The assignment object with assignment id must be specified."
-      );
+  update(id: number, updateField: AssignmentApi): Promise<AxiosPromise> {
+    if (typeof updateField.id !== "undefined") {
+      throw new ApiSpecError("You can't update the assignment id");
     }
-    const assignment = this._assignment;
-    if (typeof assignment.id === "undefined") {
-      throw TypeError("assignment.id can't be undefined");
-    }
-    const assignmentId: number = assignment.id;
-    delete assignment["id"];
-    return this.sendRequest(
-      "PATCH",
-      `${this.API_BASE_URL}/${assignmentId}`,
-      assignment
-    );
+    return this.sendRequest("PATCH", `${this.API_BASE_URL}/${id}`, updateField);
   }
 
   /**
@@ -75,15 +55,7 @@ export class AssignmentApis extends api {
    * @param id The ID of assignment that you want to get
    * @returns AxiosPromise for the request in pending state.
    */
-  delete(): Promise<AxiosPromise> {
-    if (!this._assignment) {
-      throw Error(
-        "To delete assignment, The assignment object with assignment id must be specified."
-      );
-    }
-    return this.sendRequest(
-      "DELETE",
-      `${this.API_BASE_URL}/${this._assignment.id}/`
-    );
+  delete(id: number): Promise<AxiosPromise> {
+    return this.sendRequest("DELETE", `${this.API_BASE_URL}/${id}/`);
   }
 }

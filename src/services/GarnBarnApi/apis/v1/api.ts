@@ -58,3 +58,5 @@ export class api {
     return this._firebaseUser;
   }
 }
+
+export class ApiSpecError extends Error {}
