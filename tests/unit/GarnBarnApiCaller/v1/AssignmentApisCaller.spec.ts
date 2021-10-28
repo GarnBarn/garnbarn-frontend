@@ -212,6 +212,9 @@ describe("Test Assignment APIs v1 Caller", () => {
     };
     mockAxios.mockResolvedValue({ data: mockResponse });
     const apiResponse = await garnBarnApiCaller.v1().assignment().all();
+    expect(mockAxios).toBeCalledWith(
+      generateRequestDetail(ID_TOKEN, "GET", "/api/v1/assignment/")
+    );
     expect(apiResponse.data).toEqual(mockResponse);
   });
 });
