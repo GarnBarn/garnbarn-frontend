@@ -11,6 +11,11 @@ export default class GarnBarnApi {
     this._axiosInstance = axios;
   }
 
+  /**
+   * Get the the API v1 caller.
+   *
+   * @returns Instance of v1 initilized with the stored firebaseUser
+   */
   v1(): v1 {
     return new v1(this._firebaseUser);
   }
