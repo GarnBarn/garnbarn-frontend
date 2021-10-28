@@ -12,14 +12,10 @@ install:
 
 # Mount required file and Run Test and coverage
 script:
-  - echo $FAKE_BACKEND_CONFIG > src/GarnBarnApiConfig.json
+  - echo "$FAKE_BACKEND_CONFIG" > src/GarnBarnApiConfig.json
   - yarn test:unit
   - yarn test:coverage
 
 # Submit Coverage result
 after_script:
   - codecov
-
-env:
-  jobs:
-    - FAKE_BACKEND_CONFIG = '{"apiPrefix": "http://localhost:8000"}'
