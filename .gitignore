@@ -27,3 +27,6 @@ coverage/
 
 # Ignore firebase config file
 src/firebaseConfig.json
+
+# Ignore Backend Config file
+src/GarnBarnApiConfig.json
