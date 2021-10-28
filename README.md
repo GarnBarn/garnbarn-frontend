@@ -17,28 +17,30 @@ $ yarn install
 
   _This config file can be can be acquired from Firebase_
 
-```json
-{
-  "apiKey": "",
-  "appId": "",
-  "authDomain": "",
-  "databaseURL": "",
-  "measurementId": "",
-  "messagingSenderId": "",
-  "projectId": "",
-  "storageBucket": ""
-}
-```
+  ```json
+  {
+    "apiKey": "",
+    "appId": "",
+    "authDomain": "",
+    "databaseURL": "",
+    "measurementId": "",
+    "messagingSenderId": "",
+    "projectId": "",
+    "storageBucket": ""
+  }
+  ```
 
 - **src/GarnBarnApiConfig.json**
 
   _This config file contain the API Prefix for the GarnBarn API_
 
-```json
-{
-  "apiPrefix": "http://localhost:8080" // Don't include the / at the end!
-}
-```
+  ```json
+  {
+    "apiPrefix": "http://localhost:8080"
+  }
+  ```
+
+  > _Note: Don't include the / at the end!_
 
 ### 3. Serve locally
 
