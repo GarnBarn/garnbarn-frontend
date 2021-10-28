@@ -3,7 +3,7 @@
 [![Build Status](https://app.travis-ci.com/GarnBarn/garnbarn-frontend.svg?branch=master)](https://app.travis-ci.com/GarnBarn/garnbarn-frontend)
 [![codecov](https://codecov.io/gh/GarnBarn/garnbarn-frontend/branch/master/graph/badge.svg?token=QwED3bFABW)](https://codecov.io/gh/GarnBarn/garnbarn-frontend)
 
-# 📦 Build Steps
+## 📦 Build Steps
 
 ## 1. Install dependency
 
@@ -11,7 +11,7 @@
 $ yarn install
 ```
 
-## 2. Create the required config file
+### 2. Create the required config file
 
 - **src/firebaseConfig.json**
 
@@ -40,13 +40,13 @@ $ yarn install
 }
 ```
 
-## 3. Serve locally
+### 3. Serve locally
 
 ```bash
 $ yarn serve
 ```
 
-## 4. Build for Production
+### 4. Build for Production
 
 ```bash
 $ yarn build
