@@ -12,7 +12,7 @@ install:
 
 # Mount required file and Run Test and coverage
 script:
-  - echo "$FAKE_BACKEND_CONFIG" > src/GarnBarnApiConfig.json
+  - echo $FAKE_BACKEND_CONFIG > src/GarnBarnApiConfig.json
   - yarn test:unit
   - yarn test:coverage
 
