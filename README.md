@@ -5,7 +5,7 @@
 
 ## 📦 Build Steps
 
-## 1. Install dependency
+### 1. Install dependency
 
 ```bash
 $ yarn install
