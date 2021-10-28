@@ -1,8 +1,8 @@
 import { Tag } from "./Tag";
 
 export type Assignment = {
-  id: number;
-  name: string;
+  id?: number;
+  name?: string;
   description?: string;
   dueDate?: number;
   tag?: Tag;
