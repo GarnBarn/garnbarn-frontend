@@ -185,4 +185,33 @@ describe("Test Assignment APIs v1 Caller", () => {
     );
     expect(apiResponse.data).toEqual({});
   });
+
+  test("Test Get All Assignments API", async () => {
+    const mockResponse = {
+      count: 2,
+      next: null,
+      previous: null,
+      results: [
+        {
+          id: 50,
+          tag: null,
+          name: "Test1234",
+          dueDate: null,
+          timestamp: 1635261404498,
+          description: "Hereeeee!",
+        },
+        {
+          id: 51,
+          tag: null,
+          name: "Test1234",
+          dueDate: null,
+          timestamp: 1635261459056,
+          description: "Hereeeee!",
+        },
+      ],
+    };
+    mockAxios.mockResolvedValue({ data: mockResponse });
+    const apiResponse = await garnBarnApiCaller.v1().assignment().all();
+    expect(apiResponse.data).toEqual(mockResponse);
+  });
 });

@@ -20,6 +20,16 @@ export class AssignmentApis extends api {
   }
 
   /**
+   * Call Get All Assignments API
+   * https://garnbarn.github.io/garnbarn-backend/#/api?id=create-assignment
+   *
+   * @returns AxiosPromise for the request in pending state.
+   */
+  all(): Promise<AxiosPromise> {
+    return this.sendRequest("GET", `${this.API_BASE_URL}/`);
+  }
+
+  /**
    * Call Create Assignment API
    * https://garnbarn.github.io/garnbarn-backend/#/api?id=create-assignment
    *
