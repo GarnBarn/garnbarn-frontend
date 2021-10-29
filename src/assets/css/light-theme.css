@@ -1,3 +1,9 @@
+:root {
+  --md-theme-default-primary: #448aff;
+  --md-theme-default-accent: #ff5252;
+  --md-theme-default-theme: light;
+}
+
 .md-dialog-container.md-theme-default {
   background-color: #fff;
   background-color: var(--md-theme-default-background, #fff);
@@ -13,4 +19,213 @@
   background-color: #448aff;
   background-color: var(--md-theme-default-primary, #448aff);
   color: white;
+}
+
+.md-chip.md-theme-default.md-accent.md-deletable:not(.md-disabled):hover
+  .md-input-action,
+.md-chip.md-theme-default.md-accent.md-clickable:not(.md-disabled):hover
+  .md-input-action,
+.md-chip.md-theme-default.md-duplicated.md-deletable:not(.md-disabled):hover
+  .md-input-action,
+.md-chip.md-theme-default.md-duplicated.md-clickable:not(.md-disabled):hover
+  .md-input-action {
+  background-color: rgba(255, 255, 255, 0.87);
+  background-color: var(
+    --md-theme-default-background,
+    rgba(255, 255, 255, 0.87)
+  );
+}
+
+.md-chip.md-theme-default.md-primary.md-deletable:not(.md-disabled):hover
+  .md-input-action,
+.md-chip.md-theme-default.md-primary.md-clickable:not(.md-disabled):hover
+  .md-input-action {
+  background-color: rgba(255, 255, 255, 0.87);
+  background-color: var(
+    --md-theme-default-background,
+    rgba(255, 255, 255, 0.87)
+  );
+}
+
+.md-chip.md-theme-default.md-accent .md-input-action,
+.md-chip.md-theme-default.md-duplicated .md-input-action {
+  color: #fff;
+  color: var(--md-theme-default-icon-on-disabled, #fff);
+  background-color: rgba(0, 0, 0, 0.26);
+  background-color: var(--md-theme-default-disabled, rgba(0, 0, 0, 0.26));
+}
+
+.md-chip.md-theme-default.md-accent.md-deletable:not(.md-disabled):hover
+  .md-input-action,
+.md-chip.md-theme-default.md-accent.md-clickable:not(.md-disabled):hover
+  .md-input-action,
+.md-chip.md-theme-default.md-duplicated.md-deletable:not(.md-disabled):hover
+  .md-input-action,
+.md-chip.md-theme-default.md-duplicated.md-clickable:not(.md-disabled):hover
+  .md-input-action {
+  background-color: rgba(255, 255, 255, 0.87);
+  background-color: var(
+    --md-theme-default-background,
+    rgba(255, 255, 255, 0.87)
+  );
+}
+
+.md-field.md-theme-default .md-input::-webkit-input-placeholder,
+.md-field.md-theme-default .md-textarea::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.54);
+}
+.md-field.md-theme-default.md-focused .md-input,
+.md-field.md-theme-default.md-focused .md-textarea,
+.md-field.md-theme-default.md-has-value .md-input,
+.md-field.md-theme-default.md-has-value .md-textarea {
+  -webkit-text-fill-color: rgba(0, 0, 0, 0.87);
+}
+
+.md-field.md-theme-default.md-disabled label,
+.md-field.md-theme-default.md-disabled .md-input,
+.md-field.md-theme-default.md-disabled .md-textarea {
+  color: rgba(0, 0, 0, 0.42);
+}
+
+.md-field.md-theme-default.md-focused .md-input,
+.md-field.md-theme-default.md-focused .md-textarea,
+.md-field.md-theme-default.md-highlight .md-input,
+.md-field.md-theme-default.md-highlight .md-textarea {
+  color: #448aff;
+  color: var(--md-theme-default-primary-on-background, #448aff);
+}
+
+.md-field.md-theme-default:after {
+  background-color: rgba(0, 0, 0, 0.42);
+}
+.md-field.md-theme-default:before {
+  background-color: #448aff;
+  background-color: var(--md-theme-default-primary, #448aff);
+}
+.md-field.md-theme-default .md-helper-text,
+.md-field.md-theme-default .md-count,
+.md-field.md-theme-default label {
+  color: rgba(0, 0, 0, 0.54);
+}
+.md-field.md-theme-default .md-suffix,
+.md-field.md-theme-default .md-prefix {
+  color: rgba(0, 0, 0, 0.54);
+}
+.md-field.md-theme-default .md-input::-webkit-input-placeholder,
+.md-field.md-theme-default .md-textarea::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.54);
+}
+.md-field.md-theme-default.md-focused .md-input,
+.md-field.md-theme-default.md-focused .md-textarea,
+.md-field.md-theme-default.md-has-value .md-input,
+.md-field.md-theme-default.md-has-value .md-textarea {
+  -webkit-text-fill-color: rgba(0, 0, 0, 0.87);
+}
+.md-field.md-theme-default.md-has-textarea:not(.md-autogrow):after {
+  border-color: rgba(0, 0, 0, 0.42);
+}
+.md-field.md-theme-default.md-has-textarea:not(.md-autogrow):before {
+  border-color: #448aff;
+  border-color: var(--md-theme-default-primary, #448aff);
+}
+.md-field.md-theme-default.md-disabled:after {
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.38) 0%,
+    rgba(0, 0, 0, 0.38) 33%,
+    transparent 0%
+  );
+}
+.md-field.md-theme-default.md-disabled label,
+.md-field.md-theme-default.md-disabled .md-input,
+.md-field.md-theme-default.md-disabled .md-textarea {
+  color: rgba(0, 0, 0, 0.42);
+}
+.md-field.md-theme-default > .md-icon:after {
+  background-color: #fafafa;
+  background-color: var(--md-theme-default-background-variant, #fafafa);
+}
+.md-field.md-theme-default.md-invalid:after {
+  background-color: #ff1744;
+  background-color: var(--md-theme-default-fieldvariant, #ff1744);
+}
+.md-field.md-theme-default.md-invalid.md-has-textarea:not(.md-autogrow):before {
+  border-color: #ff1744;
+  border-color: var(--md-theme-default-fieldvariant, #ff1744);
+}
+.md-field.md-theme-default.md-invalid label {
+  color: #ff1744;
+  color: var(--md-theme-default-fieldvariant, #ff1744);
+}
+.md-field.md-theme-default.md-invalid .md-error {
+  color: #ff1744;
+  color: var(--md-theme-default-fieldvariant, #ff1744);
+}
+.md-field.md-theme-default.md-invalid .md-date-icon,
+.md-field.md-theme-default.md-invalid .md-date-icon svg {
+  color: #ff1744;
+  color: var(--md-theme-default-fieldvariant, #ff1744);
+  fill: #ff1744;
+  fill: var(--md-theme-default-fieldvariant, #ff1744);
+}
+.md-field.md-theme-default.md-focused .md-input,
+.md-field.md-theme-default.md-focused .md-textarea,
+.md-field.md-theme-default.md-highlight .md-input,
+.md-field.md-theme-default.md-highlight .md-textarea {
+  color: #448aff;
+  color: var(--md-theme-default-primary-on-background, #448aff);
+}
+.md-field.md-theme-default.md-focused > .md-icon,
+.md-field.md-theme-default.md-highlight > .md-icon {
+  color: #448aff;
+  color: var(--md-theme-default-primary-on-background, #448aff);
+  fill: #448aff;
+  fill: var(--md-theme-default-primary-on-background, #448aff);
+}
+.md-field.md-theme-default.md-focused label {
+  color: #448aff;
+  color: var(--md-theme-default-primary-on-background, #448aff);
+}
+.md-field.md-theme-default.md-disabled .md-icon svg {
+  fill: rgba(0, 0, 0, 0.26);
+  fill: var(--md-theme-default-disabled-on-background, rgba(0, 0, 0, 0.26));
+}
+
+.md-button.md-theme-default.md-raised:not([disabled]) {
+  background-color: #fff;
+  background-color: var(--md-theme-default-background, #fff);
+  color: rgba(0, 0, 0, 0.87);
+  color: var(
+    --md-theme-default-text-primary-on-background,
+    rgba(0, 0, 0, 0.87)
+  );
+}
+.md-button.md-theme-default.md-raised:not([disabled]).md-primary {
+  color: #fff;
+  color: var(--md-theme-default-text-primary-on-primary, #fff);
+  background-color: #448aff;
+  background-color: var(--md-theme-default-primary, #448aff);
+}
+.md-button.md-theme-default.md-raised:not([disabled]).md-primary .md-icon-font {
+  color: #fff;
+  color: var(--md-theme-default-text-primary-on-primary, #fff);
+}
+.md-button.md-theme-default.md-raised:not([disabled]).md-primary
+  .md-icon-image {
+  fill: #fff;
+  fill: var(--md-theme-default-text-primary-on-primary, #fff);
+}
+.md-button.md-theme-default.md-raised:not([disabled]).md-accent {
+  color: #fff;
+  color: var(--md-theme-default-text-primary-on-accent, #fff);
+  background-color: #ff5252;
+  background-color: var(--md-theme-default-accent, #ff5252);
+}
+.md-button.md-theme-default.md-raised:not([disabled]).md-accent .md-icon-font {
+  color: #fff;
+  color: var(--md-theme-default-text-primary-on-accent, #fff);
+}
+.md-button.md-theme-default.md-raised:not([disabled]).md-accent .md-icon-image {
+  fill: #fff;
+  fill: var(--md-theme-default-text-primary-on-accent, #fff);
 }

@@ -6,4 +6,13 @@ module.exports = {
     "!src/main.ts",
     "!src/router/index.ts",
   ],
+  transform: {
+    "tests/unit/GarnBarnApiCaller/.(ts|tsx)": "ts-jest",
+  },
+  resetMocks: true,
+  globals: {
+    "ts-jest": {
+      compiler: "ttypescript",
+    },
+  },
 };

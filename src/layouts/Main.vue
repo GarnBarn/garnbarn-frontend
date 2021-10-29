@@ -41,10 +41,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Prop } from "vue-property-decorator";
 import firebase from "firebase";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import "firebase/auth";
+
+export type CallbackFunction = (user: firebase.User) => void;
 
 @Component({
   components: {
@@ -52,6 +54,7 @@ import "firebase/auth";
   },
 })
 export default class Layout extends Vue {
+  @Prop() callback!: CallbackFunction;
   config = {
     toolBarElevation: 1,
   };
@@ -62,6 +65,9 @@ export default class Layout extends Vue {
       // If user is not signed in yet.
       if (!user) {
         this.$router.push("/signIn");
+      }
+      if (typeof this.callback === "function") {
+        this.callback(user as firebase.User);
       }
     });
   }
