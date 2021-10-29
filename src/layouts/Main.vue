@@ -44,6 +44,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 import firebase from "firebase";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
+import { DialogBox } from "@/components/DialogBox/DialogBox";
 import "firebase/auth";
 
 export type CallbackFunction = (user: firebase.User) => void;
@@ -58,16 +59,24 @@ export default class Layout extends Vue {
   config = {
     toolBarElevation: 1,
   };
+  loadingDialogBox = new DialogBox("loadingDialogBox");
 
-  beforeMount(): void {
+  mounted(): void {
     let firebaseAuthInstance: firebase.auth.Auth = firebase.auth();
+    this.loadingDialogBox.show({
+      dialogBoxActions: [],
+    });
     firebaseAuthInstance.onAuthStateChanged((user) => {
       // If user is not signed in yet.
       if (!user) {
+        this.loadingDialogBox.dismiss();
         this.$router.push("/signIn");
       }
       if (typeof this.callback === "function") {
         this.callback(user as firebase.User);
+      }
+      else {
+        this.loadingDialogBox.dismiss();
       }
     });
   }
