@@ -31,5 +31,5 @@ A frontend page for viewing detail of assignment and connect the frontend with b
 2. API are callable and passed all the tests.
 
 ### Taskboard
-[Frontend](!https://github.com/GarnBarn/garnbarn-frontend/projects/2)   
-[Backend](!https://github.com/GarnBarn/garnbarn-backend/projects/2)
+[Frontend](https://github.com/GarnBarn/garnbarn-frontend/projects/2)   
+[Backend](https://github.com/GarnBarn/garnbarn-backend/projects/2)
