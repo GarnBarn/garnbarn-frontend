@@ -37,7 +37,7 @@
 import { Vue, Component } from "vue-property-decorator";
 import Layout from "@/layouts/Main.vue";
 import firebase from "firebase";
-import { DialogBox } from "@/components/DialogBox/DialogBox";
+import DialogBox from "@/components/DialogBox/DialogBox";
 
 @Component({
   components: {

@@ -4,47 +4,55 @@ import DialogBoxEventBus, {
 } from "./DialogBoxEventBus";
 import { DialogConfig } from "@/types/components/DialogBox";
 
-export class DialogBox {
+export default class DialogBox {
   private _dialogBoxId: string;
   constructor(dialogBoxId: string) {
     this._dialogBoxId = dialogBoxId;
   }
 
-  show(dialogConfig?: DialogConfig): void {
+  show(dialogConfig?: DialogConfig): Promise<void> {
     dialogConfig = this._checkDialogBoxId(dialogConfig ?? {});
     dialogConfig = this._parseDialogConfig(dialogConfig);
     const responseChannelId = `RESPONSE-${dialogConfig.dialogBoxId}`;
+    const eventSubscriber = this._listenResponse(responseChannelId);
     DialogBoxEventBus.$emit(DialogEvent.show, dialogConfig);
-    this._listenResponse(responseChannelId);
+    return eventSubscriber;
   }
 
-  dismiss(dialogConfig?: DialogConfig): void {
+  dismiss(dialogConfig?: DialogConfig): Promise<void> {
     dialogConfig = this._checkDialogBoxId(dialogConfig ?? {});
     const responseChannelId = `RESPONSE-${dialogConfig.dialogBoxId}`;
+    const eventSubscriber = this._listenResponse(responseChannelId);
     DialogBoxEventBus.$emit(DialogEvent.dismiss, dialogConfig);
-    this._listenResponse(responseChannelId);
+    return eventSubscriber;
   }
 
-  private _listenResponse(responseChannelId: string): void {
-    DialogBoxEventBus.$on(
-      responseChannelId,
-      (response: DialogEventResponse) => {
-        if (!response.success) {
-          throw Error(response.message);
-        }
-
+  private async _listenResponse(responseChannelId: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const timeoutCounter = setTimeout(() => {
         DialogBoxEventBus.$off(responseChannelId);
-      }
-    );
+        // If exceed 200ms without response form DialogBoxComponent, Considered as it it a lost package.
+        reject(
+          `Timeout reciving response from DialogBoxComponent. Did you create the DialogBoxComponent with this id yet? (${responseChannelId})`
+        );
+      }, 200);
+      DialogBoxEventBus.$on(
+        responseChannelId,
+        (response: DialogEventResponse) => {
+          clearTimeout(timeoutCounter);
+          if (!response.success) {
+            reject(response.message);
+          }
+          DialogBoxEventBus.$off(responseChannelId);
+          resolve();
+        }
+      );
+    });
   }
 
   private _checkDialogBoxId(dialogConfig: DialogConfig): DialogConfig {
     if (typeof dialogConfig.dialogBoxId === "undefined") {
-      if (this._dialogBoxId !== null) {
-        dialogConfig.dialogBoxId = this._dialogBoxId;
-      } else {
-        throw Error("The DialogBoxId must be specified");
-      }
+      dialogConfig.dialogBoxId = this._dialogBoxId;
     }
     return dialogConfig;
   }

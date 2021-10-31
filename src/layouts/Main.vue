@@ -46,7 +46,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 import firebase from "firebase";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
-import { DialogBox } from "@/components/DialogBox/DialogBox";
+import DialogBox from "@/components/DialogBox/DialogBox";
 import "firebase/auth";
 
 export type CallbackFunction = (

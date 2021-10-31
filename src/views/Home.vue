@@ -15,7 +15,7 @@ import DateWithAssignment from "@/components/DateWithAssignment.vue";
 import { Component, Vue } from "vue-property-decorator";
 import { DateWithAssignments } from "@/types/garnbarn/Assignment";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
-import { DialogBox } from "@/components/DialogBox/DialogBox";
+import DialogBox from "@/components/DialogBox/DialogBox";
 import firebase from "firebase";
 
 @Component({
