@@ -30,7 +30,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Assignment } from "@/types/garnbarn/Assignment";
-import { DialogBox } from "@/components/DialogBox/DialogBox";
+import DialogBox from "@/components/DialogBox/DialogBox";
 import TagBox from "@/components/TagBox.vue";
 
 @Component({

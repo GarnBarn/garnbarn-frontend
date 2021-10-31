@@ -1,12 +1,11 @@
 import axios, {
   Method,
   AxiosPromise,
-  Axios,
   AxiosRequestConfig,
   AxiosStatic,
 } from "axios";
 import firebase from "firebase";
-import GartnBarnApiConfig from "@/GarnBarnApiConfig.json";
+import GarnBarnApiConfig from "@/GarnBarnApiConfig.json";
 
 export type RequestBody = {
   [key: string]: any;
@@ -19,7 +18,7 @@ export class api {
 
   constructor(firebaseUser: firebase.User, axios?: AxiosStatic) {
     this._firebaseUser = firebaseUser;
-    this._apiPrefix = GartnBarnApiConfig.apiPrefix;
+    this._apiPrefix = GarnBarnApiConfig.apiPrefix;
     this._axiosInstance = axios;
   }
 
