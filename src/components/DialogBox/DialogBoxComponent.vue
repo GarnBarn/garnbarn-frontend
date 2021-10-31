@@ -25,7 +25,7 @@
         :key="dialogBox.dialogConfig.dialogBoxActions.indexOf(action)"
       >
         <md-button
-          :class="action.buttonClass"
+          :class="action.buttonClass + ' action-button'"
           id="actionButton"
           @click="action.onClick"
         >
@@ -108,3 +108,10 @@ export default class DialogBoxComponent extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.action-button {
+  margin: 5px !important;
+  border-radius: 100px;
+}
+</style>
