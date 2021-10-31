@@ -7,6 +7,11 @@
 
       <md-card-content>
         <div class="setting-content">
+          <h3>* UID:</h3>
+          <md-field>
+            <label></label>
+            <md-input v-model="uid" readonly></md-input>
+          </md-field>
           <h3>
             * ID Token (For development purpos only!, Please use it at your own
             risk):
@@ -44,9 +49,11 @@ export default class Account extends Vue {
     isShow: false,
     idToken: "",
   };
+  uid = "";
 
   async callback(user: firebase.User, loadingDialogBox: DialogBox) {
     this.idTokenData.idToken = await user.getIdToken();
+    this.uid = user.uid;
     loadingDialogBox.dismiss();
   }
 }
