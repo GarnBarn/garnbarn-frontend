@@ -3,30 +3,53 @@
 [![Build Status](https://app.travis-ci.com/GarnBarn/garnbarn-frontend.svg?branch=master)](https://app.travis-ci.com/GarnBarn/garnbarn-frontend)
 [![codecov](https://codecov.io/gh/GarnBarn/garnbarn-frontend/branch/master/graph/badge.svg?token=QwED3bFABW)](https://codecov.io/gh/GarnBarn/garnbarn-frontend)
 
-## Project setup
+## 📦 Build Steps
 
-```
-yarn install
-```
+### 1. Install dependency
 
-### Compiles and hot-reloads for development
-
-```
-yarn serve
+```bash
+$ yarn install
 ```
 
-### Compiles and minifies for production
+### 2. Create the required config file
 
+- **src/firebaseConfig.json**
+
+  _This config file can be can be acquired from Firebase_
+
+  ```json
+  {
+    "apiKey": "",
+    "appId": "",
+    "authDomain": "",
+    "databaseURL": "",
+    "measurementId": "",
+    "messagingSenderId": "",
+    "projectId": "",
+    "storageBucket": ""
+  }
+  ```
+
+- **src/GarnBarnApiConfig.json**
+
+  _This config file contain the API Prefix for the GarnBarn API_
+
+  ```json
+  {
+    "apiPrefix": "http://localhost:8080"
+  }
+  ```
+
+  > _Note: Don't include the / at the end!_
+
+### 3. Serve locally
+
+```bash
+$ yarn serve
 ```
-yarn build
+
+### 4. Build for Production
+
+```bash
+$ yarn build
 ```
-
-### Lints and fixes files
-
-```
-yarn lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
