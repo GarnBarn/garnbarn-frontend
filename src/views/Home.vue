@@ -1,5 +1,5 @@
 <template>
-  <layout :callback=callback>
+  <layout :callback="callback">
     <DateWithAssignment
       v-for="assignmentInDay in assignments.dateWithAssignments"
       :key="assignments.dateWithAssignments.indexOf(assignmentInDay)"
@@ -15,7 +15,7 @@ import DateWithAssignment from "@/components/DateWithAssignment.vue";
 import { Component, Vue } from "vue-property-decorator";
 import { DateWithAssignments } from "@/types/garnbarn/Assignment";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
-import { DialogBox } from "@/components/DialogBox/DialogBox";
+import DialogBox from "@/components/DialogBox/DialogBox";
 import firebase from "firebase";
 
 @Component({
@@ -25,17 +25,17 @@ import firebase from "firebase";
   },
 })
 export default class Home extends Vue {
-  garnBarnAPICaller: GarnBarnApi | undefined = undefined
+  garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   loadingDialogBox = new DialogBox("loadingDialogBox");
   assignments: DateWithAssignments = {
     dateWithAssignments: [],
   };
   callback(user: firebase.User) {
-      this.garnBarnAPICaller = new GarnBarnApi(user);
-      this.get();
+    this.garnBarnAPICaller = new GarnBarnApi(user);
+    this.get();
   }
   async get() {
-    const apiResponse = await this.garnBarnAPICaller?.v1().assignment().all(); 
+    const apiResponse = await this.garnBarnAPICaller?.v1().assignment().all();
     this.loadingDialogBox.dismiss();
   }
 }
