@@ -30,15 +30,22 @@ describe("Test Assignment Display Time", () => {
         dueDate: 1635439072
     };
 
-    const wrapper = createWrapper(assignment);
-    test("Test Format Date", () => {
-      expect(wrapper.text()).toContain("28 October");
+  const wrapper = createWrapper(assignment);
+  const assignmentDetailInstance = wrapper.vm as any;
+  const date = assignmentDetailInstance.convertUnixTimeToDate(assignment.dueDate);
+    test("Test Assignment UNIX time convert to date", () => {
+      expect(assignmentDetailInstance.date).toStrictEqual(date);
+    })
+  test("Test Format Date", () => {
+      const formatDate = assignmentDetailInstance.getFormatDate(date);
+      expect(wrapper.text()).toContain(formatDate);
     });
-    test("Test Format Time", () => {
-      expect(wrapper.text()).toContain("23:37");
+  test("Test Format Time", () => {
+      const formatTime = assignmentDetailInstance.getFormatTime(date);
+      expect(wrapper.text()).toContain(formatTime);
     })
     test("Test Assignment with no due date", () => {
-    const assignment: Assignment = {
+      const assignment: Assignment = {
         id: 1,
         tag: {
             "id": 1,
