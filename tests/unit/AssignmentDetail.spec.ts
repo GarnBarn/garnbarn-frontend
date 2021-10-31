@@ -31,11 +31,25 @@ describe("Test Assignment Display Time", () => {
     };
 
     const wrapper = createWrapper(assignment);
-    const assignmentDetailInstance = wrapper.vm as any;
     test("Test Format Date", () => {
-      expect(assignmentDetailInstance.formatDate).toBe("28 October");
+      expect(wrapper.text()).toContain("28 October");
     });
     test("Test Format Time", () => {
-        expect(assignmentDetailInstance.formatTime).toBe("23:37")
+      expect(wrapper.text()).toContain("23:37");
+    })
+    test("Test Assignment with no due date", () => {
+    const assignment: Assignment = {
+        id: 1,
+        tag: {
+            "id": 1,
+            "name": "ISP"
+        },
+        name: "Do Test",
+        description: "Write test with > 100% coverage",
+      };
+      const wrapper = createWrapper(assignment);
+      const assignmentDetailInstance = wrapper.vm as any;
+      expect(assignmentDetailInstance.date).toBe(undefined);
+      expect(wrapper.text()).toContain("No Due Date")
     })
 });
