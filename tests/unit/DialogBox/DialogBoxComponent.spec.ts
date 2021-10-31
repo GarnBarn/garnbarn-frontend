@@ -1,6 +1,6 @@
 import { createLocalVue, mount, Wrapper } from "@vue/test-utils";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
-import { DialogBox } from "@/components/DialogBox/DialogBox";
+import DialogBox from "@/components/DialogBox/DialogBox";
 import VueMaterial from "vue-material";
 import { DialogConfig } from "@/types/components/DialogBox";
 

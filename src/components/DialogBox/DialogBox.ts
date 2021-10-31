@@ -4,7 +4,7 @@ import DialogBoxEventBus, {
 } from "./DialogBoxEventBus";
 import { DialogConfig } from "@/types/components/DialogBox";
 
-export class DialogBox {
+export default class DialogBox {
   private _dialogBoxId: string;
   constructor(dialogBoxId: string) {
     this._dialogBoxId = dialogBoxId;
