@@ -13,6 +13,7 @@
     <div v-if="this.assignment.dueDate" class="due-date text-gray">
       <p>Due Date:</p>
       <p class="formatted">{{this.getFormatDate(this.date)}}</p>
+      <p>Submission Time:</p>
       <p class="formatted">{{this.getFormatTime(this.date)}}</p>
     </div>
     <div v-else class="due-date text-gray">
