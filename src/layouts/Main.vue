@@ -7,9 +7,11 @@
           <div class="itemBar">
             <md-button>Assignment</md-button>
             <md-button>Tag</md-button>
-            <md-button class="md-icon-button">
-              <md-icon>account_circle</md-icon>
-            </md-button>
+            <router-link to="account">
+              <md-button class="md-icon-button">
+                <md-icon>account_circle</md-icon>
+              </md-button>
+            </router-link>
           </div>
         </div>
       </md-app-toolbar>
