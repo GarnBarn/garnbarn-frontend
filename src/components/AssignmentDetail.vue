@@ -10,10 +10,13 @@
       <p class="header">Description:</p>
       <p class="content">{{assignment.description}}</p>
     </div>
-    <div class="due-date text-gray">
+    <div v-if="this.assignment.dueDate" class="due-date text-gray">
       <p>Due Date:</p>
-      <p class="formatted">{{this.formatDate}}</p>
-      <p class="formatted">{{this.formatTime}}</p>
+      <p class="formatted">{{this.getFormatDate(this.date)}}</p>
+      <p class="formatted">{{this.getFormatTime(this.date)}}</p>
+    </div>
+    <div v-else class="due-date text-gray">
+      <p>No Due Date</p>
     </div>
   </div>
 </template>
@@ -30,17 +33,18 @@ import  TagBox  from "@/components/TagBox.vue";
 })
 export default class AssignmentDetail extends Vue {
     @Prop({ required: true }) readonly assignment!: Assignment;
+    
+    date: Date | undefined = undefined;
 
-    date = this.convertUnixTimeToDate(this.assignment.dueDate)
-    formatDate = this.getFormatDate(this.date);
-    formatTime = this.getFormatTime(this.date);
+    beforeMount(): void {
+    if (this.assignment.dueDate) {
+      this.date = this.convertUnixTimeToDate(this.assignment.dueDate);
+      }
+    }
 
-    convertUnixTimeToDate(unix_timestamp?: number): Date | undefined {
-      if (unix_timestamp) {
+    convertUnixTimeToDate(unix_timestamp: number): Date {
         var date = new Date(unix_timestamp * 1000);
         return date;
-      }
-      return undefined;
     }
 
     getFormatDate(date?: Date): string | undefined {
