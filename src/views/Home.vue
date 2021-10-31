@@ -1,5 +1,5 @@
 <template>
-  <layout :callback=callback>
+  <layout :callback="callback">
     <DateWithAssignment
       v-for="assignmentInDay in assignments.dateWithAssignments"
       :key="assignments.dateWithAssignments.indexOf(assignmentInDay)"
@@ -25,18 +25,27 @@ import firebase from "firebase";
   },
 })
 export default class Home extends Vue {
-  garnBarnAPICaller: GarnBarnApi | undefined = undefined
-  loadingDialogBox = new DialogBox("loadingDialogBox");
+  garnBarnAPICaller: GarnBarnApi | undefined = undefined;
+  informDialogBox = new DialogBox("informDialogBox");
   assignments: DateWithAssignments = {
     dateWithAssignments: [],
   };
-  callback(user: firebase.User) {
-      this.garnBarnAPICaller = new GarnBarnApi(user);
-      this.get();
+  callback(user: firebase.User, loadingDialogBox: DialogBox) {
+    this.garnBarnAPICaller = new GarnBarnApi(user);
+    this.get(loadingDialogBox);
   }
-  async get() {
-    const apiResponse = await this.garnBarnAPICaller?.v1().assignment().all(); 
-    this.loadingDialogBox.dismiss();
+  async get(loadingDialogBox: DialogBox) {
+    try {
+      const apiResponse = await this.garnBarnAPICaller?.v1().assignment().all();
+    } catch (e) {
+      this.informDialogBox.show({
+        dialogBoxContent: {
+          title: "Error",
+          content: `Can't fetch data from GarnBarn API, Please try again or contact Administrator.`,
+        },
+      });
+    }
+    loadingDialogBox.dismiss();
   }
 }
 </script>
