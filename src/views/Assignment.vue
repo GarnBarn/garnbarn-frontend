@@ -72,7 +72,6 @@ import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import firebase from "firebase";
 
-
 @Component({
   components: {
     Layout,
@@ -88,7 +87,7 @@ export default class AssignmentView extends Vue {
   informDialogBox = new DialogBox("informDialogBox");
   editAssignmentDialogBox = new DialogBox("editAssignmentDialogBox");
   assignmentId = Number(this.$route.params.id);
-  assignment = {
+  assignment: Assignment = {
     id: this.assignmentId,
     name: "Test 1",
     tag: {
@@ -101,17 +100,20 @@ export default class AssignmentView extends Vue {
       "The overflow-wrap property in CSS allows you to specify that the browser can break a line of text inside the targeted element onto multiple lines in an otherwise unbreakable place. This helps to avoid an unusually long string of text causing layout problems due to overflow.",
     dueDate: 1635439072,
   };
-  
-  callback(user: firebase.User, loadingDialogBox: DialogBox) {
+
+  callback(user: firebase.User, loadingDialogBox: DialogBox): void {
     this.garnBarnAPICaller = new GarnBarnApi(user);
     this.get();
     loadingDialogBox.dismiss();
   }
-  
-  async get() {
+
+  async get(): Promise<void> {
     try {
-      const apiResponse = await this.garnBarnAPICaller?.v1().assignment().get(this.assignmentId);
-      this.assignment = apiResponse.data;
+      const apiResponse = await this.garnBarnAPICaller
+        ?.v1()
+        .assignment()
+        .get(this.assignmentId);
+      this.assignment = apiResponse?.data as Assignment;
     } catch (e) {
       this.informDialogBox.show({
         dialogBoxContent: {
@@ -121,24 +123,27 @@ export default class AssignmentView extends Vue {
       });
     }
   }
-  
-  async update() {
+
+  async update(): Promise<void> {
     try {
       // TODO: Acquire only changed data field and use them to update the asssignment
       // This one below ( •̀ᴗ•́ )و ̑̑ NOT GOOD.
-      const unixDueDate = this.assignmentEdit.cachedAssignment.dueDate?.valueOf();
+      const unixDueDate =
+        this.assignmentEdit.cachedAssignment.dueDate?.valueOf();
       this.assignmentEdit.cachedAssignment.dueDate = unixDueDate;
-      delete this.assignmentEdit.cachedAssignment.id;
       console.log(this.assignmentEdit.cachedAssignment);
-      const apiResponse = await this.garnBarnAPICaller?.v1().assignment(). update(this.assignmentId, this.assignmentEdit.cachedAssignment);
-      this.assignment = apiResponse.data;
-    } catch (e) {
+      const apiResponse = await this.garnBarnAPICaller
+        ?.v1()
+        .assignment()
+        .update(this.assignmentId, this.assignmentEdit.cachedAssignment);
+      this.assignment = apiResponse?.data as Assignment;
+    } catch (e: any) {
       this.informDialogBox.show({
         dialogBoxContent: {
           title: "Error",
           content: e.message,
-        }
-      })
+        },
+      });
     }
   }
 
@@ -164,7 +169,7 @@ export default class AssignmentView extends Vue {
     });
   }
 
-  assignmentCallback(assignment: Assignment) {
+  assignmentCallback(assignment: Assignment): void {
     this.$data.assignment = this.get();
   }
 }
