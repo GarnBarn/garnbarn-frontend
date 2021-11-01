@@ -35,8 +35,6 @@ import TagBox from "@/components/TagBox.vue";
 export default class AssignmentDetail extends Vue {
   @Prop({ required: true }) readonly assignment!: Assignment;
 
-  date: Date | undefined = undefined;
-
   convertUnixTimeToDate(unix_timestamp: number): Date {
     var date = new Date(unix_timestamp);
     return date;
@@ -66,7 +64,7 @@ export default class AssignmentDetail extends Vue {
     return "Unknown";
   }
 
-  get getFormatTime(): string | undefined {
+  get getFormatTime(): string {
     const date = this.convertUnixTimeToDate(this.assignment.dueDate as number);
     if (date) {
       var formattedTime = date.getHours() + ":" + date.getMinutes();
