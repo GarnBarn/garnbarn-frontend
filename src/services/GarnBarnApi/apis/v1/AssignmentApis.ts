@@ -15,7 +15,7 @@ export class AssignmentApis extends api {
    *
    * @returns AxiosPromise for the request in pending state.
    */
-  get(id: number): Promise<AxiosPromise> {
+  get(id: number): Promise<AxiosResponse> {
     return this.sendRequest("GET", `${this.API_BASE_URL}/${id}/`);
   }
 
@@ -25,7 +25,7 @@ export class AssignmentApis extends api {
    *
    * @returns AxiosPromise for the request in pending state.
    */
-  all(): Promise<AxiosPromise> {
+  all(): Promise<AxiosResponse> {
     return this.sendRequest("GET", `${this.API_BASE_URL}/`);
   }
 
@@ -35,7 +35,7 @@ export class AssignmentApis extends api {
    *
    * @returns AxiosPromise for the request in pending state.
    */
-  create(assignmentData: AssignmentApi): Promise<AxiosPromise> {
+  create(assignmentData: AssignmentApi): Promise<AxiosResponse> {
     if (typeof assignmentData.id !== "undefined") {
       throw new ApiSpecError("You can't set the assignment id");
     }
@@ -51,7 +51,7 @@ export class AssignmentApis extends api {
    *
    * @returns AxiosPromise for the request in pending state.
    */
-  update(id: number, updateField: AssignmentApi): Promise<AxiosPromise> {
+  update(id: number, updateField: AssignmentApi): Promise<AxiosResponse> {
     if (typeof updateField.id !== "undefined") {
       throw new ApiSpecError("You can't update the assignment id");
     }
@@ -65,7 +65,7 @@ export class AssignmentApis extends api {
    * @param id The ID of assignment that you want to get
    * @returns AxiosPromise for the request in pending state.
    */
-  delete(id: number): Promise<AxiosPromise> {
+  delete(id: number): Promise<AxiosResponse> {
     return this.sendRequest("DELETE", `${this.API_BASE_URL}/${id}/`);
   }
 }

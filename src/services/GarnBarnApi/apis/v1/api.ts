@@ -1,8 +1,8 @@
 import axios, {
   Method,
-  AxiosPromise,
   AxiosRequestConfig,
   AxiosStatic,
+  AxiosResponse,
 } from "axios";
 import firebase from "firebase";
 import GarnBarnApiConfig from "@/GarnBarnApiConfig.json";
@@ -32,7 +32,7 @@ export class api {
     method: Method,
     apiPath: string,
     body?: RequestBody
-  ): Promise<AxiosPromise> {
+  ): Promise<AxiosResponse> {
     const idToken = await this._firebaseUser.getIdToken();
     const axiosConfig: AxiosRequestConfig = {
       baseURL: this._apiPrefix,
@@ -45,8 +45,8 @@ export class api {
       data: body,
     };
     return this._axiosInstance
-      ? this._axiosInstance(axiosConfig)
-      : axios(axiosConfig);
+      ? await this._axiosInstance(axiosConfig)
+      : await axios(axiosConfig);
   }
 
   /**
