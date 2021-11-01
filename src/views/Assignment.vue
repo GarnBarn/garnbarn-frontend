@@ -73,7 +73,6 @@ import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import firebase from "firebase";
 
-
 @Component({
   components: {
     Layout,
@@ -89,7 +88,7 @@ export default class AssignmentView extends Vue {
   informDialogBox = new DialogBox("informDialogBox");
   editAssignmentDialogBox = new DialogBox("editAssignmentDialogBox");
   assignmentId = Number(this.$route.params.id);
-  assignment = {
+  assignment: Assignment = {
     id: this.assignmentId,
     name: "Test 1",
     tag: {
@@ -102,19 +101,27 @@ export default class AssignmentView extends Vue {
       "The overflow-wrap property in CSS allows you to specify that the browser can break a line of text inside the targeted element onto multiple lines in an otherwise unbreakable place. This helps to avoid an unusually long string of text causing layout problems due to overflow.",
     dueDate: 1635439072,
   };
+<<<<<<< HEAD
   assignmentCopy: Assignment = this.assignment;
   
   callback(user: firebase.User, loadingDialogBox: DialogBox) {
+=======
+
+  callback(user: firebase.User, loadingDialogBox: DialogBox): void {
+>>>>>>> 80342f9d868e7404e53e1ba38f5bb70d4cb84791
     this.garnBarnAPICaller = new GarnBarnApi(user);
     this.get();
     this.assignmentCopy = JSON.parse(JSON.stringify(this.assignment));
     loadingDialogBox.dismiss();
   }
-  
-  async get() {
+
+  async get(): Promise<void> {
     try {
-      const apiResponse = await this.garnBarnAPICaller?.v1().assignment().get(this.assignmentId);
-      this.assignment = apiResponse.data;
+      const apiResponse = await this.garnBarnAPICaller
+        ?.v1()
+        .assignment()
+        .get(this.assignmentId);
+      this.assignment = apiResponse?.data as Assignment;
     } catch (e) {
       this.informDialogBox.show({
         dialogBoxContent: {
@@ -124,22 +131,23 @@ export default class AssignmentView extends Vue {
       });
     }
   }
-  
-  async update() {
+
+  async update(): Promise<void> {
     try {
-      // TODO: Acquire only changed data field and use them to update the asssignment
-      // This one below ( •̀ᴗ•́ )و ̑̑ NOT GOOD.
       const diff = this.getDiff(this.assignmentCopy, this.assignmentEdit.cachedAssignment);
       console.log(this.assignmentEdit.cachedAssignment);
-      const apiResponse = await this.garnBarnAPICaller?.v1().assignment(). update(this.assignmentId, diff);
-      this.assignment = apiResponse.data;
-    } catch (e) {
+      const apiResponse = await this.garnBarnAPICaller
+        ?.v1()
+        .assignment()
+        .update(this.assignmentId, diff);
+      this.assignment = apiResponse?.data as Assignment;
+    } catch (e: any) {
       this.informDialogBox.show({
         dialogBoxContent: {
           title: "Error",
           content: e.message,
-        }
-      })
+        },
+      });
     }
   }
 
@@ -165,6 +173,7 @@ export default class AssignmentView extends Vue {
     });
   }
 
+<<<<<<< HEAD
   getDiff(copiedObject: Assignment, originalObject: Assignment): AssignmentApi {
     let diff = Object.keys(originalObject).reduce((diff, key) => {
       if (copiedObject[key as keyof Assignment] === originalObject[key as keyof Assignment]) return diff
@@ -177,6 +186,9 @@ export default class AssignmentView extends Vue {
   }
 
   assignmentCallback(assignment: Assignment) {
+=======
+  assignmentCallback(assignment: Assignment): void {
+>>>>>>> 80342f9d868e7404e53e1ba38f5bb70d4cb84791
     this.$data.assignment = this.get();
   }
 }
