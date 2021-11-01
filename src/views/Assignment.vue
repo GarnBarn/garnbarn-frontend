@@ -74,7 +74,6 @@ export default class AssignmentView extends Vue {
             buttonClass: "md-secondary",
             onClick: (): void => {
               this.informDialogBox.dismiss();
-              this.editing = false;
             }
           },
         ]
@@ -101,7 +100,6 @@ export default class AssignmentView extends Vue {
             buttonClass: "md-secondary",
             onClick: (): void => {
               this.informDialogBox.dismiss();
-              this.editing = false;
             }
           },
         ]
