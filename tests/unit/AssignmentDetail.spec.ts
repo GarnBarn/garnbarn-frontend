@@ -33,15 +33,12 @@ describe("Test Assignment Display Time", () => {
   const wrapper = createWrapper(assignment);
   const assignmentDetailInstance = wrapper.vm as any;
   const date = assignmentDetailInstance.convertUnixTimeToDate(assignment.dueDate);
-    test("Test Assignment UNIX time convert to date", () => {
-      expect(assignmentDetailInstance.date).toStrictEqual(date);
-    })
   test("Test Format Date", () => {
-      const formatDate = assignmentDetailInstance.getFormatDate(date);
+      const formatDate = assignmentDetailInstance.getFormatDate;
       expect(wrapper.text()).toContain(formatDate);
     });
   test("Test Format Time", () => {
-      const formatTime = assignmentDetailInstance.getFormatTime(date);
+      const formatTime = assignmentDetailInstance.getFormatTime;
       expect(wrapper.text()).toContain(formatTime);
     })
     test("Test Assignment with no due date", () => {
@@ -55,8 +52,6 @@ describe("Test Assignment Display Time", () => {
         description: "Write test with > 100% coverage",
       };
       const wrapper = createWrapper(assignment);
-      const assignmentDetailInstance = wrapper.vm as any;
-      expect(assignmentDetailInstance.date).toBe(undefined);
       expect(wrapper.text()).toContain("No Due Date")
     })
 });
