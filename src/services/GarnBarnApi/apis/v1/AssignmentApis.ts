@@ -1,0 +1,71 @@
+import { api, ApiSpecError } from "./api";
+import firebase from "firebase";
+import { AxiosPromise, AxiosResponse, AxiosStatic } from "axios";
+import { AssignmentApi } from "@/types/garnbarn/AssignmentApi";
+
+export class AssignmentApis extends api {
+  API_BASE_URL = "/api/v1/assignment";
+  constructor(firebaseUser: firebase.User, axios?: AxiosStatic) {
+    super(firebaseUser, axios);
+  }
+
+  /**
+   * Call Get Assignment API
+   * https://garnbarn.github.io/garnbarn-backend/#/api?id=get-assignment
+   *
+   * @returns Promise of AxiosResponse for the request in fulfilled state.
+   */
+  get(id: number): Promise<AxiosResponse> {
+    return this.sendRequest("GET", `${this.API_BASE_URL}/${id}/`);
+  }
+
+  /**
+   * Call Get All Assignments API
+   * https://garnbarn.github.io/garnbarn-backend/#/api?id=create-assignment
+   *
+   * @returns Promise of AxiosResponse for the request in fulfilled state.
+   */
+  all(): Promise<AxiosResponse> {
+    return this.sendRequest("GET", `${this.API_BASE_URL}/`);
+  }
+
+  /**
+   * Call Create Assignment API
+   * https://garnbarn.github.io/garnbarn-backend/#/api?id=create-assignment
+   *
+   * @returns Promise of AxiosResponse for the request in fulfilled state.
+   */
+  create(assignmentData: AssignmentApi): Promise<AxiosResponse> {
+    if (typeof assignmentData.id !== "undefined") {
+      throw new ApiSpecError("You can't set the assignment id");
+    }
+    if (typeof assignmentData.name === "undefined") {
+      throw new ApiSpecError("You can't create an assignment without a name");
+    }
+    return this.sendRequest("POST", `${this.API_BASE_URL}/`, assignmentData);
+  }
+
+  /**
+   * Call Update Assignment API
+   * https://garnbarn.github.io/garnbarn-backend/#/api?id=update-assignment
+   *
+   * @returns Promise of AxiosResponse for the request in fulfilled state.
+   */
+  update(id: number, updateField: AssignmentApi): Promise<AxiosResponse> {
+    if (typeof updateField.id !== "undefined") {
+      throw new ApiSpecError("You can't update the assignment id");
+    }
+    return this.sendRequest("PATCH", `${this.API_BASE_URL}/${id}/`, updateField);
+  }
+
+  /**
+   * Call Delete Assignment API
+   * https://garnbarn.github.io/garnbarn-backend/#/api?id=delete-assignment
+   *
+   * @param id The ID of assignment that you want to get
+   * @returns Promise of AxiosResponse  for the request in fulfilled state.
+   */
+  delete(id: number): Promise<AxiosResponse> {
+    return this.sendRequest("DELETE", `${this.API_BASE_URL}/${id}/`);
+  }
+}

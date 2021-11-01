@@ -21,6 +21,12 @@ jobs:
         shell: bash
         env:
           FIREBASE_SERVICE_CONFIG: ${{secrets.FIREBASE_SERVICE_CONFIG}}
+      - name: "Mount GarnBarn Backend Config File"
+        run: |
+          echo "$GARNBARN_BACKEND_CONFIG" > src/GarnBarnApiConfig.json
+        shell: bash
+        env:
+          GARNBARN_BACKEND_CONFIG: ${{secrets.GARNBARN_BACKEND_CONFIG}}
       - name: "Build Vue Project"
         run: yarn build
       - name: "Deploy to Production channel"

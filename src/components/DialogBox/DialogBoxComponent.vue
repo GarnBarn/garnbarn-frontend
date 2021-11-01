@@ -24,7 +24,11 @@
         v-for="action in dialogBox.dialogConfig.dialogBoxActions"
         :key="dialogBox.dialogConfig.dialogBoxActions.indexOf(action)"
       >
-        <md-button :class="action.buttonClass" @click="action.onClick">
+        <md-button
+          :class="action.buttonClass + ' action-button'"
+          id="actionButton"
+          @click="action.onClick"
+        >
           <div>
             {{ action.buttonContent }}
           </div>
@@ -83,6 +87,7 @@ export default class DialogBoxComponent extends Vue {
             this.dialogBoxId +
             " dialog is not a customDialog",
         });
+        return;
       }
       this.dialogBox.active = false;
       this.$set(this.dialogBox, "dialogConfig", dialogConfig);
@@ -103,3 +108,14 @@ export default class DialogBoxComponent extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.action-button {
+  margin: 5px !important;
+  border-radius: 100px;
+}
+
+.md-dialog /deep/.md-dialog-container {
+  max-width: 768px;
+}
+</style>

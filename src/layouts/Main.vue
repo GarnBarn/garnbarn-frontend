@@ -7,9 +7,11 @@
           <div class="itemBar">
             <md-button>Assignment</md-button>
             <md-button>Tag</md-button>
-            <md-button class="md-icon-button">
-              <md-icon>account_circle</md-icon>
-            </md-button>
+            <router-link to="account">
+              <md-button class="md-icon-button">
+                <md-icon>account_circle</md-icon>
+              </md-button>
+            </router-link>
           </div>
         </div>
       </md-app-toolbar>
@@ -41,10 +43,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Prop } from "vue-property-decorator";
 import firebase from "firebase";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
+import DialogBox from "@/components/DialogBox/DialogBox";
 import "firebase/auth";
+
+export type CallbackFunction = (
+  user: firebase.User,
+  loadingDialogBox: DialogBox
+) => void;
 
 @Component({
   components: {
@@ -52,16 +60,27 @@ import "firebase/auth";
   },
 })
 export default class Layout extends Vue {
+  @Prop() callback!: CallbackFunction;
   config = {
     toolBarElevation: 1,
   };
+  loadingDialogBox = new DialogBox("loadingDialogBox");
 
-  beforeMount(): void {
+  mounted(): void {
     let firebaseAuthInstance: firebase.auth.Auth = firebase.auth();
+    this.loadingDialogBox.show({
+      dialogBoxActions: [],
+    });
     firebaseAuthInstance.onAuthStateChanged((user) => {
       // If user is not signed in yet.
       if (!user) {
+        this.loadingDialogBox.dismiss();
         this.$router.push("/signIn");
+      }
+      if (typeof this.callback === "function") {
+        this.callback(user as firebase.User, this.loadingDialogBox);
+      } else {
+        this.loadingDialogBox.dismiss();
       }
     });
   }

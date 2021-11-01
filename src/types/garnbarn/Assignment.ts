@@ -1,9 +1,10 @@
 import { Tag } from "./Tag";
 
 export type Assignment = {
-  id: string;
+  id: number;
   name: string;
   description?: string;
+  reminderTime?: Array<Number>;
   dueDate?: number;
   tag?: Tag;
 };
