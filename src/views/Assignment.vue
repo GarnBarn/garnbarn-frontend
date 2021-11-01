@@ -4,7 +4,7 @@
       <div v-if="editing" class="edit">
         <AssignmentEdit ></AssignmentEdit>
         <md-button @click="detail" class="md-primary md-raised">Done</md-button>
-        <md-button @click="detail" class="md-primary md-raised">Back</md-button>
+        <md-button @click="discardChange" class="md-primary md-raised">Back</md-button>
       </div>
       <div v-else class="detail">
         <AssignmentDetail :assignment=assignment></AssignmentDetail>
@@ -58,6 +58,33 @@ export default class AssignmentView extends Vue {
     this.informDialogBox.show({
         dialogBoxContent: {
           title: "Confirm edit",
+          content: `Are you sure?`,
+        },
+        dialogBoxActions: [
+          {
+            buttonContent: "Yes",
+            buttonClass: "md-secondary",
+            onClick: (): void => {
+              this.informDialogBox.dismiss();
+              this.editing = false;
+          }
+          },
+          {
+            buttonContent: "No",
+            buttonClass: "md-secondary",
+            onClick: (): void => {
+              this.informDialogBox.dismiss();
+              this.editing = false;
+            }
+          },
+        ]
+      });
+  }
+
+  discardChange(): void {
+        this.informDialogBox.show({
+        dialogBoxContent: {
+          title: "Discard Change",
           content: `Are you sure?`,
         },
         dialogBoxActions: [
