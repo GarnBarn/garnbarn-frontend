@@ -229,3 +229,7 @@
   fill: #fff;
   fill: var(--md-theme-default-text-primary-on-accent, #fff);
 }
+
+.md-field .md-textarea {
+  margin-top: 10px;
+}

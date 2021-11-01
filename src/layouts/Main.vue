@@ -7,9 +7,11 @@
           <div class="itemBar">
             <md-button>Assignment</md-button>
             <md-button>Tag</md-button>
-            <md-button class="md-icon-button">
-              <md-icon>account_circle</md-icon>
-            </md-button>
+            <router-link to="account">
+              <md-button class="md-icon-button">
+                <md-icon>account_circle</md-icon>
+              </md-button>
+            </router-link>
           </div>
         </div>
       </md-app-toolbar>
@@ -44,10 +46,13 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 import firebase from "firebase";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
-import { DialogBox } from "@/components/DialogBox/DialogBox";
+import DialogBox from "@/components/DialogBox/DialogBox";
 import "firebase/auth";
 
-export type CallbackFunction = (user: firebase.User) => void;
+export type CallbackFunction = (
+  user: firebase.User,
+  loadingDialogBox: DialogBox
+) => void;
 
 @Component({
   components: {
@@ -73,9 +78,8 @@ export default class Layout extends Vue {
         this.$router.push("/signIn");
       }
       if (typeof this.callback === "function") {
-        this.callback(user as firebase.User);
-      }
-      else {
+        this.callback(user as firebase.User, this.loadingDialogBox);
+      } else {
         this.loadingDialogBox.dismiss();
       }
     });
