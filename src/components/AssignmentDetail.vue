@@ -1,20 +1,20 @@
 <template>
   <div class="flex-col detail">
     <div class="name title">
-      <p>{{assignment.name}}</p>
+      <p>{{ assignment.name }}</p>
     </div>
     <div class="tag">
-      <tag-box :tag=assignment.tag></tag-box>
+      <tag-box :tag="assignment.tag"></tag-box>
     </div>
     <div class="description text-gray">
       <p class="header">Description:</p>
-      <p class="content">{{assignment.description}}</p>
+      <p class="content">{{ assignment.description }}</p>
     </div>
     <div v-if="this.assignment.dueDate" class="due-date text-gray">
       <p>Due Date:</p>
-      <p class="formatted">{{this.getFormatDate(this.date)}}</p>
+      <p class="formatted">{{ getFormatDate }}</p>
       <p>Submission Time:</p>
-      <p class="formatted">{{this.getFormatTime(this.date)}}</p>
+      <p class="formatted">{{ getFormatTime }}</p>
     </div>
     <div v-else class="due-date text-gray">
       <p>No Due Date</p>
@@ -25,47 +25,55 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Assignment } from "@/types/garnbarn/Assignment";
-import  TagBox  from "@/components/TagBox.vue";
+import TagBox from "@/components/TagBox.vue";
 
 @Component({
   components: {
     TagBox,
-  }
+  },
 })
 export default class AssignmentDetail extends Vue {
-    @Prop({ required: true }) readonly assignment!: Assignment;
-    
-    date: Date | undefined = undefined;
+  @Prop({ required: true }) readonly assignment!: Assignment;
 
-    beforeMount(): void {
-    if (this.assignment.dueDate) {
-      this.date = this.convertUnixTimeToDate(this.assignment.dueDate);
-      }
+  date: Date | undefined = undefined;
+
+  convertUnixTimeToDate(unix_timestamp: number): Date {
+    var date = new Date(unix_timestamp);
+    return date;
+  }
+
+  get getFormatDate(): string {
+    const date = this.convertUnixTimeToDate(this.assignment.dueDate as number);
+    if (date) {
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      var formattedDate = date.getDate() + " " + monthNames[date.getMonth()];
+      return formattedDate;
     }
 
-    convertUnixTimeToDate(unix_timestamp: number): Date {
-        var date = new Date(unix_timestamp * 1000);
-        return date;
+    return "Unknown";
+  }
+
+  get getFormatTime(): string | undefined {
+    const date = this.convertUnixTimeToDate(this.assignment.dueDate as number);
+    if (date) {
+      var formattedTime = date.getHours() + ":" + date.getMinutes();
+      return formattedTime;
     }
-
-    getFormatDate(date?: Date): string | undefined {
-      if (date) {
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];        
-        var formattedDate = date.getDate() + ' ' + monthNames[date.getMonth()];
-        return formattedDate;
-      }
-
-      return undefined;
-    }
-
-    getFormatTime(date?: Date): string | undefined {
-      if (date) {
-        var formattedTime = date.getHours() + ':' + date.getMinutes();
-        return formattedTime;
-      }
-
-      return undefined;
-    }
+    return "Unknown";
+  }
 }
 </script>
 
