@@ -64,6 +64,7 @@
 <script lang="ts">
 import { Component, Vue, Ref } from "vue-property-decorator";
 import { Assignment } from "@/types/garnbarn/Assignment";
+import { AssignmentApi } from "@/types/garnbarn/AssignmentApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import AssignmentEdit from "@/components/AssignmentEdit.vue";
 import AssignmentDetail from "@/components/AssignmentDetail.vue";
@@ -125,13 +126,15 @@ export default class AssignmentView extends Vue {
   }
 
   async update(): Promise<void> {
-    const unixDueDate = this.assignmentEdit.cachedAssignment.dueDate?.valueOf();
-    this.assignmentEdit.cachedAssignment.dueDate = unixDueDate;
-    console.log(this.assignmentEdit.cachedAssignment);
+    const assignmentCopy = JSON.parse(JSON.stringify(this.assignment));
+    const diff = this.getDiff(
+      assignmentCopy,
+      this.assignmentEdit.cachedAssignment
+    );
     this.garnBarnAPICaller
       ?.v1()
       .assignment()
-      .update(this.assignmentId, this.assignmentEdit.cachedAssignment)
+      .update(this.assignmentId, diff)
       .then((apiResponse) => {
         this.assignment = apiResponse.data as Assignment;
       })
@@ -165,6 +168,21 @@ export default class AssignmentView extends Vue {
         },
       ],
     });
+  }
+
+  getDiff(copiedObject: Assignment, originalObject: Assignment): AssignmentApi {
+    let diff = Object.keys(originalObject).reduce((diff, key) => {
+      if (
+        copiedObject[key as keyof Assignment] ===
+        originalObject[key as keyof Assignment]
+      )
+        return diff;
+      return {
+        ...diff,
+        [key]: originalObject[key as keyof Assignment],
+      };
+    }, {});
+    return diff;
   }
 
   assignmentCallback(assignment: Assignment): void {
