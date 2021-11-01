@@ -101,14 +101,9 @@ export default class AssignmentView extends Vue {
       "The overflow-wrap property in CSS allows you to specify that the browser can break a line of text inside the targeted element onto multiple lines in an otherwise unbreakable place. This helps to avoid an unusually long string of text causing layout problems due to overflow.",
     dueDate: 1635439072,
   };
-<<<<<<< HEAD
   assignmentCopy: Assignment = this.assignment;
   
   callback(user: firebase.User, loadingDialogBox: DialogBox) {
-=======
-
-  callback(user: firebase.User, loadingDialogBox: DialogBox): void {
->>>>>>> 80342f9d868e7404e53e1ba38f5bb70d4cb84791
     this.garnBarnAPICaller = new GarnBarnApi(user);
     this.get();
     this.assignmentCopy = JSON.parse(JSON.stringify(this.assignment));
