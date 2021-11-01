@@ -114,4 +114,8 @@ export default class DialogBoxComponent extends Vue {
   margin: 5px !important;
   border-radius: 100px;
 }
+
+.md-dialog /deep/.md-dialog-container {
+  max-width: 768px;
+}
 </style>
