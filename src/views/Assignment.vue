@@ -1,5 +1,5 @@
 <template>
-  <layout>
+  <layout :callback="callback">
     <div class="detail">
       <AssignmentDetail :assignment="assignment"></AssignmentDetail>
       <md-button class="md-primary md-raised">Mark As Done</md-button>
@@ -19,7 +19,7 @@
               :cachedAssignment="JSON.parse(JSON.stringify(assignment))"
               :callback="assignmentCallback"
               md-dynamic-height
-              ref="assignmentEditBox"
+              ref="assignmentEdit"
             ></AssignmentEdit>
           </md-tab>
 
@@ -69,6 +69,9 @@ import AssignmentEdit from "@/components/AssignmentEdit.vue";
 import AssignmentDetail from "@/components/AssignmentDetail.vue";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
+import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
+import firebase from "firebase";
+
 
 @Component({
   components: {
@@ -80,6 +83,7 @@ import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 })
 export default class AssignmentView extends Vue {
   @Ref() readonly assignmentEdit!: AssignmentEdit;
+  garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   editing = false;
   informDialogBox = new DialogBox("informDialogBox");
   editAssignmentDialogBox = new DialogBox("editAssignmentDialogBox");
@@ -92,10 +96,51 @@ export default class AssignmentView extends Vue {
       name: "Test Tag",
       color: "#30475E",
     },
+    reminderTime: [50, 50, 50],
     description:
       "The overflow-wrap property in CSS allows you to specify that the browser can break a line of text inside the targeted element onto multiple lines in an otherwise unbreakable place. This helps to avoid an unusually long string of text causing layout problems due to overflow.",
     dueDate: 1635439072,
   };
+  
+  callback(user: firebase.User, loadingDialogBox: DialogBox) {
+    this.garnBarnAPICaller = new GarnBarnApi(user);
+    this.get();
+    loadingDialogBox.dismiss();
+  }
+  
+  async get() {
+    try {
+      const apiResponse = await this.garnBarnAPICaller?.v1().assignment().get(this.assignmentId);
+      this.assignment = apiResponse.data;
+    } catch (e) {
+      this.informDialogBox.show({
+        dialogBoxContent: {
+          title: "Error",
+          content: `Can't fetch data from GarnBarn API, Please try again or contact Administrator.`,
+        },
+      });
+    }
+  }
+  
+  async update() {
+    try {
+      // TODO: Acquire only changed data field and use them to update the asssignment
+      // This one below ( •̀ᴗ•́ )و ̑̑ NOT GOOD.
+      const unixDueDate = this.assignmentEdit.cachedAssignment.dueDate?.valueOf();
+      this.assignmentEdit.cachedAssignment.dueDate = unixDueDate;
+      delete this.assignmentEdit.cachedAssignment.id;
+      console.log(this.assignmentEdit.cachedAssignment);
+      const apiResponse = await this.garnBarnAPICaller?.v1().assignment(). update(this.assignmentId, this.assignmentEdit.cachedAssignment);
+      this.assignment = apiResponse.data;
+    } catch (e) {
+      this.informDialogBox.show({
+        dialogBoxContent: {
+          title: "Error",
+          content: e.message,
+        }
+      })
+    }
+  }
 
   edit(): void {
     this.editAssignmentDialogBox.show({
@@ -105,7 +150,7 @@ export default class AssignmentView extends Vue {
           buttonClass: "md-primary",
           onClick: (): void => {
             this.editAssignmentDialogBox.dismiss();
-            console.log(this.assignmentEdit.cachedAssignment);
+            this.update();
           },
         },
         {
@@ -119,36 +164,8 @@ export default class AssignmentView extends Vue {
     });
   }
 
-  detail(): void {
-    this.informDialogBox.show({
-      dialogBoxContent: {
-        title: "Confirm edit",
-        content: `Are you sure?`,
-      },
-      dialogBoxActions: [
-        {
-          buttonContent: "Yes",
-          buttonClass: "md-secondary",
-          onClick: (): void => {
-            this.informDialogBox.dismiss();
-            this.editing = false;
-          },
-        },
-        {
-          buttonContent: "No",
-          buttonClass: "md-secondary",
-          onClick: (): void => {
-            this.informDialogBox.dismiss();
-            this.editing = false;
-          },
-        },
-      ],
-    });
-  }
-
   assignmentCallback(assignment: Assignment) {
-    console.log(assignment);
-    this.$data.assignment = assignment;
+    this.$data.assignment = this.get();
   }
 }
 </script>
