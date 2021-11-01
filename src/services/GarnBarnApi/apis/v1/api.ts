@@ -26,7 +26,7 @@ export class api {
    * sendRequest is used to handle request sending using axios.
    *
    * @param config AxiosRequestConfig for config the request to send. For the `Authorization` field, It will be automatically filled.
-   * @returns Instance of AxiosPromise in pending state.
+   * @returns Instance of AxiosPromise in fulfilled state.
    */
   async sendRequest(
     method: Method,

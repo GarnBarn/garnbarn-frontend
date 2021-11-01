@@ -13,7 +13,7 @@ export class AssignmentApis extends api {
    * Call Get Assignment API
    * https://garnbarn.github.io/garnbarn-backend/#/api?id=get-assignment
    *
-   * @returns AxiosPromise for the request in pending state.
+   * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
   get(id: number): Promise<AxiosResponse> {
     return this.sendRequest("GET", `${this.API_BASE_URL}/${id}/`);
@@ -23,7 +23,7 @@ export class AssignmentApis extends api {
    * Call Get All Assignments API
    * https://garnbarn.github.io/garnbarn-backend/#/api?id=create-assignment
    *
-   * @returns AxiosPromise for the request in pending state.
+   * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
   all(): Promise<AxiosResponse> {
     return this.sendRequest("GET", `${this.API_BASE_URL}/`);
@@ -33,7 +33,7 @@ export class AssignmentApis extends api {
    * Call Create Assignment API
    * https://garnbarn.github.io/garnbarn-backend/#/api?id=create-assignment
    *
-   * @returns AxiosPromise for the request in pending state.
+   * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
   create(assignmentData: AssignmentApi): Promise<AxiosResponse> {
     if (typeof assignmentData.id !== "undefined") {
@@ -49,7 +49,7 @@ export class AssignmentApis extends api {
    * Call Update Assignment API
    * https://garnbarn.github.io/garnbarn-backend/#/api?id=update-assignment
    *
-   * @returns AxiosPromise for the request in pending state.
+   * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
   update(id: number, updateField: AssignmentApi): Promise<AxiosResponse> {
     if (typeof updateField.id !== "undefined") {
@@ -63,7 +63,7 @@ export class AssignmentApis extends api {
    * https://garnbarn.github.io/garnbarn-backend/#/api?id=delete-assignment
    *
    * @param id The ID of assignment that you want to get
-   * @returns AxiosPromise for the request in pending state.
+   * @returns Promise of AxiosResponse  for the request in fulfilled state.
    */
   delete(id: number): Promise<AxiosResponse> {
     return this.sendRequest("DELETE", `${this.API_BASE_URL}/${id}/`);
