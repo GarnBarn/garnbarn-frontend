@@ -55,7 +55,7 @@ export class AssignmentApis extends api {
     if (typeof updateField.id !== "undefined") {
       throw new ApiSpecError("You can't update the assignment id");
     }
-    return this.sendRequest("PATCH", `${this.API_BASE_URL}/${id}`, updateField);
+    return this.sendRequest("PATCH", `${this.API_BASE_URL}/${id}/`, updateField);
   }
 
   /**
