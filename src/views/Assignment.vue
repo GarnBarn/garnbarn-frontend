@@ -173,7 +173,6 @@ export default class AssignmentView extends Vue {
     });
   }
 
-<<<<<<< HEAD
   getDiff(copiedObject: Assignment, originalObject: Assignment): AssignmentApi {
     let diff = Object.keys(originalObject).reduce((diff, key) => {
       if (copiedObject[key as keyof Assignment] === originalObject[key as keyof Assignment]) return diff
@@ -185,10 +184,7 @@ export default class AssignmentView extends Vue {
     return diff;
   }
 
-  assignmentCallback(assignment: Assignment) {
-=======
   assignmentCallback(assignment: Assignment): void {
->>>>>>> 80342f9d868e7404e53e1ba38f5bb70d4cb84791
     this.$data.assignment = this.get();
   }
 }
