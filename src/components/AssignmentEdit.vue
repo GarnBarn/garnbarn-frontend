@@ -7,7 +7,7 @@
 
     <md-field>
       <label>Tag:</label>
-      <md-select v-model="cachedAssignment.tag" name="movie" id="movie">
+      <md-select v-model="cachedAssignment.tag.id">
         <!--  Not sure how to call all tag from user -->
         <md-option value="1">ISP</md-option>
         <md-option value="2">Physics</md-option>
