@@ -21,7 +21,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Assignment } from "@/types/garnbarn/Assignment";
-import { DialogBox } from "@/components/DialogBox/DialogBox";
+import DialogBox from "@/components/DialogBox/DialogBox";
+import { DialogBoxAction } from "@/types/components/DialogBox"
 import AssignmentEdit from "@/components/AssignmentEdit.vue";
 import AssignmentDetail from  "@/components/AssignmentDetail.vue";
 import Layout from "@/layouts/Main.vue";
@@ -35,7 +36,7 @@ import Layout from "@/layouts/Main.vue";
 })
 export default class AssignmentView extends Vue {
   editing = false;
-  confirmEditDialogBox = new DialogBox("confirmEditDialogBox");
+  informDialogBox = new DialogBox("informDialogBox");
   assignmentId = Number(this.$route.params.id);
   assignment: Assignment = {
     id: this.assignmentId,
@@ -54,13 +55,30 @@ export default class AssignmentView extends Vue {
   }
 
   detail(): void {
-    this.confirmEditDialogBox.show({
+    this.informDialogBox.show({
         dialogBoxContent: {
           title: "Confirm edit",
           content: `Are you sure?`,
         },
-    });
-    this.editing = false;
+        dialogBoxActions: [
+          {
+            buttonContent: "Yes",
+            buttonClass: "md-secondary",
+            onClick: (): void => {
+              this.informDialogBox.dismiss();
+              this.editing = false;
+          }
+          },
+          {
+            buttonContent: "No",
+            buttonClass: "md-secondary",
+            onClick: (): void => {
+              this.informDialogBox.dismiss();
+              this.editing = false;
+            }
+          },
+        ]
+      });
   }
 }
 </script>
