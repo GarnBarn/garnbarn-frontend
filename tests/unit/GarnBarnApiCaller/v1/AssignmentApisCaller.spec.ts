@@ -151,7 +151,7 @@ describe("Test Assignment APIs v1 Caller", () => {
       generateRequestDetail(
         ID_TOKEN,
         "PATCH",
-        "/api/v1/assignment/1",
+        "/api/v1/assignment/1/",
         mockAssignmentApiData
       )
     );
