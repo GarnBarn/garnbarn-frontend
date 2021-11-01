@@ -125,26 +125,24 @@ export default class AssignmentView extends Vue {
   }
 
   async update(): Promise<void> {
-    try {
-      // TODO: Acquire only changed data field and use them to update the asssignment
-      // This one below ( •̀ᴗ•́ )و ̑̑ NOT GOOD.
-      const unixDueDate =
-        this.assignmentEdit.cachedAssignment.dueDate?.valueOf();
-      this.assignmentEdit.cachedAssignment.dueDate = unixDueDate;
-      console.log(this.assignmentEdit.cachedAssignment);
-      const apiResponse = await this.garnBarnAPICaller
-        ?.v1()
-        .assignment()
-        .update(this.assignmentId, this.assignmentEdit.cachedAssignment);
-      this.assignment = apiResponse?.data as Assignment;
-    } catch (e: any) {
-      this.informDialogBox.show({
-        dialogBoxContent: {
-          title: "Error",
-          content: e.message,
-        },
+    const unixDueDate = this.assignmentEdit.cachedAssignment.dueDate?.valueOf();
+    this.assignmentEdit.cachedAssignment.dueDate = unixDueDate;
+    console.log(this.assignmentEdit.cachedAssignment);
+    this.garnBarnAPICaller
+      ?.v1()
+      .assignment()
+      .update(this.assignmentId, this.assignmentEdit.cachedAssignment)
+      .then((apiResponse) => {
+        this.assignment = apiResponse.data as Assignment;
+      })
+      .catch((e) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Error",
+            content: e.message,
+          },
+        });
       });
-    }
   }
 
   edit(): void {
@@ -152,7 +150,7 @@ export default class AssignmentView extends Vue {
       dialogBoxActions: [
         {
           buttonContent: "Save",
-          buttonClass: "md-primary",
+          buttonClass: "md-primary md-raised",
           onClick: (): void => {
             this.editAssignmentDialogBox.dismiss();
             this.update();
