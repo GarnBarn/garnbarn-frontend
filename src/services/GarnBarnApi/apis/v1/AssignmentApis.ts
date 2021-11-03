@@ -89,10 +89,10 @@ export class AssignmentApis extends api {
    * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
   create(assignmentData: AssignmentApi): Promise<AxiosResponse<Assignment>> {
-    if (typeof assignmentData.id !== "undefined") {
+    if (assignmentData.id) {
       throw new ApiSpecError("You can't set the assignment id");
     }
-    if (typeof assignmentData.name === "undefined") {
+    if (!assignmentData.name) {
       throw new ApiSpecError("You can't create an assignment without a name");
     }
     return this.sendRequest(
@@ -112,7 +112,7 @@ export class AssignmentApis extends api {
     id: number,
     updateField: AssignmentApi
   ): Promise<AxiosResponse<Assignment>> {
-    if (typeof updateField.id !== "undefined") {
+    if (updateField.id) {
       throw new ApiSpecError("You can't update the assignment id");
     }
     return this.sendRequest(
