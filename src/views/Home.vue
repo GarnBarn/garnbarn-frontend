@@ -1,13 +1,23 @@
 <template>
   <layout :callback="callback">
     <div v-if="!callApiError.isError">
-      <DateWithAssignment
-        v-for="assignmentInDay in assignments.dateWithAssignments"
-        :key="assignments.dateWithAssignments.indexOf(assignmentInDay)"
-        :dateString="assignmentInDay.date"
-        :assignments="assignmentInDay.assignments"
-      ></DateWithAssignment>
+      <div v-if="assignments.dateWithAssignments.length !== 0">
+        <DateWithAssignment
+          v-for="assignmentInDay in assignments.dateWithAssignments"
+          :key="assignments.dateWithAssignments.indexOf(assignmentInDay)"
+          :date="assignmentInDay.date"
+          :assignments="assignmentInDay.assignments"
+        ></DateWithAssignment>
+      </div>
+      <md-empty-state
+        md-icon="inventory_2"
+        md-label="There is no assignment left!"
+        md-description="Horry!, No work left. Or ya hide someting?"
+        v-else
+      >
+      </md-empty-state>
     </div>
+
     <md-empty-state
       class="md-accent"
       md-icon="error_outline"
@@ -108,13 +118,15 @@ export default class Home extends Vue {
       const dateTitle = dueDate.toLocaleString("en-GB", {
         day: "numeric",
         month: "short",
+        year: "numeric",
       });
-      if (!(dateTitle in mapDateWithPos)) {
+      if (typeof mapDateWithPos[dateTitle] === "undefined") {
         // If no date found before, Append the new one
-        cacheDatewithAssignment.dateWithAssignments.push({
-          date: dateTitle,
+        const pos = cacheDatewithAssignment.dateWithAssignments.push({
+          date: dueDate,
           assignments: [item],
         });
+        mapDateWithPos[dateTitle] = pos - 1;
       } else {
         const posOfDate = mapDateWithPos[dateTitle];
         cacheDatewithAssignment.dateWithAssignments[posOfDate].assignments.push(
@@ -122,6 +134,9 @@ export default class Home extends Vue {
         );
       }
     });
+    cacheDatewithAssignment.dateWithAssignments.sort((a, b) =>
+      a.date > b.date ? 1 : -1
+    );
     return cacheDatewithAssignment;
   }
 }
