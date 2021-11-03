@@ -62,7 +62,7 @@ export default class Home extends Vue {
   }
   async get(loadingDialogBox: DialogBox) {
     this.garnBarnAPICaller?.v1.assignments
-      .all()
+      .all(true)
       .then(async (apiResponse) => {
         this.assignments = this.processData(apiResponse.data.results);
         loadingDialogBox.dismiss();

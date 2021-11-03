@@ -29,29 +29,38 @@ export class AssignmentApis extends api {
    * Call Get All Assignments API
    * https://garnbarn.github.io/garnbarn-backend/#/api?id=create-assignment
    *
-   * @returns Promise of AxiosResponse for the request in fulfilled state.
+   * @param fromPresent Get the assignment only from today.
+   * @param page Page that API assigned to call.
+   * @returns Promise of AxiosResponse that contain BlukApiResponse of Assignment as data
    */
   async all(
+    fromPresent?: boolean,
     page?: number
   ): Promise<AxiosResponse<BulkApiResponse<Assignment>>> {
-    let url = `${this.API_BASE_URL}/`;
+    let url = `${this.API_BASE_URL}/?`;
     if (typeof page !== "undefined") {
-      url += `?page=${page}`;
+      url += `page=${page}&`;
+    }
+    if (fromPresent) {
+      url += `fromPresent=true&`;
     }
     const response = await this.sendRequest("GET", url);
     const responseData = response.data as any;
     responseData.next = this.createNextMethodForGetAllAssignmentApi(
-      responseData.next
+      responseData.next,
+      fromPresent
     );
     responseData.previous = this.createNextMethodForGetAllAssignmentApi(
-      responseData.previous
+      responseData.previous,
+      fromPresent
     );
     response.data = responseData;
     return response as AxiosResponse<BulkApiResponse<Assignment>>;
   }
 
   createNextMethodForGetAllAssignmentApi(
-    url: string | undefined
+    url: string | undefined,
+    fromPresent?: boolean
   ): GetAllAssignmentApiNextFunctionWrapper | null {
     if (typeof url === "undefined" || url === null) {
       return null;
@@ -61,11 +70,11 @@ export class AssignmentApis extends api {
     const page = urlParams.get("page");
     if (typeof page === "undefined" || page === null) {
       return () => {
-        return this.all(1);
+        return this.all(fromPresent, 1);
       };
     }
     return () => {
-      return this.all(parseInt(page));
+      return this.all(fromPresent, parseInt(page));
     };
   }
 
