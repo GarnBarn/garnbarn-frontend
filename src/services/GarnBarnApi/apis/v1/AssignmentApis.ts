@@ -37,12 +37,16 @@ export class AssignmentApis extends api {
     fromPresent?: boolean,
     page?: number
   ): Promise<AxiosResponse<BulkApiResponse<Assignment>>> {
-    let url = `${this.API_BASE_URL}/?`;
-    if (typeof page !== "undefined") {
-      url += `page=${page}&`;
-    }
-    if (fromPresent) {
-      url += `fromPresent=true&`;
+    let url = `${this.API_BASE_URL}/`;
+    if (fromPresent || page) {
+      // For adding Query Parameters
+      url += "?";
+      if (page) {
+        url += `page=${page}&`;
+      }
+      if (fromPresent) {
+        url += `fromPresent=true&`;
+      }
     }
     const response = await this.sendRequest("GET", url);
     const responseData = response.data as any;
@@ -62,13 +66,13 @@ export class AssignmentApis extends api {
     url: string | undefined,
     fromPresent?: boolean
   ): GetAllAssignmentApiNextFunctionWrapper | null {
-    if (typeof url === "undefined" || url === null) {
+    if (!url) {
       return null;
     }
     const processedUrl = `?${url?.split("?")[1]}`;
     const urlParams = new URLSearchParams(processedUrl);
     const page = urlParams.get("page");
-    if (typeof page === "undefined" || page === null) {
+    if (!page) {
       return () => {
         return this.all(fromPresent, 1);
       };
