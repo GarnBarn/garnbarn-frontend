@@ -1,8 +1,12 @@
 import { api, ApiSpecError } from "./api";
 import firebase from "firebase";
-import { AxiosPromise, AxiosResponse, AxiosStatic } from "axios";
+import { AxiosResponse, AxiosStatic } from "axios";
 import { AssignmentApi } from "@/types/garnbarn/AssignmentApi";
-
+import { Assignment } from "@/types/garnbarn/Assignment";
+import {
+  BulkApiResponse,
+  GetAllAssignmentApiNextFunctionWrapper,
+} from "@/types/GarnBarnApi/GarnBarnApiResponse";
 export class AssignmentApis extends api {
   API_BASE_URL = "/api/v1/assignment";
   constructor(firebaseUser: firebase.User, axios?: AxiosStatic) {
@@ -15,8 +19,10 @@ export class AssignmentApis extends api {
    *
    * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
-  get(id: number): Promise<AxiosResponse> {
-    return this.sendRequest("GET", `${this.API_BASE_URL}/${id}/`);
+  get(id: number): Promise<AxiosResponse<Assignment>> {
+    return this.sendRequest("GET", `${this.API_BASE_URL}/${id}/`) as Promise<
+      AxiosResponse<Assignment>
+    >;
   }
 
   /**
@@ -25,8 +31,42 @@ export class AssignmentApis extends api {
    *
    * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
-  all(): Promise<AxiosResponse> {
-    return this.sendRequest("GET", `${this.API_BASE_URL}/`);
+  async all(
+    page?: number
+  ): Promise<AxiosResponse<BulkApiResponse<Assignment>>> {
+    let url = `${this.API_BASE_URL}/`;
+    if (typeof page !== "undefined") {
+      url += `?page=${page}`;
+    }
+    const response = await this.sendRequest("GET", url);
+    const responseData = response.data as any;
+    responseData.next = this.createNextMethodForGetAllAssignmentApi(
+      responseData.next
+    );
+    responseData.previous = this.createNextMethodForGetAllAssignmentApi(
+      responseData.previous
+    );
+    response.data = responseData;
+    return response as AxiosResponse<BulkApiResponse<Assignment>>;
+  }
+
+  createNextMethodForGetAllAssignmentApi(
+    url: string | undefined
+  ): GetAllAssignmentApiNextFunctionWrapper | null {
+    if (typeof url === "undefined" || url === null) {
+      return null;
+    }
+    const processedUrl = `?${url?.split("?")[1]}`;
+    const urlParams = new URLSearchParams(processedUrl);
+    const page = urlParams.get("page");
+    if (typeof page === "undefined" || page === null) {
+      return () => {
+        return this.all(1);
+      };
+    }
+    return () => {
+      return this.all(parseInt(page));
+    };
   }
 
   /**
@@ -35,14 +75,18 @@ export class AssignmentApis extends api {
    *
    * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
-  create(assignmentData: AssignmentApi): Promise<AxiosResponse> {
+  create(assignmentData: AssignmentApi): Promise<AxiosResponse<Assignment>> {
     if (typeof assignmentData.id !== "undefined") {
       throw new ApiSpecError("You can't set the assignment id");
     }
     if (typeof assignmentData.name === "undefined") {
       throw new ApiSpecError("You can't create an assignment without a name");
     }
-    return this.sendRequest("POST", `${this.API_BASE_URL}/`, assignmentData);
+    return this.sendRequest(
+      "POST",
+      `${this.API_BASE_URL}/`,
+      assignmentData
+    ) as Promise<AxiosResponse<Assignment>>;
   }
 
   /**
@@ -51,11 +95,18 @@ export class AssignmentApis extends api {
    *
    * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
-  update(id: number, updateField: AssignmentApi): Promise<AxiosResponse> {
+  update(
+    id: number,
+    updateField: AssignmentApi
+  ): Promise<AxiosResponse<Assignment>> {
     if (typeof updateField.id !== "undefined") {
       throw new ApiSpecError("You can't update the assignment id");
     }
-    return this.sendRequest("PATCH", `${this.API_BASE_URL}/${id}/`, updateField);
+    return this.sendRequest(
+      "PATCH",
+      `${this.API_BASE_URL}/${id}/`,
+      updateField
+    ) as Promise<AxiosResponse<Assignment>>;
   }
 
   /**
