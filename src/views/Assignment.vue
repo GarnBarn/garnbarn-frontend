@@ -110,10 +110,9 @@ export default class AssignmentView extends Vue {
 
   async get(): Promise<void> {
     try {
-      const apiResponse = await this.garnBarnAPICaller
-        ?.v1()
-        .assignment()
-        .get(this.assignmentId);
+      const apiResponse = await this.garnBarnAPICaller?.v1.assignments.get(
+        this.assignmentId
+      );
       this.assignment = apiResponse?.data as Assignment;
     } catch (e) {
       this.informDialogBox.show({
@@ -131,9 +130,7 @@ export default class AssignmentView extends Vue {
       assignmentCopy,
       this.assignmentEdit.cachedAssignment
     );
-    this.garnBarnAPICaller
-      ?.v1()
-      .assignment()
+    this.garnBarnAPICaller?.v1.assignments
       .update(this.assignmentId, diff)
       .then((apiResponse) => {
         this.assignment = apiResponse.data as Assignment;
