@@ -27,7 +27,7 @@ export class AssignmentApis extends api {
 
   /**
    * Call Get All Assignments API
-   * https://garnbarn.github.io/garnbarn-backend/#/api?id=create-assignment
+   * https://garnbarn.github.io/garnbarn-backend/#/api?id=get-all-assignments
    *
    * @param fromPresent Get the assignment only from today.
    * @param page Page that API assigned to call.
