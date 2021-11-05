@@ -1,6 +1,5 @@
 import { api, ApiSpecError } from "./api";
-import firebase from "firebase";
-import { AxiosResponse, AxiosStatic } from "axios";
+import { AxiosResponse } from "axios";
 import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import {
