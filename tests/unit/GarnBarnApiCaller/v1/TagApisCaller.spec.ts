@@ -6,6 +6,7 @@ import GarnBarnApiConfig from "@/GarnBarnApiConfig.json";
 import { TagApi } from "@/types/GarnBarnApi/TagApi";
 import { ApiSpecError } from "@/services/GarnBarnApi/apis/v1/api";
 import { Tag } from "@/types/garnbarn/Tag";
+import { GetAllTagApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
 
 jest.mock("axios");
 
@@ -131,5 +132,28 @@ describe("Test Tag APIs v1 Caller", () => {
       generateRequestDetail(ID_TOKEN, "DELETE", "/api/v1/tag/1/")
     );
     expect(apiResponse.data).toEqual({});
+  });
+
+  test("Test calling Get All Tag API", async () => {
+    await garnBarnApiCaller.v1.tags.all();
+    expect(mockAxios).toBeCalledWith(
+      generateRequestDetail(ID_TOKEN, "GET", "/api/v1/tag/")
+    );
+    await garnBarnApiCaller.v1.tags.all(5);
+    expect(mockAxios).toBeCalledWith(
+      generateRequestDetail(ID_TOKEN, "GET", "/api/v1/tag/?page=5&")
+    );
+  });
+
+  test("Test Create next method for get all tag api", async () => {
+    const nextFunction =
+      garnBarnApiCaller.v1.tags.createNextMethodForGetAllTagApi(
+        `${GarnBarnApiConfig.apiPrefix}/?page=2`
+      );
+    expect(nextFunction).not.toBe(null);
+    await (nextFunction as GetAllTagApiNextFunctionWrapper)();
+    expect(mockAxios).toBeCalledWith(
+      generateRequestDetail(ID_TOKEN, "GET", "/api/v1/tag/?page=2&")
+    );
   });
 });

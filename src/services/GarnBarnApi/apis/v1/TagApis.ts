@@ -1,4 +1,8 @@
 import { Tag } from "@/types/garnbarn/Tag";
+import {
+  BulkApiResponse,
+  GetAllTagApiNextFunctionWrapper,
+} from "@/types/GarnBarnApi/GarnBarnApiResponse";
 import { TagApi } from "@/types/GarnBarnApi/TagApi";
 import { AxiosResponse } from "axios";
 import { api, ApiSpecError } from "./api";
@@ -33,6 +37,40 @@ export default class TagApis extends api {
     return this.sendRequest("POST", `${this.API_BASE_URL}/`, tag) as Promise<
       AxiosResponse<Tag>
     >;
+  }
+
+  async all(page?: number): Promise<AxiosResponse<BulkApiResponse<Tag>>> {
+    let url = `${this.API_BASE_URL}/`;
+    if (page) {
+      // For adding Query Parameters
+      url += `?page=${page}&`;
+    }
+    const response = await this.sendRequest("GET", url);
+    const responseData = response.data as any;
+    responseData.next = this.createNextMethodForGetAllTagApi(responseData.next);
+    responseData.previous = this.createNextMethodForGetAllTagApi(
+      responseData.previous
+    );
+    return response as AxiosResponse<BulkApiResponse<Tag>>;
+  }
+
+  createNextMethodForGetAllTagApi(
+    url: string | undefined
+  ): GetAllTagApiNextFunctionWrapper | null {
+    if (!url) {
+      return null;
+    }
+    const processedUrl = `?${url?.split("?")[1]}`;
+    const urlParams = new URLSearchParams(processedUrl);
+    const page = urlParams.get("page");
+    if (!page) {
+      return () => {
+        return this.all();
+      };
+    }
+    return () => {
+      return this.all(parseInt(page));
+    };
   }
 
   /**
