@@ -64,7 +64,7 @@
 <script lang="ts">
 import { Component, Vue, Ref } from "vue-property-decorator";
 import { Assignment } from "@/types/garnbarn/Assignment";
-import { AssignmentApi } from "@/types/garnbarn/AssignmentApi";
+import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import AssignmentEdit from "@/components/AssignmentEdit.vue";
 import AssignmentDetail from "@/components/AssignmentDetail.vue";
@@ -93,6 +93,7 @@ export default class AssignmentView extends Vue {
     name: "Test 1",
     tag: {
       id: 1,
+      author: "1",
       name: "Test Tag",
       color: "#30475E",
     },

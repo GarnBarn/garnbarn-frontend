@@ -1,7 +1,7 @@
 import { api, ApiSpecError } from "./api";
 import firebase from "firebase";
 import { AxiosResponse, AxiosStatic } from "axios";
-import { AssignmentApi } from "@/types/garnbarn/AssignmentApi";
+import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import {
   BulkApiResponse,
@@ -9,9 +9,6 @@ import {
 } from "@/types/GarnBarnApi/GarnBarnApiResponse";
 export class AssignmentApis extends api {
   API_BASE_URL = "/api/v1/assignment";
-  constructor(firebaseUser: firebase.User, axios?: AxiosStatic) {
-    super(firebaseUser, axios);
-  }
 
   /**
    * Call Get Assignment API
