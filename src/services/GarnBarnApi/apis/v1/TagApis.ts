@@ -28,7 +28,7 @@ export default class TagApis extends api {
    */
   create(tag: TagApi): Promise<AxiosResponse<Tag>> {
     if (!tag.name) {
-      throw new ApiSpecError("Name is needed to create the tag");
+      throw new ApiSpecError("You can't create a tag without a name");
     }
     return this.sendRequest("POST", `${this.API_BASE_URL}/`, tag) as Promise<
       AxiosResponse<Tag>
@@ -43,7 +43,7 @@ export default class TagApis extends api {
    * @param tag Tag Information that will be updated
    * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
-  update(id: number, tag: TagApis): Promise<AxiosResponse<Tag>> {
+  update(id: number, tag: TagApi): Promise<AxiosResponse<Tag>> {
     return this.sendRequest(
       "PATCH",
       `${this.API_BASE_URL}/${id}/`,
