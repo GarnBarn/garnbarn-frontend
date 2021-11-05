@@ -10,7 +10,7 @@ export type Assignment = {
 };
 
 export type AssignmentsInDay = {
-  date: string;
+  date: Date;
   assignments: Array<Assignment>;
 };
 

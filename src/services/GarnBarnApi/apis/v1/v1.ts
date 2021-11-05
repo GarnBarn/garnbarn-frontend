@@ -17,7 +17,7 @@ export class v1 {
    *
    * @returns Instance of AssignmentApis
    */
-  assignment(): AssignmentApis {
+  get assignments(): AssignmentApis {
     return new AssignmentApis(this._firebaseUser, this._axiosInstance);
   }
 }

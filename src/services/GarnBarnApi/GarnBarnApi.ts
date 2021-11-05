@@ -16,7 +16,7 @@ export default class GarnBarnApi {
    *
    * @returns Instance of v1 initilized with the stored firebaseUser
    */
-  v1(): v1 {
+  get v1(): v1 {
     return new v1(this._firebaseUser);
   }
 }
