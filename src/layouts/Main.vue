@@ -3,11 +3,13 @@
     <md-app md-mode="fixed" class="full-height">
       <md-app-toolbar :md-elevation="config.toolBarElevation" class="nav-bar">
         <div class="md-toolbar-row">
-          <div class="logo">GarnBarn</div>
+          <router-link to="/home">
+            <div class="logo">GarnBarn</div>
+          </router-link>
           <div class="itemBar">
             <md-button>Assignment</md-button>
             <md-button>Tag</md-button>
-            <router-link to="account">
+            <router-link to="/account">
               <md-button class="md-icon-button">
                 <md-icon>account_circle</md-icon>
               </md-button>
