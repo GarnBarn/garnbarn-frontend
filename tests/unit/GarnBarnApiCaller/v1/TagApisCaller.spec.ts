@@ -4,7 +4,6 @@ import firebase from "firebase";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import GarnBarnApiConfig from "@/GarnBarnApiConfig.json";
 import { TagApi } from "@/types/GarnBarnApi/TagApi";
-import { Assignment } from "@/types/garnbarn/Assignment";
 import { ApiSpecError } from "@/services/GarnBarnApi/apis/v1/api";
 import { Tag } from "@/types/garnbarn/Tag";
 
@@ -40,7 +39,7 @@ function generateRequestDetail(
   };
 }
 
-function generateTagObject(tag: any, tagApi: TagApi): Assignment {
+function generateTagObject(tag: any, tagApi: TagApi): Tag {
   for (const [key, value] of Object.entries(tagApi)) {
     if (key == "tagId") {
       continue;
@@ -79,7 +78,7 @@ describe("Test Tag APIs v1 Caller", () => {
 
   test("Test calling Create Tag API with valid data", async () => {
     const mockTagData: TagApi = {
-      name: "Example Assignment",
+      name: "Example Tag",
       color: "#123456",
       reminderTime: [10, 20],
     };
@@ -122,7 +121,7 @@ describe("Test Tag APIs v1 Caller", () => {
     );
   });
 
-  test("Test calling Delete Assignment API", async () => {
+  test("Test calling Delete Tag API", async () => {
     mockAxios.mockResolvedValue({
       data: {},
     });
