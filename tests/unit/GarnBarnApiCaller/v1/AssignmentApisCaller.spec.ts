@@ -3,7 +3,7 @@ import { createMock } from "ts-auto-mock";
 import firebase from "firebase";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import GarnBarnApiConfig from "@/GarnBarnApiConfig.json";
-import { AssignmentApi } from "@/types/garnbarn/AssignmentApi";
+import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import { api, ApiSpecError } from "@/services/GarnBarnApi/apis/v1/api";
 

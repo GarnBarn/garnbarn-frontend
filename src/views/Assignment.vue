@@ -91,6 +91,7 @@ export default class AssignmentView extends Vue {
   assignment: Assignment = {
     id: this.assignmentId,
     name: "Test 1",
+    author: "A",
     tag: {
       id: 1,
       author: "1",
