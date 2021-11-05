@@ -8,6 +8,15 @@
           :date="assignmentInDay.date"
           :assignments="assignmentInDay.assignments"
         ></DateWithAssignment>
+        <div class="load-next-box">
+          <md-button
+            class="md-secondary md-raised"
+            v-if="getNextData"
+            @click="processNext"
+            >Load next assignments?</md-button
+          >
+          <h3 v-else><i>That all assignments you got.</i> ƪ(=ｘωｘ=ƪ)</h3>
+        </div>
       </div>
       <md-empty-state
         md-icon="inventory_2"
@@ -37,6 +46,11 @@ import { Assignment, DateWithAssignments } from "@/types/garnbarn/Assignment";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import firebase from "firebase";
+import { GetAllAssignmentApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
+
+type mapPosWithData = {
+  [k: string]: number;
+};
 
 @Component({
   components: {
@@ -51,10 +65,12 @@ export default class Home extends Vue {
   assignments: DateWithAssignments = {
     dateWithAssignments: [],
   };
+  posWithDate: mapPosWithData = {};
   callApiError = {
     isError: false,
     errorMessage: "",
   };
+  getNextData: GetAllAssignmentApiNextFunctionWrapper | null = null;
 
   callback(user: firebase.User, loadingDialogBox: DialogBox) {
     this.garnBarnAPICaller = new GarnBarnApi(user);
@@ -64,7 +80,8 @@ export default class Home extends Vue {
     this.garnBarnAPICaller?.v1.assignments
       .all(true)
       .then(async (apiResponse) => {
-        this.assignments = this.processData(apiResponse.data.results);
+        this.processData(apiResponse.data.results);
+        this.getNextData = apiResponse.data.next;
         loadingDialogBox.dismiss();
       })
       .catch((e) => {
@@ -98,14 +115,7 @@ export default class Home extends Vue {
       });
   }
 
-  processData(assignments: Array<Assignment>): DateWithAssignments {
-    type mapPosWithData = {
-      [k: string]: number;
-    };
-    const mapDateWithPos: mapPosWithData = {};
-    const cacheDatewithAssignment: DateWithAssignments = {
-      dateWithAssignments: [],
-    };
+  processData(assignments: Array<Assignment>) {
     assignments.forEach((item) => {
       if (!item.dueDate) {
         return;
@@ -116,24 +126,78 @@ export default class Home extends Vue {
         month: "short",
         year: "numeric",
       });
-      if (typeof mapDateWithPos[dateTitle] === "undefined") {
+      if (typeof this.posWithDate[dateTitle] === "undefined") {
         // If no date found before, Append the new one
-        const pos = cacheDatewithAssignment.dateWithAssignments.push({
+        const pos = this.assignments.dateWithAssignments.push({
           date: dueDate,
           assignments: [item],
         });
-        mapDateWithPos[dateTitle] = pos - 1;
+        this.posWithDate[dateTitle] = pos - 1;
       } else {
-        const posOfDate = mapDateWithPos[dateTitle];
-        cacheDatewithAssignment.dateWithAssignments[posOfDate].assignments.push(
-          item
-        );
+        const posOfDate = this.posWithDate[dateTitle];
+        this.assignments.dateWithAssignments[posOfDate].assignments.push(item);
       }
     });
-    cacheDatewithAssignment.dateWithAssignments.sort((a, b) =>
+    this.assignments.dateWithAssignments.sort((a, b) =>
       a.date > b.date ? 1 : -1
     );
-    return cacheDatewithAssignment;
+  }
+
+  async processNext() {
+    this.informDialogBox
+      .show({
+        dialogBoxContent: {
+          title: "Grabing data",
+          content: "Getting data from GarnBarn API",
+        },
+      })
+      .then(() => {
+        if (typeof this.getNextData !== "function") {
+          this.informDialogBox.dismiss();
+          throw Error("Can't call next while next is null");
+        }
+        return this.getNextData();
+      })
+      .then((apiResponse) => {
+        this.processData(apiResponse.data.results);
+        this.getNextData = apiResponse.data.next;
+        this.informDialogBox.dismiss();
+      })
+      .catch((e) => {
+        console.error(e);
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Error",
+            content: `Can't fetch data from GarnBarn API, Please try again or contact Administrator.`,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Try again",
+              buttonClass: "md-primary",
+              onClick: async () => {
+                await this.informDialogBox.dismiss();
+                this.processNext();
+              },
+            },
+            {
+              buttonContent: "Dismiss",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                this.callApiError.isError = true;
+                this.callApiError.errorMessage = e;
+                this.processNext();
+                this.informDialogBox.dismiss();
+              },
+            },
+          ],
+        });
+      });
   }
 }
 </script>
+
+<style scoped>
+.load-next-box {
+  margin-top: 50px;
+}
+</style>
