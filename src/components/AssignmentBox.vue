@@ -95,8 +95,6 @@ export default class AssignmentBox extends Vue {
 }
 
 .big-text {
-  width: fit-content;
-  height: 100%;
   text-overflow: ellipsis;
   font-size: xx-large !important;
   overflow: hidden;
