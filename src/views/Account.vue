@@ -21,77 +21,54 @@
             />
           </div>
           <div class="user-info">
-            <md-card class="info-card">
-              <md-card-header>
-                <div class="md-title">Basic Infomation</div></md-card-header
-              >
-              <md-divider></md-divider>
-              <md-card-content>
-                <h3>Display Name:</h3>
-                <p>{{ displayName }}</p>
-                <h3>UID:</h3>
-                <p>{{ uid }}</p>
-              </md-card-content>
-            </md-card>
-
-            <md-card class="info-card">
-              <md-card-header>
-                <div class="md-title">Third party platform</div></md-card-header
-              >
-              <md-divider></md-divider>
-              <md-card-content>
-                <h3>LINE:</h3>
-
-                <div>
-                  <md-button class="line-green"
-                    ><img
-                      class="line-logo"
-                      src="@/assets/images/line_logo.png"
-                    />Log In</md-button
-                  >
-                </div>
-                <i
-                  >Link your GarnBarn Account with LINE to recieve assignment
-                  notfication on LINE
-                </i>
-              </md-card-content>
-            </md-card>
-
-            <md-card class="info-card">
-              <md-card-header>
-                <div class="md-title">
-                  Account Management & Credential
-                </div></md-card-header
-              >
-              <md-divider></md-divider>
-              <md-card-content>
-                <h3>
-                  ID Token:
-                  <md-icon
-                    >help
-                    <md-tooltip md-direction="right"
-                      >ID Token is containing your account information and can
-                      be used to access your GarnBarn Account. It will live for
-                      1 hour after being generated.</md-tooltip
-                    >
-                  </md-icon>
-                </h3>
-                <md-button
-                  class="md-secondary"
-                  v-if="!idTokenData.isShow"
-                  @click="onShowIdToken"
+            <AccountDetailCard title="Basic Information">
+              <h3>Display Name:</h3>
+              <p>{{ displayName }}</p>
+              <h3>UID:</h3>
+              <p>{{ uid }}</p>
+            </AccountDetailCard>
+            <AccountDetailCard title="Third party platform">
+              <h3>LINE:</h3>
+              <div>
+                <md-button class="line-green"
+                  ><img
+                    class="line-logo"
+                    src="@/assets/images/line_logo.png"
+                  />Log In</md-button
                 >
-                  Show your ID Token
-                </md-button>
-                <md-field v-if="idTokenData.isShow">
-                  <label>ID Token</label>
-                  <md-textarea
-                    v-model="idTokenData.idToken"
-                    readonly
-                  ></md-textarea>
-                </md-field>
-              </md-card-content>
-            </md-card>
+              </div>
+              <i
+                >Link your GarnBarn Account with LINE to recieve assignment
+                notfication on LINE
+              </i>
+            </AccountDetailCard>
+            <AccountDetailCard title="Account Management & Credential">
+              <h3>
+                ID Token:
+                <md-icon
+                  >help
+                  <md-tooltip md-direction="right"
+                    >ID Token is containing your account information and can be
+                    used to access your GarnBarn Account. It will live for 1
+                    hour after being generated.</md-tooltip
+                  >
+                </md-icon>
+              </h3>
+              <md-button
+                class="md-secondary"
+                v-if="!idTokenData.isShow"
+                @click="onShowIdToken"
+              >
+                Show your ID Token
+              </md-button>
+              <md-field v-if="idTokenData.isShow">
+                <label>ID Token</label>
+                <md-textarea
+                  v-model="idTokenData.idToken"
+                  readonly
+                ></md-textarea>
+              </md-field>
+            </AccountDetailCard>
           </div>
         </div>
       </md-card-content>
@@ -104,10 +81,12 @@ import { Vue, Component } from "vue-property-decorator";
 import Layout from "@/layouts/Main.vue";
 import firebase from "firebase";
 import DialogBox from "@/components/DialogBox/DialogBox";
+import AccountDetailCard from "@/components/Account/AccountDetailCard.vue";
 
 @Component({
   components: {
     Layout,
+    AccountDetailCard,
   },
 })
 export default class Account extends Vue {
@@ -189,12 +168,6 @@ export default class Account extends Vue {
   width: 30px;
   margin-right: 10px;
 }
-.info-card {
-  border-radius: 10px !important;
-  border-style: solid;
-  border-width: 1px;
-  margin: 20px;
-}
 
 .profile-image-box {
   max-height: 200px;
@@ -210,10 +183,6 @@ export default class Account extends Vue {
   margin-right: auto;
 }
 
-/* .title-box {
-  margin-top: 20px !important;
-} */
-
 .account-card {
   padding: 10px;
   border-radius: 20px;
@@ -222,10 +191,5 @@ export default class Account extends Vue {
 
 .setting-content {
   width: 100%;
-}
-
-.user-info {
-  flex: 5;
-  margin-left: 20px;
 }
 </style>
