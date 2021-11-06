@@ -7,7 +7,9 @@
             <div class="logo">GarnBarn</div>
           </router-link>
           <div class="itemBar">
-            <md-button>Assignment</md-button>
+            <router-link to="/assignment/">
+              <md-button>Assignment</md-button>
+            </router-link>
             <md-button>Tag</md-button>
             <router-link to="/account">
               <md-button class="md-icon-button">
