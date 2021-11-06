@@ -95,8 +95,11 @@ export default class AssignmentBox extends Vue {
 }
 
 .big-text {
-  font-size: 3rem !important;
+  width: 100%;
   height: fit-content;
+  text-overflow: ellipsis;
+  font-size: xx-large !important;
+  overflow: hidden;
 }
 
 .assignment-content {
@@ -117,7 +120,7 @@ export default class AssignmentBox extends Vue {
 
 @media only screen and (max-width: 800px) {
   .big-text {
-    font-size: 2.5rem !important;
+    font-size: xx-large !important;
   }
   .assignment-card {
     margin: 20px;
