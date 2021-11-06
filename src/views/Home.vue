@@ -151,6 +151,7 @@ export default class Home extends Vue {
           title: "Grabing data",
           content: "Getting data from GarnBarn API",
         },
+        dialogBoxActions: [],
       })
       .then(() => {
         if (typeof this.getNextData !== "function") {
