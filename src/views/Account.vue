@@ -20,6 +20,13 @@
               alt="Account"
             />
           </div>
+          <center>
+            <md-button
+              class="md-accent md-raised rounded-button"
+              @click="onSignOut"
+              ><md-icon>exit_to_app</md-icon> Sign Out</md-button
+            >
+          </center>
           <div class="user-info">
             <AccountDetailCard title="Basic Information">
               <h3>Display Name:</h3>
@@ -49,7 +56,7 @@
                   >help
                   <md-tooltip md-direction="right"
                     >ID Token is containing your account information and can be
-                    used to access your GarnBarn Account. It will live for 1
+                    used to access your GarnBarn Account. It will life for 1
                     hour after being generated.</md-tooltip
                   >
                 </md-icon>
@@ -130,6 +137,52 @@ export default class Account extends Vue {
     });
   }
 
+  onSignOut(): void {
+    this.informDialogBox.show({
+      dialogBoxContent: {
+        title: "Are you sure?",
+        content:
+          "You are about to sign-out from this account. You can sign-in back again using the same Google Account you used to sign in before.",
+      },
+      dialogBoxActions: [
+        {
+          buttonContent: "Yes",
+          buttonClass: "md-primary",
+          onClick: () => {
+            this.informDialogBox.dismiss().then(() => {
+              this.onSignOutHander();
+            });
+          },
+        },
+        {
+          buttonContent: "No",
+          buttonClass: "md-secondary",
+          onClick: () => {
+            this.informDialogBox.dismiss();
+          },
+        },
+      ],
+    });
+  }
+
+  onSignOutHander(): void {
+    this.informDialogBox
+      .show({
+        dialogBoxContent: {
+          title: "Signing out",
+          content: "Please wait.",
+        },
+        dialogBoxActions: [],
+      })
+      .then(() => {
+        return firebase.auth().signOut();
+      })
+      .then(() => {
+        this.informDialogBox.dismiss();
+        this.$router.replace("/");
+      });
+  }
+
   get profileImage(): string | null | undefined {
     if (!this.user?.photoURL) {
       return null;
@@ -191,5 +244,9 @@ export default class Account extends Vue {
 
 .setting-content {
   width: 100%;
+}
+
+.rounded-button {
+  border-radius: 20px !important;
 }
 </style>
