@@ -19,18 +19,32 @@
       <md-textarea v-model="cachedAssignment.description"></md-textarea>
     </md-field>
 
-    <label>Due Date:</label>
-    <md-datepicker v-model="cachedAssignment.dueDate" />
+    <label>Due Date: </label>
+    <!-- TODO: fix date not updating after confirming the date. -->
+    <date-picker 
+    v-model="cachedAssignment.dueDate" 
+    type="datetime" 
+    value-type="timestamp"
+    :minute-step="30"
+    format="DD/MM/YY HH:mm"
+    confirm=true
+    ></date-picker>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Assignment } from "@/types/garnbarn/Assignment";
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
 
 export type assignmentCallback = (assignment: Assignment) => void;
 
-@Component
+@Component({
+  components: {
+    DatePicker,
+  }
+})
 export default class AssignmentEdit extends Vue {
   @Prop({ required: true }) callback!: assignmentCallback;
   @Prop({ required: true }) cachedAssignment!: Assignment;
