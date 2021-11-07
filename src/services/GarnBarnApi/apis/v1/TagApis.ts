@@ -32,7 +32,9 @@ export default class TagApis extends api {
    */
   create(tag: TagApi): Promise<AxiosResponse<Tag>> {
     if (!tag.name) {
-      throw new ApiSpecError("You can't create a tag without a name");
+      return Promise.reject(
+        new ApiSpecError("You can't create a tag without a name")
+      );
     }
     return this.sendRequest("POST", `${this.API_BASE_URL}/`, tag) as Promise<
       AxiosResponse<Tag>

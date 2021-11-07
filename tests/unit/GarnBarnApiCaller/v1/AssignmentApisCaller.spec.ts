@@ -115,9 +115,9 @@ describe("Test Assignment APIs v1 Caller", () => {
       tagId: 1,
     };
     // User can't set the assignment id and the api caller must throw the ApiSpecError
-    expect(() => {
-      garnBarnApiCaller.v1.assignments.create(mockAssignmentData);
-    }).toThrow(new ApiSpecError("You can't set the assignment id"));
+    await expect(
+      garnBarnApiCaller.v1.assignments.create(mockAssignmentData)
+    ).rejects.toEqual(new ApiSpecError("You can't set the assignment id"));
   });
 
   test("Test calling Create Assignment API while not providing the name of assignment", () => {
@@ -126,9 +126,9 @@ describe("Test Assignment APIs v1 Caller", () => {
       dueDate: 1634745493,
       tagId: 1,
     };
-    expect(() => {
-      garnBarnApiCaller.v1.assignments.create(mockAssignmentData);
-    }).toThrow(
+    return expect(
+      garnBarnApiCaller.v1.assignments.create(mockAssignmentData)
+    ).rejects.toEqual(
       new ApiSpecError("You can't create an assignment without a name")
     );
   });
@@ -160,7 +160,7 @@ describe("Test Assignment APIs v1 Caller", () => {
     );
   });
 
-  test("Test calling Update Assignment API while providing the assignment id", () => {
+  test("Test calling Update Assignment API while providing the assignment id", async () => {
     const mockAssignmentApiData = {
       id: 2,
       name: "Example Assignment",
@@ -169,9 +169,9 @@ describe("Test Assignment APIs v1 Caller", () => {
       tagId: 1,
     };
 
-    expect(() => {
-      garnBarnApiCaller.v1.assignments.update(1, mockAssignmentApiData);
-    }).toThrow(new ApiSpecError("You can't update the assignment id"));
+    await expect(
+      garnBarnApiCaller.v1.assignments.update(1, mockAssignmentApiData)
+    ).rejects.toEqual(new ApiSpecError("You can't update the assignment id"));
   });
 
   test("Test calling Delete Assignment API", async () => {
