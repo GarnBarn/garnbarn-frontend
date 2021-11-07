@@ -7,10 +7,8 @@
             <div class="logo">GarnBarn</div>
           </router-link>
           <div class="itemBar">
-            <router-link to="/assignment/">
-              <md-button>Assignment</md-button>
-            </router-link>
-            <md-button>Tag</md-button>
+            <md-button v-on:click="edit('assignment')">Assignment</md-button>
+            <md-button v-on:click="edit('tag')">Tag</md-button>
             <router-link to="/account">
               <md-button class="md-icon-button">
                 <md-icon>account_circle</md-icon>
@@ -43,14 +41,68 @@
       :isCustomDialogBox="false"
     >
     </dialog-box-component>
+    <DialogBoxComponent
+      :dialogBoxId="'createDialogBox'"
+      :isCustomDialogBox="true"
+      class="blur"
+    >
+      <md-card-content>
+        <md-tabs md-dynamic-height>
+          <md-tab md-label="Create">
+            <Create
+              :assignmentData="this.assignmentData"
+              md-dynamic-height
+              ref="assignmentCreate"
+            ></Create>
+          </md-tab>
+
+          <md-tab md-label="Delete">
+            <p>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+              mollitia dolorum dolores quae commodi impedit possimus qui, atque
+              at voluptates cupiditate. Neque quae culpa suscipit praesentium
+              inventore ducimus ipsa aut.
+            </p>
+            <p>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+              mollitia dolorum dolores quae commodi impedit possimus qui, atque
+              at voluptates cupiditate. Neque quae culpa suscipit praesentium
+              inventore ducimus ipsa aut.
+            </p>
+            <p>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+              mollitia dolorum dolores quae commodi impedit possimus qui, atque
+              at voluptates cupiditate. Neque quae culpa suscipit praesentium
+              inventore ducimus ipsa aut.
+            </p>
+            <p>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+              mollitia dolorum dolores quae commodi impedit possimus qui, atque
+              at voluptates cupiditate. Neque quae culpa suscipit praesentium
+              inventore ducimus ipsa aut.
+            </p>
+            <p>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+              mollitia dolorum dolores quae commodi impedit possimus qui, atque
+              at voluptates cupiditate. Neque quae culpa suscipit praesentium
+              inventore ducimus ipsa aut.
+            </p>
+          </md-tab>
+        </md-tabs>
+      </md-card-content>
+    </DialogBoxComponent>
+
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+import { Component, Vue, Prop, Ref } from "vue-property-decorator";
 import firebase from "firebase";
+import Create from "@/components/Create.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import DialogBox from "@/components/DialogBox/DialogBox";
+import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
+import { AssignmentApi } from "@/types/garnbarn/AssignmentApi"
 import "firebase/auth";
 
 export type CallbackFunction = (
@@ -61,14 +113,28 @@ export type CallbackFunction = (
 @Component({
   components: {
     DialogBoxComponent,
+    Create
   },
 })
 export default class Layout extends Vue {
+  @Ref() readonly assignmentCreate!: Create;
   @Prop() callback!: CallbackFunction;
   config = {
     toolBarElevation: 1,
   };
+  createDialogBox = new DialogBox("createDialogBox");
   loadingDialogBox = new DialogBox("loadingDialogBox");
+  informDialogBox = new DialogBox("informDialogBox");
+
+  assignmentData: AssignmentApi = {
+    id: undefined,
+    name: "",
+    description: undefined,
+    reminderTime: undefined,
+    dueDate: undefined,
+    tagId: undefined,
+  };
+  garnBarnAPICaller: GarnBarnApi | undefined = undefined;
 
   mounted(): void {
     let firebaseAuthInstance: firebase.auth.Auth = firebase.auth();
@@ -87,6 +153,50 @@ export default class Layout extends Vue {
         this.loadingDialogBox.dismiss();
       }
     });
+  }
+
+    edit(type: "tag" | "assignment"): void {
+    this.createDialogBox.show({
+      dialogBoxActions: [
+        {
+          buttonContent: "Save",
+          buttonClass: "md-primary md-raised",
+          onClick: (): void => {
+            // this.callback = (user, loadingDialogBox) => {
+            //   this.garnBarnAPICaller = new GarnBarnApi(user);
+            //   loadingDialogBox.dismiss();
+            // }
+            if (type == "assignment") {
+              this.createAssignment();
+            }
+            else {
+              // this.createTag();
+            }
+            this.createDialogBox.dismiss();
+          },
+        },
+        {
+          buttonContent: "Exit",
+          buttonClass: "md-secondary",
+          onClick: (): void => {
+            this.createDialogBox.dismiss();
+          },
+        },
+      ],
+    });
+  }
+
+    async createAssignment(): Promise<void> {
+    this.garnBarnAPICaller?.v1.assignments
+      .create(this.assignmentCreate.assignmentData)
+      .catch((e) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Error",
+            content: e.message,
+          },
+        });
+      });
   }
 }
 </script>
@@ -115,5 +225,11 @@ export default class Layout extends Vue {
 
 .nav-bar {
   background-color: #f9f9f9;
+}
+
+.blur {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 </style>

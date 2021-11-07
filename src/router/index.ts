@@ -26,11 +26,6 @@ const routes: Array<RouteConfig> = [
     component: Home,
   },
   {
-    path: "/assignment/",
-    name: "CreateAssignment",
-    component: AssignmentCreate
-  },
-  {
     path: "/assignment/:id",
     name: "AssignmentPage",
     component: AssignmentView,
