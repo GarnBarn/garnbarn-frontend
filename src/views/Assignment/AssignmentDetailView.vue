@@ -2,7 +2,6 @@
   <layout :callback="callback">
     <div class="detail">
       <AssignmentDetail :assignment="assignment"></AssignmentDetail>
-      <md-button class="md-primary md-raised">Mark As Done</md-button>
       <md-button class="md-primary md-raised" v-on:click="edit">Edit</md-button>
       <router-link to="/home">
         <md-button class="md-secondary">Back</md-button>
@@ -16,11 +15,12 @@
       <md-card-content>
         <md-tabs md-dynamic-height>
           <md-tab md-label="Assignment">
-            <AssignmentEdit
-              :assignmentData="assignmentApi"
+            <Create
+              :apiData="assignmentApi"
+              :creationType="creationType"
               :callback="assignmentCallback"
               md-dynamic-height
-            ></AssignmentEdit>
+            ></Create>
           </md-tab>
 
           <md-tab md-label="Notification Settings" md-disabled>
@@ -66,7 +66,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
-import AssignmentEdit from "@/components/AssignmentEdit.vue";
+import Create from "@/components/Create.vue";
 import AssignmentDetail from "@/components/AssignmentDetail.vue";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
@@ -77,13 +77,14 @@ import firebase from "firebase";
   components: {
     Layout,
     AssignmentDetail,
-    AssignmentEdit,
+    Create,
     DialogBoxComponent,
   },
 })
 export default class AssignmentDetailView extends Vue {
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   editing = false;
+  creationType = 'assignment';
   informDialogBox = new DialogBox("informDialogBox");
   editAssignmentDialogBox = new DialogBox("editAssignmentDialogBox");
   assignmentId = Number(this.$route.params.id);
@@ -182,7 +183,7 @@ export default class AssignmentDetailView extends Vue {
       tagId: undefined
     };
     assignmentApi.name = assignment.name;
-    assignmentApi.reminderTime = [0];
+    assignmentApi.reminderTime = assignment.reminderTime;
     assignmentApi.description = assignment.description;
     assignmentApi.dueDate = assignment.dueDate;
     if (assignment.tag) {
