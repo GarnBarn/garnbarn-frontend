@@ -1,11 +1,8 @@
 <template>
   <layout :callback="callback">
     <div>
-      <h1>Add Assignment</h1>
-      <md-button
-        class="md-icon-button md-raised md-primary"
-        v-on:click="edit"
-      >
+      <h1>Add/Delete Assignment</h1>
+      <md-button class="md-icon-button md-raised md-primary" v-on:click="edit">
         <md-icon>add</md-icon>
       </md-button>
       <!-- <md-table>
@@ -34,6 +31,7 @@
             <md-tab md-label="Create">
               <Create
                 :assignmentData="assignmentData"
+                :creationType="assignment"
                 md-dynamic-height
                 ref="assignmentCreate"
               ></Create>
@@ -95,7 +93,7 @@ import firebase from "firebase";
     Create,
   },
 })
-export default class AssignmentView extends Vue {
+export default class Assignments extends Vue {
   @Ref() readonly assignmentCreate!: Create;
 
   createDialogBox = new DialogBox("createDialogBox");

@@ -10,7 +10,9 @@
             <router-link to="/assignment">
               <md-button>Assignment</md-button>
             </router-link>
-            <md-button>Tag</md-button>
+            <router-link to="/tag">
+              <md-button>Tag</md-button>
+            </router-link>
             <router-link to="/account">
               <md-button class="md-icon-button">
                 <md-icon>account_circle</md-icon>

@@ -82,8 +82,7 @@ import firebase from "firebase";
     DialogBoxComponent,
   },
 })
-export default class AssignmentView extends Vue {
-  @Ref() readonly assignmentEdit!: AssignmentEdit;
+export default class AssignmentDetailView extends Vue {
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   editing = false;
   informDialogBox = new DialogBox("informDialogBox");
