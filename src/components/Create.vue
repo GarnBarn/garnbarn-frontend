@@ -26,7 +26,6 @@
       value-type="timestamp"
       :minute-step="30"
       format="DD/MM/YY HH:mm"
-      confirm=true
     ></date-picker>
   </div>
 </template>
