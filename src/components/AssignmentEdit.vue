@@ -32,12 +32,9 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Assignment } from "@/types/garnbarn/Assignment";
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
-
-export type assignmentCallback = (assignment: Assignment) => void;
 
 @Component({
   components: {
@@ -45,7 +42,6 @@ export type assignmentCallback = (assignment: Assignment) => void;
   }
 })
 export default class AssignmentEdit extends Vue {
-  @Prop({ required: true }) callback!: assignmentCallback;
   @Prop({ required: true }) assignmentData!: AssignmentApi;
 }
 </script>
