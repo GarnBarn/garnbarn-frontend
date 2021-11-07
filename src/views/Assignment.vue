@@ -17,7 +17,7 @@
         <md-tabs md-dynamic-height>
           <md-tab md-label="Assignment">
             <AssignmentEdit
-              :cachedAssignment="JSON.parse(JSON.stringify(assignment))"
+              :cachedAssignment="assignment"
               :callback="assignmentCallback"
               md-dynamic-height
               ref="assignmentEdit"
@@ -104,6 +104,7 @@ export default class AssignmentView extends Vue {
       "The overflow-wrap property in CSS allows you to specify that the browser can break a line of text inside the targeted element onto multiple lines in an otherwise unbreakable place. This helps to avoid an unusually long string of text causing layout problems due to overflow.",
     dueDate: 1635439072,
   };
+  assignmentCopy: Assignment | undefined = undefined;
 
   callback(user: firebase.User, loadingDialogBox: DialogBox): void {
     this.garnBarnAPICaller = new GarnBarnApi(user);
@@ -117,6 +118,7 @@ export default class AssignmentView extends Vue {
         this.assignmentId
       );
       this.assignment = apiResponse?.data as Assignment;
+      this.assignmentCopy = JSON.parse(JSON.stringify(this.assignment));
     } catch (e) {
       this.informDialogBox.show({
         dialogBoxContent: {
@@ -128,9 +130,8 @@ export default class AssignmentView extends Vue {
   }
 
   async update(): Promise<void> {
-    const assignmentCopy = JSON.parse(JSON.stringify(this.assignment));
     const diff = this.getDiff(
-      assignmentCopy,
+      this.assignmentCopy as Assignment,
       this.assignmentEdit.cachedAssignment
     );
     this.garnBarnAPICaller?.v1.assignments

@@ -20,7 +20,6 @@
     </md-field>
 
     <label>Due Date: </label>
-    <!-- TODO: fix date not updating after confirming the date. -->
     <date-picker 
     v-model="cachedAssignment.dueDate" 
     type="datetime" 
