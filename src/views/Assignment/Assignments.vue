@@ -14,15 +14,15 @@
           <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
             item.id
           }}</md-table-cell>
-          <md-table-cell md-label="Tag" md-sort-by="Tag">
+          <md-table-cell md-label="Tag" md-sort-by="tag">
             <div v-if="item.tag">
               {{ item.tag.name }}
             </div>
           </md-table-cell>
-          <md-table-cell md-label="Name" md-sort-by="Name">{{
+          <md-table-cell md-label="Name" md-sort-by="name">{{
             item.name
           }}</md-table-cell>
-          <md-table-cell md-label="Due Date" md-sort-by="Due Date">
+          <md-table-cell md-label="Due Date" md-sort-by="dueDate">
             <div v-if="item.dueDate">
               {{ getHumanReadableTime(item.dueDate) }}
             </div>
