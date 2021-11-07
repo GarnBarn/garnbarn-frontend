@@ -3,7 +3,7 @@
     <div class="name title">
       <p>{{ assignment.name }}</p>
     </div>
-    <div class="tag">
+    <div v-if="assignment.tag" class="tag">
       <tag-box :tag="assignment.tag"></tag-box>
     </div>
     <div class="description text-gray">
@@ -67,10 +67,23 @@ export default class AssignmentDetail extends Vue {
   get getFormatTime(): string {
     const date = this.convertUnixTimeToDate(this.assignment.dueDate as number);
     if (date) {
-      var formattedTime = date.getHours() + ":" + date.getMinutes();
-      return formattedTime;
+      const time = [date.getHours(), date.getMinutes()];
+      var formattedTime: string[] = time.map(function(value) {
+        if (value >= 0 && value <= 9) {
+          return "0" + value;
+        }
+        return value.toString();
+      });
+      return formattedTime[0] + ":" + formattedTime[1];
     }
     return "Unknown";
+  }
+
+  addZeroSingularDigitTime(formatTime: string): string {
+    if (formatTime >= '0' && formatTime <= '9') {
+      return "0" + formatTime;
+    }
+    return formatTime;
   }
 }
 </script>

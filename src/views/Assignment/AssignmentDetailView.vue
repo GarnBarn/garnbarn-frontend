@@ -2,28 +2,29 @@
   <layout :callback="callback">
     <div class="detail">
       <AssignmentDetail :assignment="assignment"></AssignmentDetail>
-      <md-button class="md-primary md-raised">Mark As Done</md-button>
       <md-button class="md-primary md-raised" v-on:click="edit">Edit</md-button>
-      <router-link to="/home">
-        <md-button class="md-primary md-raised">Back</md-button>
-      </router-link>
+      <md-button class="md-accent md-raised" v-on:click="confirmDelete"
+        >Delete</md-button
+      >
+      <md-button class="md-secondary" @click="popBack">Back</md-button>
     </div>
     <DialogBoxComponent
       :dialogBoxId="'editAssignmentDialogBox'"
       :isCustomDialogBox="true"
+      class="blur"
     >
       <md-card-content>
         <md-tabs md-dynamic-height>
           <md-tab md-label="Assignment">
-            <AssignmentEdit
-              :cachedAssignment="JSON.parse(JSON.stringify(assignment))"
-              :callback="assignmentCallback"
+            <Create
+              :assignmentData="assignmentApi"
+              :creationType="creationType"
+              :firebaseUser="firebaseUser"
               md-dynamic-height
-              ref="assignmentEdit"
-            ></AssignmentEdit>
+            ></Create>
           </md-tab>
 
-          <md-tab md-label="Notification Settings">
+          <md-tab md-label="Notification Settings" md-disabled>
             <p>
               Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
               mollitia dolorum dolores quae commodi impedit possimus qui, atque
@@ -62,11 +63,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Ref } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
-import AssignmentEdit from "@/components/AssignmentEdit.vue";
+import Create from "@/components/Create.vue";
 import AssignmentDetail from "@/components/AssignmentDetail.vue";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
@@ -77,13 +78,13 @@ import firebase from "firebase";
   components: {
     Layout,
     AssignmentDetail,
-    AssignmentEdit,
+    Create,
     DialogBoxComponent,
   },
 })
-export default class AssignmentView extends Vue {
-  @Ref() readonly assignmentEdit!: AssignmentEdit;
+export default class AssignmentDetailView extends Vue {
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
+  creationType = "assignment";
   editing = false;
   informDialogBox = new DialogBox("informDialogBox");
   editAssignmentDialogBox = new DialogBox("editAssignmentDialogBox");
@@ -103,9 +104,19 @@ export default class AssignmentView extends Vue {
       "The overflow-wrap property in CSS allows you to specify that the browser can break a line of text inside the targeted element onto multiple lines in an otherwise unbreakable place. This helps to avoid an unusually long string of text causing layout problems due to overflow.",
     dueDate: 1635439072,
   };
+  assignmentApi: AssignmentApi = {
+    id: undefined,
+    name: undefined,
+    reminderTime: undefined,
+    description: undefined,
+    dueDate: undefined,
+    tagId: undefined,
+  };
+  firebaseUser: firebase.User | null = null;
 
   callback(user: firebase.User, loadingDialogBox: DialogBox): void {
     this.garnBarnAPICaller = new GarnBarnApi(user);
+    this.firebaseUser = user;
     this.get();
     loadingDialogBox.dismiss();
   }
@@ -116,6 +127,9 @@ export default class AssignmentView extends Vue {
         this.assignmentId
       );
       this.assignment = apiResponse?.data as Assignment;
+      this.assignmentApi = this.extractAssignmentToAssignmentApi(
+        this.assignment
+      );
     } catch (e) {
       this.informDialogBox.show({
         dialogBoxContent: {
@@ -127,13 +141,8 @@ export default class AssignmentView extends Vue {
   }
 
   async update(): Promise<void> {
-    const assignmentCopy = JSON.parse(JSON.stringify(this.assignment));
-    const diff = this.getDiff(
-      assignmentCopy,
-      this.assignmentEdit.cachedAssignment
-    );
     this.garnBarnAPICaller?.v1.assignments
-      .update(this.assignmentId, diff)
+      .update(this.assignmentId, this.assignmentApi as AssignmentApi)
       .then((apiResponse) => {
         this.assignment = apiResponse.data as Assignment;
       })
@@ -145,6 +154,63 @@ export default class AssignmentView extends Vue {
           },
         });
       });
+  }
+
+  async deleteAssignment(): Promise<void> {
+    this.garnBarnAPICaller?.v1.assignments
+      .delete(this.assignmentId)
+      .then((apiResponse) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Assignment deleted",
+            content: `Your assignment has been deleted.`,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                this.informDialogBox.dismiss();
+              },
+            },
+          ],
+        });
+      })
+      .catch((e) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Error",
+            content: e.message,
+          },
+        });
+      });
+  }
+
+  confirmDelete(): void {
+    this.informDialogBox.show({
+      dialogBoxContent: {
+        title: "Confirm Delete?",
+        content: `This action can't be undone, Are you sure?`,
+      },
+      dialogBoxActions: [
+        {
+          buttonContent: "Confirm",
+          buttonClass: "md-primary",
+          onClick: (): void => {
+            this.deleteAssignment();
+            this.informDialogBox.dismiss();
+            this.$router.back();
+          },
+        },
+        {
+          buttonContent: "Cancel",
+          buttonClass: "md-secondary",
+          onClick: (): void => {
+            this.informDialogBox.dismiss();
+          },
+        },
+      ],
+    });
   }
 
   edit(): void {
@@ -169,23 +235,36 @@ export default class AssignmentView extends Vue {
     });
   }
 
-  getDiff(copiedObject: Assignment, originalObject: Assignment): AssignmentApi {
-    let diff = Object.keys(originalObject).reduce((diff, key) => {
-      if (
-        copiedObject[key as keyof Assignment] ===
-        originalObject[key as keyof Assignment]
-      )
-        return diff;
-      return {
-        ...diff,
-        [key]: originalObject[key as keyof Assignment],
-      };
-    }, {});
-    return diff;
+  extractAssignmentToAssignmentApi(assignment: Assignment): AssignmentApi {
+    let assignmentApi: AssignmentApi = {
+      id: undefined,
+      name: undefined,
+      reminderTime: undefined,
+      description: undefined,
+      dueDate: undefined,
+      tagId: undefined,
+    };
+    assignmentApi.name = assignment.name;
+    assignmentApi.reminderTime = [0];
+    assignmentApi.description = assignment.description;
+    assignmentApi.dueDate = assignment.dueDate;
+    if (assignment.tag) {
+      assignmentApi.tagId = assignment.tag.id;
+    }
+
+    return assignmentApi;
   }
 
-  assignmentCallback(assignment: Assignment): void {
-    this.$data.assignment = this.get();
+  popBack() {
+    this.$router.back();
   }
 }
 </script>
+
+<style scoped>
+.blur {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+</style>

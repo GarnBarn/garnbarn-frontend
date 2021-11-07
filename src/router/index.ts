@@ -3,7 +3,8 @@ import VueRouter, { RouteConfig } from "vue-router";
 import Index from "@/views/Index.vue";
 import Home from "@/views/Home.vue";
 import SignIn from "@/views/SignIn.vue";
-import AssignmentView from "@/views/Assignment.vue";
+import AssignmentDetailView from "@/views/Assignment/AssignmentDetailView.vue";
+import Assignments from "@/views/Assignment/Assignments.vue";
 import Account from "@/views/Account/Account.vue";
 import LinkAccount from "@/views/Account/LinkAccount.vue";
 
@@ -26,9 +27,14 @@ const routes: Array<RouteConfig> = [
     component: Home,
   },
   {
+    path: "/assignment",
+    name: "Assignments",
+    component: Assignments,
+  },
+  {
     path: "/assignment/:id",
-    name: "AssignmentPage",
-    component: AssignmentView,
+    name: "AssignmentDetailPage",
+    component: AssignmentDetailView,
   },
   {
     path: "/account",

@@ -36,7 +36,8 @@ $ yarn install
 
   ```json
   {
-    "apiPrefix": "http://localhost:8080"
+    "apiPrefix": "http://localhost:8080",
+    "lineClientId": "1234"
   }
   ```
 
