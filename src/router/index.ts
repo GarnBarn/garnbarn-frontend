@@ -4,7 +4,8 @@ import Index from "@/views/Index.vue";
 import Home from "@/views/Home.vue";
 import SignIn from "@/views/SignIn.vue";
 import AssignmentView from "@/views/Assignment.vue";
-import Account from "@/views/Account.vue";
+import Account from "@/views/Account/Account.vue";
+import LinkAccount from "@/views/Account/LinkAccount.vue";
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,11 @@ const routes: Array<RouteConfig> = [
     path: "/account",
     name: "AccountPage",
     component: Account,
+  },
+  {
+    path: "/account/linkAccount",
+    name: "LinkAccountPage",
+    component: LinkAccount,
   },
 ];
 

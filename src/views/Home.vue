@@ -10,12 +10,13 @@
         ></DateWithAssignment>
         <div class="load-next-box">
           <md-button
-            class="md-secondary md-raised"
+            class="md-secondary"
             v-if="getNextData"
             @click="processNext"
             >Load next assignments?</md-button
           >
           <h3 v-else><i>That all assignments you got.</i> ƪ(=ｘωｘ=ƪ)</h3>
+          <md-divider></md-divider>
         </div>
       </div>
       <md-empty-state
@@ -150,6 +151,7 @@ export default class Home extends Vue {
           title: "Grabing data",
           content: "Getting data from GarnBarn API",
         },
+        dialogBoxActions: [],
       })
       .then(() => {
         if (typeof this.getNextData !== "function") {
