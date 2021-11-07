@@ -2,10 +2,7 @@
   <layout :callback="callback">
     <div>
       <h1>Add Assignment</h1>
-      <md-button
-        class="md-icon-button md-raised md-primary"
-        v-on:click="edit"
-      >
+      <md-button class="md-icon-button md-raised md-primary" v-on:click="edit">
         <md-icon>add</md-icon>
       </md-button>
       <!-- <md-table>
@@ -122,7 +119,7 @@ export default class AssignmentView extends Vue {
         {
           buttonContent: "Save",
           buttonClass: "md-primary md-raised",
-          onClick: (): void => {
+          onClick: async (): Promise<void> => {
             this.createAssignment();
             this.createDialogBox.dismiss();
           },
@@ -138,41 +135,49 @@ export default class AssignmentView extends Vue {
     });
   }
 
-  async createAssignment(): Promise<void> {
+  createAssignment(): void {
     this.garnBarnAPICaller?.v1.assignments
       .create(this.assignmentCreate.assignmentData)
-      .then(() => {
+      .then((apiResponse) => {
         this.informDialogBox.show({
           dialogBoxContent: {
             title: "Assignment created",
-            content: "",
+            content: `Your assignment has been created with id ${apiResponse.data.id}`,
           },
           dialogBoxActions: [
-              {
-                  buttonContent: "OK",
-                  buttonClass: "md-primary md-raised",
-                  onClick: (): void => {
-                      this.informDialogBox.dismiss();
-                  }
+            {
+              buttonContent: "OK",
+              buttonClass: "md-primary",
+              onClick: async () => {
+                this.informDialogBox.dismiss();
               },
-              {
-                  buttonContent: "Home",
-                  buttonClass: "md-secondary md-raised",
-                  onClick: (): void => {
-                      this.$router.push('home');
-                  }
-              }
+            },
+            {
+              buttonContent: "Home",
+              buttonClass: "md-secondary ",
+              onClick: (): void => {
+                this.$router.push("home");
+              },
+            },
           ],
-        }
-        );
+        });
       })
       .catch((e) => {
-        console.log(e);
         this.informDialogBox.show({
           dialogBoxContent: {
-            title: "Error",
+            title: "An Error occurred",
             content: e.message,
           },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-primary",
+              onClick: async () => {
+                await this.informDialogBox.dismiss();
+                this.edit();
+              },
+            },
+          ],
         });
       });
   }
