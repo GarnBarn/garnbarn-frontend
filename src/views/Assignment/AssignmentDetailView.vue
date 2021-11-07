@@ -4,7 +4,9 @@
       <AssignmentDetail :assignment="assignment"></AssignmentDetail>
       <md-button class="md-primary md-raised">Mark As Done</md-button>
       <md-button class="md-primary md-raised" v-on:click="edit">Edit</md-button>
-      <md-button class="md-accent md-raised" v-on:click="confirmDelete">Delete</md-button>
+      <md-button class="md-accent md-raised" v-on:click="confirmDelete"
+        >Delete</md-button
+      >
       <md-button class="md-secondary" @click="popBack">Back</md-button>
     </div>
     <DialogBoxComponent
@@ -82,7 +84,7 @@ import firebase from "firebase";
 })
 export default class AssignmentDetailView extends Vue {
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
-  creationType = 'assignment';
+  creationType = "assignment";
   editing = false;
   informDialogBox = new DialogBox("informDialogBox");
   editAssignmentDialogBox = new DialogBox("editAssignmentDialogBox");
@@ -186,12 +188,12 @@ export default class AssignmentDetailView extends Vue {
     this.informDialogBox.show({
       dialogBoxContent: {
         title: "Confirm Delete?",
-        content: ``,
+        content: `This action can't be undone, Are you sure?`,
       },
       dialogBoxActions: [
         {
           buttonContent: "Confirm",
-          buttonClass: "md-primary md-raised",
+          buttonClass: "md-primary",
           onClick: (): void => {
             this.deleteAssignment();
             this.informDialogBox.dismiss();
@@ -199,7 +201,7 @@ export default class AssignmentDetailView extends Vue {
           },
         },
         {
-          buttonContent: "Exit",
+          buttonContent: "Cancel",
           buttonClass: "md-secondary",
           onClick: (): void => {
             this.informDialogBox.dismiss();
