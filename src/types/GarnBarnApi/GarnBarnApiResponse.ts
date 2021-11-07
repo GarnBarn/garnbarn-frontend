@@ -1,10 +1,10 @@
 import { AssignmentApis } from "@/services/GarnBarnApi/apis/v1/AssignmentApis";
 import TagApis from "@/services/GarnBarnApi/apis/v1/TagApis";
 
-export type BulkApiResponse<R = any> = {
+export type BulkApiResponse<R = any, NextFunction = null> = {
   count: number;
-  next: GetAllAssignmentApiNextFunctionWrapper | null;
-  previous: GetAllAssignmentApiNextFunctionWrapper | null;
+  next: NextFunction | null;
+  previous: NextFunction | null;
   results: Array<R>;
 };
 

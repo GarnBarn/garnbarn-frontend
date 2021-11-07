@@ -5,6 +5,7 @@ import { Assignment } from "@/types/garnbarn/Assignment";
 import {
   BulkApiResponse,
   GetAllAssignmentApiNextFunctionWrapper,
+  GetAllTagApiNextFunctionWrapper,
 } from "@/types/GarnBarnApi/GarnBarnApiResponse";
 export class AssignmentApis extends api {
   API_BASE_URL = "/api/v1/assignment";
@@ -32,7 +33,9 @@ export class AssignmentApis extends api {
   async all(
     fromPresent?: boolean,
     page?: number
-  ): Promise<AxiosResponse<BulkApiResponse<Assignment>>> {
+  ): Promise<
+    AxiosResponse<BulkApiResponse<Assignment, GetAllTagApiNextFunctionWrapper>>
+  > {
     let url = `${this.API_BASE_URL}/`;
     if (fromPresent || page) {
       // For adding Query Parameters
@@ -55,7 +58,9 @@ export class AssignmentApis extends api {
       fromPresent
     );
     response.data = responseData;
-    return response as AxiosResponse<BulkApiResponse<Assignment>>;
+    return response as AxiosResponse<
+      BulkApiResponse<Assignment, GetAllTagApiNextFunctionWrapper>
+    >;
   }
 
   createNextMethodForGetAllAssignmentApi(
