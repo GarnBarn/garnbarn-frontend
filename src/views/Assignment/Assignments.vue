@@ -9,16 +9,24 @@
         <md-table-toolbar>
           <h1 class="md-title">All Assignments</h1>
         </md-table-toolbar>
-        
+
         <md-table-row slot="md-table-row" slot-scope="{ item }">
-        <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell>
-        <md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
-        <md-table-cell md-label="Email" md-sort-by="email">{{ item.email }}</md-table-cell>
-        <md-table-cell md-label="Gender" md-sort-by="gender">{{ item.gender }}</md-table-cell>
-        <md-table-cell md-label="Job Title" md-sort-by="title">{{ item.title }}</md-table-cell>
-
-      </md-table-row>
-
+          <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
+            item.id
+          }}</md-table-cell>
+          <md-table-cell md-label="Name" md-sort-by="name">{{
+            item.name
+          }}</md-table-cell>
+          <md-table-cell md-label="Email" md-sort-by="email">{{
+            item.email
+          }}</md-table-cell>
+          <md-table-cell md-label="Gender" md-sort-by="gender">{{
+            item.gender
+          }}</md-table-cell>
+          <md-table-cell md-label="Job Title" md-sort-by="title">{{
+            item.title
+          }}</md-table-cell>
+        </md-table-row>
       </md-table> -->
 
       <DialogBoxComponent
@@ -78,7 +86,7 @@
 
 <script lang="ts">
 import { Component, Vue, Ref } from "vue-property-decorator";
-import { AssignmentApi } from "@/types/garnbarn/AssignmentApi";
+import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
@@ -114,13 +122,13 @@ export default class Assignments extends Vue {
     loadingDialogBox.dismiss();
   }
 
-  edit(operationType: "tag" | "assignment"): void {
+  edit(): void {
     this.createDialogBox.show({
       dialogBoxActions: [
         {
           buttonContent: "Save",
           buttonClass: "md-primary md-raised",
-          onClick: (): void => {
+          onClick: async (): Promise<void> => {
             this.createAssignment();
             this.createDialogBox.dismiss();
           },
@@ -136,24 +144,42 @@ export default class Assignments extends Vue {
     });
   }
 
-  async createAssignment(): Promise<void> {
+  createAssignment(): void {
     this.garnBarnAPICaller?.v1.assignments
       .create(this.assignmentCreate.assignmentData)
-      .then(() => {
+      .then((apiResponse) => {
         this.informDialogBox.show({
           dialogBoxContent: {
             title: "Assignment created",
-            content: "",
+            content: `Your assignment has been created with id ${apiResponse.data.id}`,
           },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                this.informDialogBox.dismiss();
+              },
+            },
+          ],
         });
       })
       .catch((e) => {
-        console.log(e);
         this.informDialogBox.show({
           dialogBoxContent: {
-            title: "Error",
+            title: "An Error occurred",
             content: e.message,
           },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-primary",
+              onClick: async () => {
+                await this.informDialogBox.dismiss();
+                this.edit();
+              },
+            },
+          ],
         });
       });
   }

@@ -3,7 +3,7 @@
     <div class="name title">
       <p>{{ assignment.name }}</p>
     </div>
-    <div class="tag">
+    <div v-if="assignment.tag" class="tag">
       <tag-box :tag="assignment.tag"></tag-box>
     </div>
     <div class="description text-gray">

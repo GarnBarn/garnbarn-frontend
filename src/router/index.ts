@@ -5,7 +5,10 @@ import Home from "@/views/Home.vue";
 import SignIn from "@/views/SignIn.vue";
 import AssignmentDetailView from "@/views/Assignment/AssignmentDetailView.vue";
 import Assignments from "@/views/Assignment/Assignments.vue";
+<<<<<<< HEAD
 import Tags from "@/views/Tags.vue"
+=======
+>>>>>>> iteration3-assignment-create
 import Account from "@/views/Account.vue";
 
 Vue.use(VueRouter);
@@ -29,11 +32,11 @@ const routes: Array<RouteConfig> = [
   {
     path: "/assignment",
     name: "Assignments",
-    component: Assignments
+    component: Assignments,
   },
   {
     path: "/assignment/:id",
-    name: "AssignmentPage",
+    name: "AssignmentDetailPage",
     component: AssignmentDetailView,
   },
   {
