@@ -3,9 +3,10 @@
     <div class="detail">
       <AssignmentDetail :assignment="assignment"></AssignmentDetail>
       <md-button class="md-primary md-raised" v-on:click="edit">Edit</md-button>
-      <router-link to="/home">
-        <md-button class="md-secondary">Back</md-button>
-      </router-link>
+      <md-button class="md-accent md-raised" v-on:click="confirmDelete"
+        >Delete</md-button
+      >
+      <md-button class="md-secondary" @click="popBack">Back</md-button>
     </div>
     <DialogBoxComponent
       :dialogBoxId="'editAssignmentDialogBox'"
@@ -18,7 +19,7 @@
             <Create
               :apiData="assignmentApi"
               :creationType="creationType"
-              :callback="assignmentCallback"
+              :firebaseUser="firebaseUser"
               md-dynamic-height
             ></Create>
           </md-tab>
@@ -83,8 +84,8 @@ import firebase from "firebase";
 })
 export default class AssignmentDetailView extends Vue {
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
+  creationType = "assignment";
   editing = false;
-  creationType = 'assignment';
   informDialogBox = new DialogBox("informDialogBox");
   editAssignmentDialogBox = new DialogBox("editAssignmentDialogBox");
   assignmentId = Number(this.$route.params.id);
@@ -104,16 +105,18 @@ export default class AssignmentDetailView extends Vue {
     dueDate: 1635439072,
   };
   assignmentApi: AssignmentApi = {
-      id: undefined,
-      name: undefined,
-      reminderTime: undefined,
-      description: undefined,
-      dueDate: undefined,
-      tagId: undefined
-    };
+    id: undefined,
+    name: undefined,
+    reminderTime: undefined,
+    description: undefined,
+    dueDate: undefined,
+    tagId: undefined,
+  };
+  firebaseUser: firebase.User | null = null;
 
   callback(user: firebase.User, loadingDialogBox: DialogBox): void {
     this.garnBarnAPICaller = new GarnBarnApi(user);
+    this.firebaseUser = user;
     this.get();
     loadingDialogBox.dismiss();
   }
@@ -124,7 +127,9 @@ export default class AssignmentDetailView extends Vue {
         this.assignmentId
       );
       this.assignment = apiResponse?.data as Assignment;
-      this.assignmentApi = this.extractAssignmentToAssignmentApi(this.assignment);
+      this.assignmentApi = this.extractAssignmentToAssignmentApi(
+        this.assignment
+      );
     } catch (e) {
       this.informDialogBox.show({
         dialogBoxContent: {
@@ -151,6 +156,63 @@ export default class AssignmentDetailView extends Vue {
       });
   }
 
+  async deleteAssignment(): Promise<void> {
+    this.garnBarnAPICaller?.v1.assignments
+      .delete(this.assignmentId)
+      .then((apiResponse) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Assignment deleted",
+            content: `Your assignment has been deleted.`,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                this.informDialogBox.dismiss();
+              },
+            },
+          ],
+        });
+      })
+      .catch((e) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Error",
+            content: e.message,
+          },
+        });
+      });
+  }
+
+  confirmDelete(): void {
+    this.informDialogBox.show({
+      dialogBoxContent: {
+        title: "Confirm Delete?",
+        content: `This action can't be undone, Are you sure?`,
+      },
+      dialogBoxActions: [
+        {
+          buttonContent: "Confirm",
+          buttonClass: "md-primary",
+          onClick: (): void => {
+            this.deleteAssignment();
+            this.informDialogBox.dismiss();
+            this.$router.back();
+          },
+        },
+        {
+          buttonContent: "Cancel",
+          buttonClass: "md-secondary",
+          onClick: (): void => {
+            this.informDialogBox.dismiss();
+          },
+        },
+      ],
+    });
+  }
+
   edit(): void {
     this.editAssignmentDialogBox.show({
       dialogBoxActions: [
@@ -172,18 +234,20 @@ export default class AssignmentDetailView extends Vue {
       ],
     });
   }
-  
+
   extractAssignmentToAssignmentApi(assignment: Assignment): AssignmentApi {
     let assignmentApi: AssignmentApi = {
       id: undefined,
       name: undefined,
-      reminderTime: undefined,
+      reminderTime: [],
       description: undefined,
       dueDate: undefined,
-      tagId: undefined
+      tagId: undefined,
     };
     assignmentApi.name = assignment.name;
-    assignmentApi.reminderTime = assignment.reminderTime;
+    if (assignment.reminderTime) {
+      assignmentApi.reminderTime = assignment.reminderTime;
+    }
     assignmentApi.description = assignment.description;
     assignmentApi.dueDate = assignment.dueDate;
     if (assignment.tag) {
@@ -193,8 +257,8 @@ export default class AssignmentDetailView extends Vue {
     return assignmentApi;
   }
 
-  assignmentCallback(assignment: Assignment): void {
-    this.$data.assignment = this.get();
+  popBack() {
+    this.$router.back();
   }
 }
 </script>

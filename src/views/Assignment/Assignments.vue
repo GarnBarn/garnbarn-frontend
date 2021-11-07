@@ -1,10 +1,60 @@
 <template>
   <layout :callback="callback">
     <div>
-      <h1>Add/Delete Assignment</h1>
+      <h1>Add Assignment</h1>
       <md-button class="md-icon-button md-raised md-primary" v-on:click="edit">
         <md-icon>add</md-icon>
       </md-button>
+      <md-table
+        v-model="tablePages.mdData"
+        md-sort="id"
+        @md-selected="onSelected"
+      >
+        <md-table-toolbar>
+          <div class="md-title left-align">All Assignments</div>
+          <md-button class="md-icon-button md-raised md-primary" @click="edit">
+            <md-icon>add</md-icon>
+            <md-tooltip> Create new Assignment </md-tooltip>
+          </md-button>
+        </md-table-toolbar>
+        <!-- <router-link :to="item.id"> -->
+        <md-table-row
+          slot="md-table-row"
+          slot-scope="{ item }"
+          md-selectable="single"
+        >
+          <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
+            item.id
+          }}</md-table-cell>
+          <md-table-cell md-label="Tag" md-sort-by="tag">
+            <div v-if="item.tag">
+              {{ item.tag.name }}
+            </div>
+          </md-table-cell>
+          <md-table-cell md-label="Name" md-sort-by="name">{{
+            item.name
+          }}</md-table-cell>
+          <md-table-cell md-label="Due Date" md-sort-by="dueDate">
+            <div v-if="item.dueDate">
+              {{ getHumanReadableTime(item.dueDate) }}
+            </div>
+            <div v-else><i>No due date</i></div>
+          </md-table-cell>
+        </md-table-row>
+
+        <md-table-pagination
+          :md-page-size="rowsPerPage"
+          :md-page-options="[10]"
+          :md-update="updatePagination"
+          :md-data.sync="tablePages"
+        />
+      </md-table>
+      <div class="load-next-box">
+        <md-button class="md-secondary" v-if="getNextData" @click="processNext"
+          >Load next assignments?</md-button
+        >
+        <h3 v-else><i>That all assignments you got.</i> ƪ(=ｘωｘ=ƪ)</h3>
+      </div>
       <DialogBoxComponent
         :dialogBoxId="'createDialogBox'"
         :isCustomDialogBox="true"
@@ -16,6 +66,7 @@
               <Create
                 :apiData="assignmentData"
                 :creationType="creationType"
+                :firebaseUser="firebaseUser"
                 md-dynamic-height
                 ref="assignmentCreate"
               ></Create>
@@ -69,6 +120,8 @@ import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import Create from "@/components/Create.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import firebase from "firebase";
+import { Assignment } from "@/types/garnbarn/Assignment";
+import { GetAllAssignmentApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
 
 @Component({
   components: {
@@ -84,6 +137,12 @@ export default class Assignments extends Vue {
   loadingDialogBox = new DialogBox("loadingDialogBox");
   informDialogBox = new DialogBox("informDialogBox");
   creationType = 'assignment';
+  tablePages = {
+    mdCount: null as number | null,
+    mdPage: null as number | null,
+    mdData: [] as Array<Assignment>,
+  };
+  rowsPerPage = 10;
   assignmentData: AssignmentApi = {
     id: undefined,
     name: undefined,
@@ -92,10 +151,62 @@ export default class Assignments extends Vue {
     tagId: undefined,
   };
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
+  getNextData: GetAllAssignmentApiNextFunctionWrapper | null = null;
+  firebaseUser: firebase.User | null = null;
 
   callback(user: firebase.User, loadingDialogBox: DialogBox): void {
     this.garnBarnAPICaller = new GarnBarnApi(user);
-    loadingDialogBox.dismiss();
+    this.updatePagination(1, this.rowsPerPage).then(() => {
+      this.firebaseUser = user;
+      loadingDialogBox.dismiss();
+    });
+  }
+
+  onSelected(item: Assignment) {
+    this.$router.push("assignment/" + item.id.toString());
+  }
+
+  async updatePagination(
+    page: number,
+    pageSize: number,
+    sort?: any,
+    sortOrder?: any
+  ): Promise<void> {
+    this.garnBarnAPICaller?.v1.assignments
+      .all(false, page)
+      .then((apiResponse) => {
+        this.tablePages = {
+          mdCount: apiResponse.data.count,
+          mdPage: 1,
+          mdData: apiResponse.data.results,
+        };
+        this.rowsPerPage = apiResponse.data.results.length;
+        this.getNextData = apiResponse.data.next;
+      });
+  }
+
+  processNext(): void {
+    this.informDialogBox
+      .show({
+        dialogBoxContent: {
+          title: "Grabing Data",
+          content: "Grabing data from GarnBarn API",
+        },
+        dialogBoxActions: [],
+      })
+      .then(() => {
+        if (!this.getNextData) {
+          return Promise.reject("No next function");
+        }
+        return this.getNextData();
+      })
+      .then((apiResponse) => {
+        this.tablePages.mdData = this.tablePages.mdData.concat(
+          apiResponse.data.results
+        );
+        this.getNextData = apiResponse.data.next;
+        return this.informDialogBox.dismiss();
+      });
   }
 
   edit(): void {
@@ -159,6 +270,17 @@ export default class Assignments extends Vue {
         });
       });
   }
+
+  getHumanReadableTime(timestamp: number): string {
+    const dueDate = new Date(timestamp);
+    return dueDate.toLocaleString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    });
+  }
 }
 </script>
 
@@ -167,5 +289,16 @@ export default class Assignments extends Vue {
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+}
+
+.md-table + .md-table {
+  margin-top: 16px;
+}
+.avatar img {
+  max-width: 30px;
+}
+
+.left-align {
+  text-align: left;
 }
 </style>

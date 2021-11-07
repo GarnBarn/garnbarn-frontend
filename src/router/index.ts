@@ -7,7 +7,8 @@ import AssignmentDetailView from "@/views/Assignment/AssignmentDetailView.vue";
 import Assignments from "@/views/Assignment/Assignments.vue";
 import Tags from "@/views/Tag/Tags.vue"
 import TagDetailView from "@/views/Tag/TagDetailView.vue";
-import Account from "@/views/Account.vue";
+import Account from "@/views/Account/Account.vue";
+import LinkAccount from "@/views/Account/LinkAccount.vue";
 
 Vue.use(VueRouter);
 
@@ -51,6 +52,11 @@ const routes: Array<RouteConfig> = [
     path: "/account",
     name: "AccountPage",
     component: Account,
+  },
+  {
+    path: "/account/linkAccount",
+    name: "LinkAccountPage",
+    component: LinkAccount,
   },
 ];
 

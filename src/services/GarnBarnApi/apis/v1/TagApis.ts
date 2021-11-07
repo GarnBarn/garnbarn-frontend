@@ -41,7 +41,11 @@ export default class TagApis extends api {
     >;
   }
 
-  async all(page?: number): Promise<AxiosResponse<BulkApiResponse<Tag>>> {
+  async all(
+    page?: number
+  ): Promise<
+    AxiosResponse<BulkApiResponse<Tag, GetAllTagApiNextFunctionWrapper>>
+  > {
     let url = `${this.API_BASE_URL}/`;
     if (page) {
       // For adding Query Parameters
@@ -53,7 +57,9 @@ export default class TagApis extends api {
     responseData.previous = this.createNextMethodForGetAllTagApi(
       responseData.previous
     );
-    return response as AxiosResponse<BulkApiResponse<Tag>>;
+    return response as AxiosResponse<
+      BulkApiResponse<Tag, GetAllTagApiNextFunctionWrapper>
+    >;
   }
 
   createNextMethodForGetAllTagApi(
