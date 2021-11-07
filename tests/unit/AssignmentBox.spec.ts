@@ -30,6 +30,7 @@ describe("Test AssignmentBox", () => {
     const assignment: Assignment = {
       id: 1,
       name: "Hello Assignment",
+      author: "A",
     };
     const wrapper = createWrapper(assignment);
     const assignmentBoxInstance = wrapper.vm as any;
@@ -57,6 +58,7 @@ describe("Test AssignmentBox", () => {
     const assignment: Assignment = {
       id: 1,
       name: "Hello Assignment",
+      author: "A",
     };
     const wrapper = createWrapper(assignment);
     expect(wrapper.text()).toContain("Hello Assignment");
@@ -68,8 +70,10 @@ describe("Test AssignmentBox", () => {
     const assignment: Assignment = {
       id: 1,
       name: "Hello Assignment",
+      author: "A",
       tag: {
         id: 1,
+        author: "A",
         name: "This is a Tag",
         color: "#111111",
       },
@@ -92,6 +96,7 @@ describe("Test AssignmentBox", () => {
     const assignment: Assignment = {
       id: 1,
       name: "Hello Assignment",
+      author: "A",
     };
     const wrapper = createWrapper(assignment);
     await wrapper.find(".assignment-card").trigger("click");

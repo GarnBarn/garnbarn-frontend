@@ -3,9 +3,10 @@ import { createMock } from "ts-auto-mock";
 import firebase from "firebase";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import GarnBarnApiConfig from "@/GarnBarnApiConfig.json";
-import { AssignmentApi } from "@/types/garnbarn/AssignmentApi";
+import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import { Assignment } from "@/types/garnbarn/Assignment";
-import { api, ApiSpecError } from "@/services/GarnBarnApi/apis/v1/api";
+import { ApiSpecError } from "@/services/GarnBarnApi/apis/v1/api";
+import { GetAllAssignmentApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
 
 jest.mock("axios");
 
@@ -215,5 +216,53 @@ describe("Test Assignment APIs v1 Caller", () => {
       generateRequestDetail(ID_TOKEN, "GET", "/api/v1/assignment/")
     );
     expect(apiResponse.data).toEqual(mockResponse);
+  });
+
+  test("Test Get All Assignments API with fromPresent to be true", async () => {
+    const apiResponse = await garnBarnApiCaller.v1.assignments.all(true);
+    expect(mockAxios).toBeCalledWith(
+      generateRequestDetail(
+        ID_TOKEN,
+        "GET",
+        "/api/v1/assignment/?fromPresent=true&"
+      )
+    );
+  });
+
+  test("Test Get All Assignments API with page number", async () => {
+    const apiResponse = await garnBarnApiCaller.v1.assignments.all(false, 5);
+    expect(mockAxios).toBeCalledWith(
+      generateRequestDetail(ID_TOKEN, "GET", "/api/v1/assignment/?page=5&")
+    );
+  });
+
+  test("Test Create next method for get all assignment api", async () => {
+    const nextMethod =
+      garnBarnApiCaller.v1.assignments.createNextMethodForGetAllAssignmentApi(
+        `http://${GarnBarnApiConfig.apiPrefix}/?page=1`,
+        true
+      );
+    expect(nextMethod).not.toBe(null);
+    await (nextMethod as GetAllAssignmentApiNextFunctionWrapper)();
+    expect(mockAxios).toBeCalledWith(
+      generateRequestDetail(
+        ID_TOKEN,
+        "GET",
+        "/api/v1/assignment/?page=1&fromPresent=true&"
+      )
+    );
+  });
+
+  test("Test Create next method for get all assignment api witn invalud request parameter", async () => {
+    const nextMethod =
+      garnBarnApiCaller.v1.assignments.createNextMethodForGetAllAssignmentApi(
+        `http://${GarnBarnApiConfig.apiPrefix}/`,
+        false
+      );
+    expect(nextMethod).not.toBe(null);
+    await (nextMethod as GetAllAssignmentApiNextFunctionWrapper)();
+    expect(mockAxios).toBeCalledWith(
+      generateRequestDetail(ID_TOKEN, "GET", "/api/v1/assignment/?page=1&")
+    );
   });
 });
