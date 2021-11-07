@@ -24,7 +24,7 @@
             ></AssignmentEdit>
           </md-tab>
 
-          <md-tab md-label="Notification Settings">
+          <md-tab md-label="Notification Settings" md-disabled>
             <p>
               Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
               mollitia dolorum dolores quae commodi impedit possimus qui, atque
