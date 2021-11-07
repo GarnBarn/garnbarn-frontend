@@ -20,6 +20,7 @@
     "vue-material": "^1.0.0-beta-15",
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.2.0",
+    "vue-swatches": "^2.1.1",
     "vue2-datepicker": "^3.10.2"
   },
   "devDependencies": {
