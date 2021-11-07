@@ -2,7 +2,6 @@
   <layout :callback="callback">
     <div class="detail">
       <AssignmentDetail :assignment="assignment"></AssignmentDetail>
-      <md-button class="md-primary md-raised">Mark As Done</md-button>
       <md-button class="md-primary md-raised" v-on:click="edit">Edit</md-button>
       <md-button class="md-accent md-raised" v-on:click="confirmDelete"
         >Delete</md-button
