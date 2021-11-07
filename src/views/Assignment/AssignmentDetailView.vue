@@ -4,9 +4,8 @@
       <AssignmentDetail :assignment="assignment"></AssignmentDetail>
       <md-button class="md-primary md-raised">Mark As Done</md-button>
       <md-button class="md-primary md-raised" v-on:click="edit">Edit</md-button>
-      <router-link to="/home">
-        <md-button class="md-secondary">Back</md-button>
-      </router-link>
+
+      <md-button class="md-secondary" @click="popBack">Back</md-button>
     </div>
     <DialogBoxComponent
       :dialogBoxId="'editAssignmentDialogBox'"
@@ -196,6 +195,10 @@ export default class AssignmentDetailView extends Vue {
 
   assignmentCallback(assignment: Assignment): void {
     this.$data.assignment = this.get();
+  }
+
+  popBack() {
+    this.$router.back();
   }
 }
 </script>
