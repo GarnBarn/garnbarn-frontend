@@ -35,9 +35,9 @@
               <p>{{ uid }}</p>
             </AccountDetailCard>
             <AccountDetailCard title="Third party platform">
-              <h3>LINE:</h3>
+              <h3>LINE: <md-chip>Still in development</md-chip></h3>
               <div>
-                <md-button class="line-green"
+                <md-button class="line-green" @click="onClickLineLogin"
                   ><img
                     class="line-logo"
                     src="@/assets/images/line_logo.png"
@@ -89,6 +89,7 @@ import Layout from "@/layouts/Main.vue";
 import firebase from "firebase";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import AccountDetailCard from "@/components/Account/AccountDetailCard.vue";
+import garnBarnApiConfig from "@/GarnBarnApiConfig.json";
 
 @Component({
   components: {
@@ -104,10 +105,33 @@ export default class Account extends Vue {
   user: firebase.User | null = null;
   informDialogBox = new DialogBox("informDialogBox");
 
-  async callback(user: firebase.User, loadingDialogBox: DialogBox) {
-    this.idTokenData.idToken = await user.getIdToken();
-    loadingDialogBox.dismiss();
-    this.user = user;
+  callback(user: firebase.User, loadingDialogBox: DialogBox) {
+    user
+      .getIdToken()
+      .then((idToken) => {
+        this.idTokenData.idToken = idToken;
+        loadingDialogBox.dismiss();
+        this.user = user;
+      })
+      .catch((e) => {
+        console.error(e);
+        loadingDialogBox.dismiss();
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "An error occurred",
+            content: e,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Try again",
+              buttonClass: "md-primary",
+              onClick: () => {
+                this.callback(user, loadingDialogBox);
+              },
+            },
+          ],
+        });
+      });
   }
 
   onShowIdToken() {
@@ -181,6 +205,48 @@ export default class Account extends Vue {
         this.informDialogBox.dismiss();
         this.$router.replace("/");
       });
+  }
+
+  generateLineLoginUrl() {
+    let baseUrl = "https://access.line.me/oauth2/v2.1/authorize?";
+    let currentPath = window.location.href.split("/");
+    let redirectUri =
+      currentPath[0] + "//" + currentPath[2] + "/account/linkAccount";
+
+    baseUrl += "response_type=code&";
+    baseUrl += `client_id=${garnBarnApiConfig.lineClientId}&`;
+    baseUrl += `redirect_uri=${encodeURI(redirectUri)}&`;
+    baseUrl += "state=line&";
+    baseUrl += "scope=profile&";
+    baseUrl += "garnbarn_third_party=line";
+    return baseUrl;
+  }
+
+  onClickLineLogin() {
+    const redirectUrl = window.location.href;
+    this.informDialogBox.show({
+      dialogBoxContent: {
+        title: "You'll be redirected",
+        content:
+          "To signin with LINE, You will be redirect to LINE. Please accept all consent from LINE inorder to continue linking account.",
+      },
+      dialogBoxActions: [
+        {
+          buttonContent: "OK",
+          buttonClass: "md-primary",
+          onClick: () => {
+            window.location.replace(this.generateLineLoginUrl());
+          },
+        },
+        {
+          buttonContent: "Cancel",
+          buttonClass: "md-secondart",
+          onClick: () => {
+            this.informDialogBox.dismiss();
+          },
+        },
+      ],
+    });
   }
 
   get profileImage(): string | null | undefined {
