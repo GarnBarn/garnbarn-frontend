@@ -29,7 +29,7 @@
         format="DD/MM/YY HH:mm"
       ></date-picker>
     </div>
-    <div v-if="creationType === 'tag'">
+    <div v-if="creationType === 'tag'" class="overflow">
       <div>
         <md-field>
           <label>Tag name:</label>
@@ -38,16 +38,16 @@
       </div>
 
       <div>
-        <label>Color:</label><br>
-        <v-swatches v-model="apiData.color" style="position:relative; z-index:10"></v-swatches>
-      </div>
-
-      <div>
         <label>Reminder Time:</label>
         <md-checkbox v-model="apiData.reminderTime" :value="this.getReminderTime(7)">1 Week</md-checkbox>
         <md-checkbox v-model="apiData.reminderTime" :value="this.getReminderTime(1)">1 Day</md-checkbox>
         <md-checkbox v-model="apiData.reminderTime" :value="this.getReminderTime(0.5)">12 hours</md-checkbox>
         <md-checkbox v-model="apiData.reminderTime" :value="this.getReminderTime(0.25)">6 hours</md-checkbox>
+      </div>
+
+      <div>
+        <label>Color:</label><br>
+        <v-swatches v-model="apiData.color"></v-swatches>
       </div>
     </div>
   </div>
@@ -90,4 +90,7 @@ export default class Create extends Vue {
   flex-direction: column ;
 }
 
+.overflow {
+  overflow: auto;
+}
 </style>
