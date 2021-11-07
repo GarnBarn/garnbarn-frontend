@@ -1,7 +1,11 @@
 <template>
   <layout :callback="callback">
     <div>
-      <md-table v-model="tablePages.mdData" md-sort="id">
+      <md-table
+        v-model="tablePages.mdData"
+        md-sort="id"
+        @md-selected="onSelected"
+      >
         <md-table-toolbar>
           <div class="md-title left-align">All Assignments</div>
           <md-button class="md-icon-button md-raised md-primary" @click="edit">
@@ -9,8 +13,12 @@
             <md-tooltip> Create new Assignment </md-tooltip>
           </md-button>
         </md-table-toolbar>
-
-        <md-table-row slot="md-table-row" slot-scope="{ item }">
+        <!-- <router-link :to="item.id"> -->
+        <md-table-row
+          slot="md-table-row"
+          slot-scope="{ item }"
+          md-selectable="single"
+        >
           <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
             item.id
           }}</md-table-cell>
@@ -146,6 +154,10 @@ export default class AssignmentView extends Vue {
       this.firebaseUser = user;
       loadingDialogBox.dismiss();
     });
+  }
+
+  onSelected(item: Assignment) {
+    this.$router.push("assignment/" + item.id.toString());
   }
 
   async updatePagination(
