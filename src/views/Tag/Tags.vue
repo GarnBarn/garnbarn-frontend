@@ -122,7 +122,7 @@ export default class Tags extends Vue {
 
   createTag(): void {
     this.garnBarnAPICaller?.v1.tags
-      .create(this.tagCreate.apiData)
+      .create(this.tagCreate.apiData as TagApi)
       .then((apiResponse) => {
         this.informDialogBox.show({
           dialogBoxContent: {
