@@ -5,7 +5,6 @@ import { Assignment } from "@/types/garnbarn/Assignment";
 import {
   BulkApiResponse,
   GetAllAssignmentApiNextFunctionWrapper,
-  GetAllTagApiNextFunctionWrapper,
 } from "@/types/GarnBarnApi/GarnBarnApiResponse";
 export class AssignmentApis extends api {
   API_BASE_URL = "/api/v1/assignment";
@@ -34,7 +33,9 @@ export class AssignmentApis extends api {
     fromPresent?: boolean,
     page?: number
   ): Promise<
-    AxiosResponse<BulkApiResponse<Assignment, GetAllTagApiNextFunctionWrapper>>
+    AxiosResponse<
+      BulkApiResponse<Assignment, GetAllAssignmentApiNextFunctionWrapper>
+    >
   > {
     let url = `${this.API_BASE_URL}/`;
     if (fromPresent || page) {
@@ -59,7 +60,7 @@ export class AssignmentApis extends api {
     );
     response.data = responseData;
     return response as AxiosResponse<
-      BulkApiResponse<Assignment, GetAllTagApiNextFunctionWrapper>
+      BulkApiResponse<Assignment, GetAllAssignmentApiNextFunctionWrapper>
     >;
   }
 
