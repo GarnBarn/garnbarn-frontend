@@ -116,7 +116,7 @@ export default class AssignmentView extends Vue {
     loadingDialogBox.dismiss();
   }
 
-  edit(operationType: "tag" | "assignment"): void {
+  edit(): void {
     this.createDialogBox.show({
       dialogBoxActions: [
         {
@@ -147,7 +147,24 @@ export default class AssignmentView extends Vue {
             title: "Assignment created",
             content: "",
           },
-        });
+          dialogBoxActions: [
+              {
+                  buttonContent: "OK",
+                  buttonClass: "md-primary md-raised",
+                  onClick: (): void => {
+                      this.informDialogBox.dismiss();
+                  }
+              },
+              {
+                  buttonContent: "Home",
+                  buttonClass: "md-secondary md-raised",
+                  onClick: (): void => {
+                      this.$router.push('home');
+                  }
+              }
+          ],
+        }
+        );
       })
       .catch((e) => {
         console.log(e);
