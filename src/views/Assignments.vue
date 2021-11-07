@@ -123,11 +123,7 @@ export default class AssignmentView extends Vue {
           buttonContent: "Save",
           buttonClass: "md-primary md-raised",
           onClick: (): void => {
-            if (operationType == "assignment") {
-              this.createAssignment();
-            } else {
-              this.createAssignment();
-            }
+            this.createAssignment();
             this.createDialogBox.dismiss();
           },
         },
