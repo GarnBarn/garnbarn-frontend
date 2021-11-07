@@ -4,7 +4,7 @@
       <h1>Add Assignment</h1>
       <md-button
         class="md-icon-button md-raised md-primary"
-        v-on:click="edit('assignment')"
+        v-on:click="edit"
       >
         <md-icon>add</md-icon>
       </md-button>
