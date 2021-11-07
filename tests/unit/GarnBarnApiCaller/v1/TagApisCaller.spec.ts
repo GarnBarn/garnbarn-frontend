@@ -93,13 +93,13 @@ describe("Test Tag APIs v1 Caller", () => {
     expect(apiResponse.data).toBe(mockTagData);
   });
 
-  test("Test calling Create Tag API while not providing the name of Tag", () => {
+  test("Test calling Create Tag API while not providing the name of Tag", async () => {
     const mockTagData: TagApi = {
       color: "#1234",
     };
-    expect(() => {
-      garnBarnApiCaller.v1.tags.create(mockTagData);
-    }).toThrow(new ApiSpecError("You can't create a tag without a name"));
+    await expect(garnBarnApiCaller.v1.tags.create(mockTagData)).rejects.toEqual(
+      new ApiSpecError("You can't create a tag without a name")
+    );
   });
 
   test("Test calling Update Tag API with valid data", async () => {
