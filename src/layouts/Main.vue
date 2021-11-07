@@ -12,8 +12,14 @@
             </router-link>
             <md-button>Tag</md-button>
             <router-link to="/account">
-              <md-button class="md-icon-button">
-                <md-icon>account_circle</md-icon>
+              <md-button class="md-icon-button profile-button">
+                <img v-if="photoUrl" class="profile-image" :src="photoUrl" />
+                <img
+                  v-else
+                  class="profile-image"
+                  src="@/assets/images/account_placeholder.png"
+                />
+                <md-tooltip>Account Setting</md-tooltip>
               </md-button>
             </router-link>
           </div>
@@ -69,6 +75,7 @@ export default class Layout extends Vue {
     toolBarElevation: 1,
   };
   loadingDialogBox = new DialogBox("loadingDialogBox");
+  photoUrl: string | null | undefined = null;
 
   mounted(): void {
     let firebaseAuthInstance: firebase.auth.Auth = firebase.auth();
@@ -81,6 +88,7 @@ export default class Layout extends Vue {
         this.loadingDialogBox.dismiss();
         this.$router.push("/signIn");
       }
+      this.photoUrl = user?.photoURL;
       if (typeof this.callback === "function") {
         this.callback(user as firebase.User, this.loadingDialogBox);
       } else {
@@ -115,5 +123,14 @@ export default class Layout extends Vue {
 
 .nav-bar {
   background-color: #f9f9f9;
+}
+
+.profile-image {
+  border-radius: 20px;
+}
+
+.profile-button {
+  width: 50px;
+  height: 50px;
 }
 </style>
