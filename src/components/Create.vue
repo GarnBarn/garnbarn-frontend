@@ -31,15 +31,10 @@
     </div>
     <div v-if="creationType === 'tag'">
       <md-field>
-        <label>Assignment name:</label>
+        <label>Tag name:</label>
         <md-input v-model="apiData.name" required></md-input>
       </md-field>
-
-      <md-field>
-        <label>Description:</label>
-        <md-textarea v-model="apiData.description"></md-textarea>
-      </md-field>
-
+    
       <label>Due Date:</label>
       <date-picker
         v-model="apiData.dueDate"

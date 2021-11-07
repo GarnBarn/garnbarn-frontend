@@ -5,30 +5,6 @@
       <md-button class="md-icon-button md-raised md-primary" v-on:click="edit">
         <md-icon>add</md-icon>
       </md-button>
-      <!-- <md-table>
-        <md-table-toolbar>
-          <h1 class="md-title">All Assignments</h1>
-        </md-table-toolbar>
-
-        <md-table-row slot="md-table-row" slot-scope="{ item }">
-          <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
-            item.id
-          }}</md-table-cell>
-          <md-table-cell md-label="Name" md-sort-by="name">{{
-            item.name
-          }}</md-table-cell>
-          <md-table-cell md-label="Email" md-sort-by="email">{{
-            item.email
-          }}</md-table-cell>
-          <md-table-cell md-label="Gender" md-sort-by="gender">{{
-            item.gender
-          }}</md-table-cell>
-          <md-table-cell md-label="Job Title" md-sort-by="title">{{
-            item.title
-          }}</md-table-cell>
-        </md-table-row>
-      </md-table> -->
-
       <DialogBoxComponent
         :dialogBoxId="'createDialogBox'"
         :isCustomDialogBox="true"
@@ -38,8 +14,8 @@
           <md-tabs md-dynamic-height>
             <md-tab md-label="Create">
               <Create
-                :assignmentData="assignmentData"
-                :creationType="assignment"
+                :apiData="assignmentData"
+                :creationType="creationType"
                 md-dynamic-height
                 ref="assignmentCreate"
               ></Create>
@@ -107,7 +83,7 @@ export default class Assignments extends Vue {
   createDialogBox = new DialogBox("createDialogBox");
   loadingDialogBox = new DialogBox("loadingDialogBox");
   informDialogBox = new DialogBox("informDialogBox");
-
+  creationType = 'assignment';
   assignmentData: AssignmentApi = {
     id: undefined,
     name: undefined,
@@ -146,7 +122,7 @@ export default class Assignments extends Vue {
 
   createAssignment(): void {
     this.garnBarnAPICaller?.v1.assignments
-      .create(this.assignmentCreate.assignmentData)
+      .create(this.assignmentCreate.apiData)
       .then((apiResponse) => {
         this.informDialogBox.show({
           dialogBoxContent: {

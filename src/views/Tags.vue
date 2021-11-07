@@ -5,29 +5,6 @@
       <md-button class="md-icon-button md-raised md-primary" v-on:click="edit">
         <md-icon>add</md-icon>
       </md-button>
-      <!-- <md-table>
-        <md-table-toolbar>
-          <h1 class="md-title">All Assignments</h1>
-        </md-table-toolbar>
-
-        <md-table-row slot="md-table-row" slot-scope="{ item }">
-          <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
-            item.id
-          }}</md-table-cell>
-          <md-table-cell md-label="Name" md-sort-by="name">{{
-            item.name
-          }}</md-table-cell>
-          <md-table-cell md-label="Email" md-sort-by="email">{{
-            item.email
-          }}</md-table-cell>
-          <md-table-cell md-label="Gender" md-sort-by="gender">{{
-            item.gender
-          }}</md-table-cell>
-          <md-table-cell md-label="Job Title" md-sort-by="title">{{
-            item.title
-          }}</md-table-cell>
-        </md-table-row>
-      </md-table> -->
 
       <DialogBoxComponent
         :dialogBoxId="'createDialogBox'"
@@ -38,8 +15,8 @@
           <md-tabs md-dynamic-height>
             <md-tab md-label="Create">
               <Create
-                :assignmentData="assignmentData"
-                :creationType="tags"
+                :apiData="tagData"
+                :creationType="creationType"
                 md-dynamic-height
                 ref="assignmentCreate"
               ></Create>
@@ -107,7 +84,7 @@ export default class Tags extends Vue {
   createDialogBox = new DialogBox("createDialogBox");
   loadingDialogBox = new DialogBox("loadingDialogBox");
   informDialogBox = new DialogBox("informDialogBox");
-
+  creationType = 'tag';
   tagData: TagApi = {
     name: undefined,
     color: undefined,
