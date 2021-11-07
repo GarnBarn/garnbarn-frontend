@@ -30,19 +30,25 @@
       ></date-picker>
     </div>
     <div v-if="creationType === 'tag'">
-      <md-field>
-        <label>Tag name:</label>
-        <md-input v-model="apiData.name" required></md-input>
-      </md-field>
-    
-      <label>Due Date:</label>
-      <date-picker
-        v-model="apiData.dueDate"
-        type="datetime"
-        value-type="timestamp"
-        :minute-step="30"
-        format="DD/MM/YY HH:mm"
-      ></date-picker>
+      <div>
+        <md-field>
+          <label>Tag name:</label>
+          <md-input v-model="apiData.name" required></md-input>
+        </md-field>
+      </div>
+
+      <div>
+        <label>Color:</label><br>
+        <v-swatches v-model="apiData.color" style="position:relative; z-index:10"></v-swatches>
+      </div>
+
+      <div>
+        <label>Reminder Time:</label>
+        <md-checkbox v-model="apiData.reminderTime" :value="this.getReminderTime(7)">1 Week</md-checkbox>
+        <md-checkbox v-model="apiData.reminderTime" :value="this.getReminderTime(1)">1 Day</md-checkbox>
+        <md-checkbox v-model="apiData.reminderTime" :value="this.getReminderTime(0.5)">12 hours</md-checkbox>
+        <md-checkbox v-model="apiData.reminderTime" :value="this.getReminderTime(0.25)">6 hours</md-checkbox>
+      </div>
     </div>
   </div>
   
@@ -54,15 +60,23 @@ import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import { TagApi } from "@/types/GarnBarnApi/TagApi"
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
+import VSwatches from 'vue-swatches'
+import 'vue-swatches/dist/vue-swatches.css'
 
 @Component({
   components: {
     DatePicker,
+    VSwatches
   },
 })
 export default class Create extends Vue {
   @Prop({ required: true }) creationType!: "assignment" | "tag";
   @Prop({ required: true }) apiData!: AssignmentApi | TagApi;
+
+  getReminderTime(timeBeforeDue: number): number {
+    var reminderTime = (24*60*60*1000) * timeBeforeDue; //time of timeBeforeDue days
+    return reminderTime
+  }
 }
 </script>
 
@@ -72,8 +86,8 @@ export default class Create extends Vue {
 }
 
 .flex-col {
-  flex: 1 1 0%;
-  flex-direction: column;
-  text-align: left;
+  flex: 1 1 0% ;
+  flex-direction: column ;
 }
+
 </style>

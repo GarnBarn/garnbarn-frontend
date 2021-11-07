@@ -18,7 +18,7 @@
                 :apiData="tagData"
                 :creationType="creationType"
                 md-dynamic-height
-                ref="assignmentCreate"
+                ref="tagCreate"
               ></Create>
             </md-tab>
 
@@ -88,7 +88,7 @@ export default class Tags extends Vue {
   tagData: TagApi = {
     name: undefined,
     color: undefined,
-    reminderTime: undefined,
+    reminderTime: [],
     subscriber: undefined,
   };
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
@@ -122,7 +122,7 @@ export default class Tags extends Vue {
 
   createTag(): void {
     this.garnBarnAPICaller?.v1.tags
-      .create(this.assignmentCreate.assignmentData)
+      .create(this.tagCreate.apiData)
       .then((apiResponse) => {
         this.informDialogBox.show({
           dialogBoxContent: {
