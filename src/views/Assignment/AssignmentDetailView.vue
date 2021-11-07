@@ -81,7 +81,7 @@ import firebase from "firebase";
     DialogBoxComponent,
   },
 })
-export default class AssignmentView extends Vue {
+export default class AssignmentDetailView extends Vue {
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   editing = false;
   informDialogBox = new DialogBox("informDialogBox");
@@ -103,13 +103,13 @@ export default class AssignmentView extends Vue {
     dueDate: 1635439072,
   };
   assignmentApi: AssignmentApi = {
-      id: undefined,
-      name: undefined,
-      reminderTime: undefined,
-      description: undefined,
-      dueDate: undefined,
-      tagId: undefined
-    };
+    id: undefined,
+    name: undefined,
+    reminderTime: undefined,
+    description: undefined,
+    dueDate: undefined,
+    tagId: undefined,
+  };
 
   callback(user: firebase.User, loadingDialogBox: DialogBox): void {
     this.garnBarnAPICaller = new GarnBarnApi(user);
@@ -123,7 +123,9 @@ export default class AssignmentView extends Vue {
         this.assignmentId
       );
       this.assignment = apiResponse?.data as Assignment;
-      this.assignmentApi = this.extractAssignmentToAssignmentApi(this.assignment);
+      this.assignmentApi = this.extractAssignmentToAssignmentApi(
+        this.assignment
+      );
     } catch (e) {
       this.informDialogBox.show({
         dialogBoxContent: {
@@ -171,7 +173,7 @@ export default class AssignmentView extends Vue {
       ],
     });
   }
-  
+
   extractAssignmentToAssignmentApi(assignment: Assignment): AssignmentApi {
     let assignmentApi: AssignmentApi = {
       id: undefined,
@@ -179,7 +181,7 @@ export default class AssignmentView extends Vue {
       reminderTime: undefined,
       description: undefined,
       dueDate: undefined,
-      tagId: undefined
+      tagId: undefined,
     };
     assignmentApi.name = assignment.name;
     assignmentApi.reminderTime = [0];
