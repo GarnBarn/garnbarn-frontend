@@ -80,7 +80,7 @@
 
 <script lang="ts">
 import { Component, Vue, Ref } from "vue-property-decorator";
-import { AssignmentApi } from "@/types/garnbarn/AssignmentApi";
+import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
