@@ -5,12 +5,13 @@
       <md-button class="md-primary md-raised">Mark As Done</md-button>
       <md-button class="md-primary md-raised" v-on:click="edit">Edit</md-button>
       <router-link to="/home">
-        <md-button class="md-primary md-raised">Back</md-button>
+        <md-button class="md-secondary">Back</md-button>
       </router-link>
     </div>
     <DialogBoxComponent
       :dialogBoxId="'editAssignmentDialogBox'"
       :isCustomDialogBox="true"
+      class="blur"
     >
       <md-card-content>
         <md-tabs md-dynamic-height>
@@ -187,3 +188,11 @@ export default class AssignmentView extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.blur {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+</style>
