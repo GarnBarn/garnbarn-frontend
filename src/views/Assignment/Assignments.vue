@@ -53,6 +53,7 @@
             <md-tab md-label="Create">
               <Create
                 :assignmentData="assignmentData"
+                :firebaseUser="firebaseUser"
                 md-dynamic-height
                 ref="assignmentCreate"
               ></Create>
@@ -137,10 +138,12 @@ export default class AssignmentView extends Vue {
   };
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   getNextData: GetAllAssignmentApiNextFunctionWrapper | null = null;
+  firebaseUser: firebase.User | null = null;
 
   callback(user: firebase.User, loadingDialogBox: DialogBox): void {
     this.garnBarnAPICaller = new GarnBarnApi(user);
     this.updatePagination(1, this.rowsPerPage).then(() => {
+      this.firebaseUser = user;
       loadingDialogBox.dismiss();
     });
   }
