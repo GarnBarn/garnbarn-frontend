@@ -4,12 +4,8 @@
       <AssignmentDetail :assignment="assignment"></AssignmentDetail>
       <md-button class="md-primary md-raised">Mark As Done</md-button>
       <md-button class="md-primary md-raised" v-on:click="edit">Edit</md-button>
-      <md-button class="md-accent md-raised" v-on:click="confirmDelete"
-        >Delete</md-button
-      >
-      <router-link to="/home">
-        <md-button class="md-secondary">Back</md-button>
-      </router-link>
+      <md-button class="md-accent md-raised" v-on:click="confirmDelete">Delete</md-button>
+      <md-button class="md-secondary" @click="popBack">Back</md-button>
     </div>
     <DialogBoxComponent
       :dialogBoxId="'editAssignmentDialogBox'"
@@ -84,7 +80,7 @@ import firebase from "firebase";
     DialogBoxComponent,
   },
 })
-export default class AssignmentView extends Vue {
+export default class AssignmentDetailView extends Vue {
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   creationType = 'assignment';
   editing = false;
@@ -253,6 +249,10 @@ export default class AssignmentView extends Vue {
     }
 
     return assignmentApi;
+  }
+
+  popBack() {
+    this.$router.back();
   }
 }
 </script>

@@ -32,7 +32,11 @@ export class AssignmentApis extends api {
   async all(
     fromPresent?: boolean,
     page?: number
-  ): Promise<AxiosResponse<BulkApiResponse<Assignment>>> {
+  ): Promise<
+    AxiosResponse<
+      BulkApiResponse<Assignment, GetAllAssignmentApiNextFunctionWrapper>
+    >
+  > {
     let url = `${this.API_BASE_URL}/`;
     if (fromPresent || page) {
       // For adding Query Parameters
@@ -55,7 +59,9 @@ export class AssignmentApis extends api {
       fromPresent
     );
     response.data = responseData;
-    return response as AxiosResponse<BulkApiResponse<Assignment>>;
+    return response as AxiosResponse<
+      BulkApiResponse<Assignment, GetAllAssignmentApiNextFunctionWrapper>
+    >;
   }
 
   createNextMethodForGetAllAssignmentApi(

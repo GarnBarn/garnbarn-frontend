@@ -8,9 +8,9 @@
     <md-field>
       <label>Tag:</label>
       <md-select v-model="assignmentData.tagId">
-        <!--  Not sure how to call all tag from user -->
-        <md-option value="1">ISP</md-option>
-        <md-option value="2">Physics</md-option>
+        <md-option :value="item.id" v-for="item in tags" :key="item.id">{{
+          item.name
+        }}</md-option>
       </md-select>
     </md-field>
 
@@ -35,6 +35,9 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
+import firebase from "firebase";
+import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
+import { Tag } from "@/types/garnbarn/Tag";
 
 @Component({
   components: {
@@ -43,6 +46,22 @@ import "vue2-datepicker/index.css";
 })
 export default class Create extends Vue {
   @Prop({ required: true }) assignmentData!: AssignmentApi;
+  @Prop({ required: true }) firebaseUser!: firebase.User;
+  garnBarnApiCaller: GarnBarnApi | null = null;
+  tags: Array<Tag> = [];
+
+  mounted() {
+    this.garnBarnApiCaller = new GarnBarnApi(this.firebaseUser);
+    this.garnBarnApiCaller.v1.tags.all().then(async (apiResponse) => {
+      this.tags = apiResponse.data.results;
+      let nextFunction = apiResponse.data.next;
+      while (typeof nextFunction === "function") {
+        const response = await nextFunction();
+        this.tags = this.tags.concat(response.data.results);
+        nextFunction = response.data.next;
+      }
+    });
+  }
 }
 </script>
 
