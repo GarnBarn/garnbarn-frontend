@@ -1,7 +1,5 @@
-export type Tag = {
-  id: number;
-  name: string;
-  author: string;
+export type TagApi = {
+  name?: string;
   color?: string;
   reminderTime?: Array<number>;
   subscriber?: Array<number>;
