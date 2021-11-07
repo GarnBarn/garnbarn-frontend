@@ -2,6 +2,9 @@
   <layout :callback="callback">
     <div>
       <md-button class="md-primary md-raised" v-on:click="edit">Edit</md-button>
+      <md-button class="md-accent md-raised" v-on:click="confirmDelete"
+        >Delete</md-button
+      >
       <router-link to="/home">
         <md-button class="md-secondary">Back</md-button>
       </router-link>
@@ -115,7 +118,7 @@ export default class TagDetailView extends Vue {
         this.tagId
       );
       this.tag = apiResponse?.data as Tag;
-      this.tagApi = this.extractAssignmentToAssignmentApi(this.tag);
+      this.tagApi = this.extractTagToTagApi(this.tag);
     } catch (e) {
       this.informDialogBox.show({
         dialogBoxContent: {
@@ -127,7 +130,7 @@ export default class TagDetailView extends Vue {
   }
 
   async update(): Promise<void> {
-    this.garnBarnAPICaller?.v1.assignments
+    this.garnBarnAPICaller?.v1.tags
       .update(this.tagId, this.tagApi as TagApi)
       .then((apiResponse) => {
         this.tag = apiResponse.data as Tag;
@@ -140,6 +143,63 @@ export default class TagDetailView extends Vue {
           },
         });
       });
+  }
+
+   async deleteTag(): Promise<void> {
+    this.garnBarnAPICaller?.v1.tags
+      .delete(this.tagId)
+      .then((apiResponse) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Tag deleted",
+            content: `Your tag has been deleted.`,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                this.informDialogBox.dismiss();
+              },
+            },
+          ],
+        });
+      })
+      .catch((e) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Error",
+            content: e.message,
+          },
+        });
+      });
+  }
+
+  confirmDelete(): void {
+    this.informDialogBox.show({
+      dialogBoxContent: {
+        title: "Confirm Delete?",
+        content: `This action can't be undone, Are you sure?`,
+      },
+      dialogBoxActions: [
+        {
+          buttonContent: "Confirm",
+          buttonClass: "md-primary",
+          onClick: (): void => {
+            this.deleteTag();
+            this.informDialogBox.dismiss();
+            this.$router.push('/home');
+          },
+        },
+        {
+          buttonContent: "Cancel",
+          buttonClass: "md-secondary",
+          onClick: (): void => {
+            this.informDialogBox.dismiss();
+          },
+        },
+      ],
+    });
   }
 
   edit(): void {
@@ -164,20 +224,22 @@ export default class TagDetailView extends Vue {
     });
   }
   
-  extractAssignmentToAssignmentApi(tag: Tag): TagApi {
+  extractTagToTagApi(tag: Tag): TagApi {
     let tagApi: TagApi = {
       name: undefined,
       color: undefined,
       reminderTime: [],
-      subscriber: undefined
+      subscriber: []
     };
     tagApi.name = tag.name;
     if (tag.reminderTime) {
       tagApi.reminderTime = tag.reminderTime;
     }
     tagApi.color = tag.color;
-    tagApi.subscriber = tag.subscriber
-
+    if (tag.subscriber) {
+      tagApi.subscriber = tag.subscriber
+    }
+    
     return tagApi;
   }
 }
