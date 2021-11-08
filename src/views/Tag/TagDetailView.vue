@@ -1,29 +1,30 @@
 <template>
   <layout :callback="callback">
-    <div class="detail">
-      <AssignmentDetail :assignment="assignment"></AssignmentDetail>
-      <md-button class="md-primary md-raised">Mark As Done</md-button>
+    <div>
       <md-button class="md-primary md-raised" v-on:click="edit">Edit</md-button>
+      <md-button class="md-accent md-raised" v-on:click="confirmDelete"
+        >Delete</md-button
+      >
       <router-link to="/home">
-        <md-button class="md-primary md-raised">Back</md-button>
+        <md-button class="md-secondary">Back</md-button>
       </router-link>
     </div>
     <DialogBoxComponent
-      :dialogBoxId="'editAssignmentDialogBox'"
+      :dialogBoxId="'editTagDialogBox'"
       :isCustomDialogBox="true"
+      class="blur"
     >
       <md-card-content>
         <md-tabs md-dynamic-height>
           <md-tab md-label="Assignment">
-            <AssignmentEdit
-              :cachedAssignment="JSON.parse(JSON.stringify(assignment))"
-              :callback="assignmentCallback"
+            <Create
+              :apiData="tagApi"
+              :creationType="creationType"
               md-dynamic-height
-              ref="assignmentEdit"
-            ></AssignmentEdit>
+            ></Create>
           </md-tab>
 
-          <md-tab md-label="Notification Settings">
+          <md-tab md-label="Notification Settings" md-disabled>
             <p>
               Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
               mollitia dolorum dolores quae commodi impedit possimus qui, atque
@@ -62,12 +63,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Ref } from "vue-property-decorator";
-import { Assignment } from "@/types/garnbarn/Assignment";
-import { AssignmentApi } from "@/types/garnbarn/AssignmentApi";
+import { Component, Vue } from "vue-property-decorator";
+import { Tag } from "@/types/garnbarn/Tag";
+import { TagApi } from "@/types/GarnBarnApi/TagApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
-import AssignmentEdit from "@/components/AssignmentEdit.vue";
-import AssignmentDetail from "@/components/AssignmentDetail.vue";
+import Create from "@/components/Create.vue";
+import TagDetail from "@/components/TagDetail.vue";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
@@ -76,45 +77,48 @@ import firebase from "firebase";
 @Component({
   components: {
     Layout,
-    AssignmentDetail,
-    AssignmentEdit,
+    TagDetail,
+    Create,
     DialogBoxComponent,
   },
 })
-export default class AssignmentView extends Vue {
-  @Ref() readonly assignmentEdit!: AssignmentEdit;
+export default class TagDetailView extends Vue {
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   editing = false;
+  creationType = 'tag';
+  firebaseUser: firebase.User | undefined = undefined;
   informDialogBox = new DialogBox("informDialogBox");
-  editAssignmentDialogBox = new DialogBox("editAssignmentDialogBox");
-  assignmentId = Number(this.$route.params.id);
-  assignment: Assignment = {
-    id: this.assignmentId,
-    name: "Test 1",
-    tag: {
-      id: 1,
-      name: "Test Tag",
-      color: "#30475E",
-    },
-    reminderTime: [50, 50, 50],
-    description:
-      "The overflow-wrap property in CSS allows you to specify that the browser can break a line of text inside the targeted element onto multiple lines in an otherwise unbreakable place. This helps to avoid an unusually long string of text causing layout problems due to overflow.",
-    dueDate: 1635439072,
+  editTagDialogBox = new DialogBox("editTagDialogBox");
+  tagId = Number(this.$route.params.id);
+  tag: Tag = {
+      id: this.tagId,
+      name: "",
+      author: this.firebaseUser?.uid as string,
+      color: "",
+      reminderTime: [],
+      subscriber: undefined
+  }
+  tagApi: TagApi = {
+    name: undefined,
+    color: undefined,
+    reminderTime: [],
+    subscriber: undefined,
   };
 
   callback(user: firebase.User, loadingDialogBox: DialogBox): void {
     this.garnBarnAPICaller = new GarnBarnApi(user);
     this.get();
+    this.firebaseUser = user
     loadingDialogBox.dismiss();
   }
 
   async get(): Promise<void> {
     try {
-      const apiResponse = await this.garnBarnAPICaller
-        ?.v1()
-        .assignment()
-        .get(this.assignmentId);
-      this.assignment = apiResponse?.data as Assignment;
+      const apiResponse = await this.garnBarnAPICaller?.v1.tags.get(
+        this.tagId
+      );
+      this.tag = apiResponse?.data as Tag;
+      this.tagApi = this.extractTagToTagApi(this.tag);
     } catch (e) {
       this.informDialogBox.show({
         dialogBoxContent: {
@@ -126,17 +130,10 @@ export default class AssignmentView extends Vue {
   }
 
   async update(): Promise<void> {
-    const assignmentCopy = JSON.parse(JSON.stringify(this.assignment));
-    const diff = this.getDiff(
-      assignmentCopy,
-      this.assignmentEdit.cachedAssignment
-    );
-    this.garnBarnAPICaller
-      ?.v1()
-      .assignment()
-      .update(this.assignmentId, diff)
+    this.garnBarnAPICaller?.v1.tags
+      .update(this.tagId, this.tagApi as TagApi)
       .then((apiResponse) => {
-        this.assignment = apiResponse.data as Assignment;
+        this.tag = apiResponse.data as Tag;
       })
       .catch((e) => {
         this.informDialogBox.show({
@@ -148,14 +145,71 @@ export default class AssignmentView extends Vue {
       });
   }
 
+   async deleteTag(): Promise<void> {
+    this.garnBarnAPICaller?.v1.tags
+      .delete(this.tagId)
+      .then((apiResponse) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Tag deleted",
+            content: `Your tag has been deleted.`,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                this.informDialogBox.dismiss();
+              },
+            },
+          ],
+        });
+      })
+      .catch((e) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Error",
+            content: e.message,
+          },
+        });
+      });
+  }
+
+  confirmDelete(): void {
+    this.informDialogBox.show({
+      dialogBoxContent: {
+        title: "Confirm Delete?",
+        content: `This action can't be undone, Are you sure?`,
+      },
+      dialogBoxActions: [
+        {
+          buttonContent: "Confirm",
+          buttonClass: "md-primary",
+          onClick: (): void => {
+            this.deleteTag();
+            this.informDialogBox.dismiss();
+            this.$router.push('/home');
+          },
+        },
+        {
+          buttonContent: "Cancel",
+          buttonClass: "md-secondary",
+          onClick: (): void => {
+            this.informDialogBox.dismiss();
+          },
+        },
+      ],
+    });
+  }
+
   edit(): void {
-    this.editAssignmentDialogBox.show({
+    this.editTagDialogBox.show({
       dialogBoxActions: [
         {
           buttonContent: "Save",
           buttonClass: "md-primary md-raised",
           onClick: (): void => {
-            this.editAssignmentDialogBox.dismiss();
+            this.editTagDialogBox.dismiss();
             this.update();
           },
         },
@@ -163,30 +217,38 @@ export default class AssignmentView extends Vue {
           buttonContent: "Exit",
           buttonClass: "md-secondary",
           onClick: (): void => {
-            this.editAssignmentDialogBox.dismiss();
+            this.editTagDialogBox.dismiss();
           },
         },
       ],
     });
   }
-
-  getDiff(copiedObject: Assignment, originalObject: Assignment): AssignmentApi {
-    let diff = Object.keys(originalObject).reduce((diff, key) => {
-      if (
-        copiedObject[key as keyof Assignment] ===
-        originalObject[key as keyof Assignment]
-      )
-        return diff;
-      return {
-        ...diff,
-        [key]: originalObject[key as keyof Assignment],
-      };
-    }, {});
-    return diff;
-  }
-
-  assignmentCallback(assignment: Assignment): void {
-    this.$data.assignment = this.get();
+  
+  extractTagToTagApi(tag: Tag): TagApi {
+    let tagApi: TagApi = {
+      name: undefined,
+      color: undefined,
+      reminderTime: [],
+      subscriber: []
+    };
+    tagApi.name = tag.name;
+    if (tag.reminderTime) {
+      tagApi.reminderTime = tag.reminderTime;
+    }
+    tagApi.color = tag.color;
+    if (tag.subscriber) {
+      tagApi.subscriber = tag.subscriber
+    }
+    
+    return tagApi;
   }
 }
 </script>
+
+<style scoped>
+.blur {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+</style>

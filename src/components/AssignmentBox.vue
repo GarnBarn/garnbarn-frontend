@@ -19,7 +19,7 @@
 
           <div class="submission-time inline-flex">
             <md-icon>watch_later</md-icon>
-            <p>Submission Time: 19:00</p>
+            <p>Submission Time: {{ timeString }}</p>
           </div>
         </div>
       </md-card-content>
@@ -70,6 +70,17 @@ export default class AssignmentBox extends Vue {
   navigateToAssignmentPage(assignmentId: number): void {
     this.$router.push(`/assignment/${assignmentId}`);
   }
+
+  get timeString(): string {
+    if (typeof this.assignment.dueDate === "undefined") {
+      return "Unknown";
+    }
+    const date = new Date(this.assignment.dueDate);
+    return date.toLocaleTimeString("en-GB", {
+      hour: "numeric",
+      minute: "numeric",
+    });
+  }
 }
 </script>
 
@@ -84,8 +95,10 @@ export default class AssignmentBox extends Vue {
 }
 
 .big-text {
-  font-size: 3rem !important;
-  height: fit-content;
+  text-overflow: ellipsis;
+  font-size: xx-large !important;
+  overflow: hidden;
+  padding: 3px;
 }
 
 .assignment-content {
@@ -106,7 +119,7 @@ export default class AssignmentBox extends Vue {
 
 @media only screen and (max-width: 800px) {
   .big-text {
-    font-size: 2.5rem !important;
+    font-size: xx-large !important;
   }
   .assignment-card {
     margin: 20px;

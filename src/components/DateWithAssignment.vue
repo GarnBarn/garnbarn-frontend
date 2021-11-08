@@ -5,7 +5,7 @@
     </div>
     <div class="assignment-list">
       <assignment-box
-        v-for="assignment in assignments"
+        v-for="assignment in assignmentsSorted"
         :key="assignments.indexOf(assignment)"
         :assignment="assignment"
       ></assignment-box>
@@ -24,8 +24,32 @@ import AssignmentBox from "@/components/AssignmentBox.vue";
   },
 })
 export default class DateWithAssignment extends Vue {
-  @Prop({ required: true }) readonly dateString!: string;
+  @Prop({ required: true }) readonly date!: Date;
   @Prop({ default: [] }) readonly assignments!: Array<Assignment>;
+
+  get dateString(): string {
+    return this.date.toLocaleString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  }
+
+  get assignmentsSorted(): Array<Assignment> {
+    this.assignments.sort((a, b) => {
+      if (
+        typeof a.dueDate === "undefined" ||
+        typeof b.dueDate === "undefined"
+      ) {
+        return -1;
+      }
+      if (a.dueDate < b.dueDate) {
+        return -1;
+      }
+      return 1;
+    });
+    return this.assignments;
+  }
 }
 </script>
 

@@ -3,9 +3,10 @@ import { createMock } from "ts-auto-mock";
 import firebase from "firebase";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import GarnBarnApiConfig from "@/GarnBarnApiConfig.json";
-import { AssignmentApi } from "@/types/garnbarn/AssignmentApi";
+import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import { Assignment } from "@/types/garnbarn/Assignment";
-import { api, ApiSpecError } from "@/services/GarnBarnApi/apis/v1/api";
+import { ApiSpecError } from "@/services/GarnBarnApi/apis/v1/api";
+import { GetAllAssignmentApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
 
 jest.mock("axios");
 
@@ -77,7 +78,7 @@ describe("Test Assignment APIs v1 Caller", () => {
   });
 
   test("Test calling Get Assignment API with valid data", async () => {
-    const apiResponse = await garnBarnApiCaller.v1().assignment().get(1);
+    const apiResponse = await garnBarnApiCaller.v1.assignments.get(1);
     expect(mockAxios).toHaveBeenCalledWith(
       generateRequestDetail(ID_TOKEN, "GET", "/api/v1/assignment/1/")
     );
@@ -91,10 +92,9 @@ describe("Test Assignment APIs v1 Caller", () => {
       dueDate: 1634745493,
       tagId: 1,
     };
-    const apiResponse = await garnBarnApiCaller
-      .v1()
-      .assignment()
-      .create(mockAssignmentData);
+    const apiResponse = await garnBarnApiCaller.v1.assignments.create(
+      mockAssignmentData
+    );
     expect(mockAxios).toBeCalledWith(
       generateRequestDetail(
         ID_TOKEN,
@@ -115,9 +115,9 @@ describe("Test Assignment APIs v1 Caller", () => {
       tagId: 1,
     };
     // User can't set the assignment id and the api caller must throw the ApiSpecError
-    expect(() => {
-      garnBarnApiCaller.v1().assignment().create(mockAssignmentData);
-    }).toThrow(new ApiSpecError("You can't set the assignment id"));
+    await expect(
+      garnBarnApiCaller.v1.assignments.create(mockAssignmentData)
+    ).rejects.toEqual(new ApiSpecError("You can't set the assignment id"));
   });
 
   test("Test calling Create Assignment API while not providing the name of assignment", () => {
@@ -126,9 +126,9 @@ describe("Test Assignment APIs v1 Caller", () => {
       dueDate: 1634745493,
       tagId: 1,
     };
-    expect(() => {
-      garnBarnApiCaller.v1().assignment().create(mockAssignmentData);
-    }).toThrow(
+    return expect(
+      garnBarnApiCaller.v1.assignments.create(mockAssignmentData)
+    ).rejects.toEqual(
       new ApiSpecError("You can't create an assignment without a name")
     );
   });
@@ -143,10 +143,10 @@ describe("Test Assignment APIs v1 Caller", () => {
     mockAxios.mockResolvedValue({
       data: generateAssignmentObject(MOCK_RESPONSE, mockAssignmentApiData),
     });
-    const apiResponse = await garnBarnApiCaller
-      .v1()
-      .assignment()
-      .update(1, mockAssignmentApiData);
+    const apiResponse = await garnBarnApiCaller.v1.assignments.update(
+      1,
+      mockAssignmentApiData
+    );
     expect(mockAxios).toBeCalledWith(
       generateRequestDetail(
         ID_TOKEN,
@@ -160,7 +160,7 @@ describe("Test Assignment APIs v1 Caller", () => {
     );
   });
 
-  test("Test calling Update Assignment API while providing the assignment id", () => {
+  test("Test calling Update Assignment API while providing the assignment id", async () => {
     const mockAssignmentApiData = {
       id: 2,
       name: "Example Assignment",
@@ -169,9 +169,9 @@ describe("Test Assignment APIs v1 Caller", () => {
       tagId: 1,
     };
 
-    expect(() => {
-      garnBarnApiCaller.v1().assignment().update(1, mockAssignmentApiData);
-    }).toThrow(new ApiSpecError("You can't update the assignment id"));
+    await expect(
+      garnBarnApiCaller.v1.assignments.update(1, mockAssignmentApiData)
+    ).rejects.toEqual(new ApiSpecError("You can't update the assignment id"));
   });
 
   test("Test calling Delete Assignment API", async () => {
@@ -179,7 +179,7 @@ describe("Test Assignment APIs v1 Caller", () => {
       data: {},
     });
 
-    const apiResponse = await garnBarnApiCaller.v1().assignment().delete(1);
+    const apiResponse = await garnBarnApiCaller.v1.assignments.delete(1);
     expect(mockAxios).toBeCalledWith(
       generateRequestDetail(ID_TOKEN, "DELETE", "/api/v1/assignment/1/")
     );
@@ -211,10 +211,58 @@ describe("Test Assignment APIs v1 Caller", () => {
       ],
     };
     mockAxios.mockResolvedValue({ data: mockResponse });
-    const apiResponse = await garnBarnApiCaller.v1().assignment().all();
+    const apiResponse = await garnBarnApiCaller.v1.assignments.all();
     expect(mockAxios).toBeCalledWith(
       generateRequestDetail(ID_TOKEN, "GET", "/api/v1/assignment/")
     );
     expect(apiResponse.data).toEqual(mockResponse);
+  });
+
+  test("Test Get All Assignments API with fromPresent to be true", async () => {
+    const apiResponse = await garnBarnApiCaller.v1.assignments.all(true);
+    expect(mockAxios).toBeCalledWith(
+      generateRequestDetail(
+        ID_TOKEN,
+        "GET",
+        "/api/v1/assignment/?fromPresent=true&"
+      )
+    );
+  });
+
+  test("Test Get All Assignments API with page number", async () => {
+    const apiResponse = await garnBarnApiCaller.v1.assignments.all(false, 5);
+    expect(mockAxios).toBeCalledWith(
+      generateRequestDetail(ID_TOKEN, "GET", "/api/v1/assignment/?page=5&")
+    );
+  });
+
+  test("Test Create next method for get all assignment api", async () => {
+    const nextMethod =
+      garnBarnApiCaller.v1.assignments.createNextMethodForGetAllAssignmentApi(
+        `http://${GarnBarnApiConfig.apiPrefix}/?page=1`,
+        true
+      );
+    expect(nextMethod).not.toBe(null);
+    await (nextMethod as GetAllAssignmentApiNextFunctionWrapper)();
+    expect(mockAxios).toBeCalledWith(
+      generateRequestDetail(
+        ID_TOKEN,
+        "GET",
+        "/api/v1/assignment/?page=1&fromPresent=true&"
+      )
+    );
+  });
+
+  test("Test Create next method for get all assignment api witn invalud request parameter", async () => {
+    const nextMethod =
+      garnBarnApiCaller.v1.assignments.createNextMethodForGetAllAssignmentApi(
+        `http://${GarnBarnApiConfig.apiPrefix}/`,
+        false
+      );
+    expect(nextMethod).not.toBe(null);
+    await (nextMethod as GetAllAssignmentApiNextFunctionWrapper)();
+    expect(mockAxios).toBeCalledWith(
+      generateRequestDetail(ID_TOKEN, "GET", "/api/v1/assignment/?page=1&")
+    );
   });
 });

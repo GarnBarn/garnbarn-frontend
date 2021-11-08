@@ -3,7 +3,9 @@
     <div class="name title">
       <p>{{ assignment.name }}</p>
     </div>
-    <div class="tag">
+    <div v-if="assignment.tag" class="tag" 
+        @click="navigateToTagPage(assignment.tag.id)"
+    >
       <tag-box :tag="assignment.tag"></tag-box>
     </div>
     <div class="description text-gray">
@@ -43,22 +45,10 @@ export default class AssignmentDetail extends Vue {
   get getFormatDate(): string {
     const date = this.convertUnixTimeToDate(this.assignment.dueDate as number);
     if (date) {
-      const monthNames = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ];
-      var formattedDate = date.getDate() + " " + monthNames[date.getMonth()];
-      return formattedDate;
+      return date.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+      })
     }
 
     return "Unknown";
@@ -67,10 +57,16 @@ export default class AssignmentDetail extends Vue {
   get getFormatTime(): string {
     const date = this.convertUnixTimeToDate(this.assignment.dueDate as number);
     if (date) {
-      var formattedTime = date.getHours() + ":" + date.getMinutes();
-      return formattedTime;
+      return date.toLocaleTimeString("en-GB", {
+          hour: "numeric",
+          minute: "numeric",
+      })
     }
     return "Unknown";
+  }
+
+  navigateToTagPage(tagId: number): void {
+    this.$router.push(`/tag/${tagId}`);
   }
 }
 </script>
@@ -114,5 +110,9 @@ export default class AssignmentDetail extends Vue {
 
 .text-gray {
   color: #616161;
+}
+
+.tag {
+  cursor: pointer;
 }
 </style>

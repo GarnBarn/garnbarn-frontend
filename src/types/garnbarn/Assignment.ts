@@ -3,6 +3,7 @@ import { Tag } from "./Tag";
 export type Assignment = {
   id: number;
   name: string;
+  author: string;
   description?: string;
   reminderTime?: Array<Number>;
   dueDate?: number;
@@ -10,7 +11,7 @@ export type Assignment = {
 };
 
 export type AssignmentsInDay = {
-  date: string;
+  date: Date;
   assignments: Array<Assignment>;
 };
 
