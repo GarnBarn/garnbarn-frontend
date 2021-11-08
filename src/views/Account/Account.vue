@@ -119,7 +119,7 @@ export default class Account extends Vue {
         this.informDialogBox.show({
           dialogBoxContent: {
             title: "An error occurred",
-            content: e,
+            content: e.message,
           },
           dialogBoxActions: [
             {
