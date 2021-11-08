@@ -204,8 +204,8 @@ export default class Tags extends Vue {
       .then((apiResponse) => {
         this.informDialogBox.show({
           dialogBoxContent: {
-            title: "Assignment created",
-            content: `Your assignment has been created with id ${apiResponse.data.id}`,
+            title: "Tag created",
+            content: `Your Tag has been created with id ${apiResponse.data.id}`,
           },
           dialogBoxActions: [
             {
@@ -213,6 +213,15 @@ export default class Tags extends Vue {
               buttonClass: "md-secondary",
               onClick: async () => {
                 this.informDialogBox.dismiss();
+                if (!this.garnBarnAPICaller?.v1.assignments.getFirebaseUser()) {
+                  return;
+                }
+                this.loadingDialogBox.show();
+                this.tags = [];
+                this.callback(
+                  this.garnBarnAPICaller?.v1.tags.getFirebaseUser(),
+                  this.loadingDialogBox
+                );
               },
             },
           ],

@@ -262,6 +262,15 @@ export default class Assignments extends Vue {
               buttonClass: "md-secondary",
               onClick: async () => {
                 this.informDialogBox.dismiss();
+                if (!this.garnBarnAPICaller?.v1.assignments.getFirebaseUser()) {
+                  return;
+                }
+                this.loadingDialogBox.show();
+                this.tablePages.mdData = [];
+                this.callback(
+                  this.garnBarnAPICaller?.v1.assignments.getFirebaseUser(),
+                  this.loadingDialogBox
+                );
               },
             },
           ],
