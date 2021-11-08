@@ -45,22 +45,10 @@ export default class AssignmentDetail extends Vue {
   get getFormatDate(): string {
     const date = this.convertUnixTimeToDate(this.assignment.dueDate as number);
     if (date) {
-      const monthNames = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ];
-      var formattedDate = date.getDate() + " " + monthNames[date.getMonth()];
-      return formattedDate;
+      return date.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+      })
     }
 
     return "Unknown";
@@ -69,23 +57,12 @@ export default class AssignmentDetail extends Vue {
   get getFormatTime(): string {
     const date = this.convertUnixTimeToDate(this.assignment.dueDate as number);
     if (date) {
-      const time = [date.getHours(), date.getMinutes()];
-      var formattedTime: string[] = time.map(function(value) {
-        if (value >= 0 && value <= 9) {
-          return "0" + value;
-        }
-        return value.toString();
-      });
-      return formattedTime[0] + ":" + formattedTime[1];
+      return date.toLocaleTimeString("en-GB", {
+          hour: "numeric",
+          minute: "numeric",
+      })
     }
     return "Unknown";
-  }
-
-  addZeroSingularDigitTime(formatTime: string): string {
-    if (formatTime >= '0' && formatTime <= '9') {
-      return "0" + formatTime;
-    }
-    return formatTime;
   }
 
   navigateToTagPage(tagId: number): void {
