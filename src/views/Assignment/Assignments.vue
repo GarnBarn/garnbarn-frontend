@@ -1,10 +1,6 @@
 <template>
   <layout :callback="callback">
     <div>
-      <h1>Add Assignment</h1>
-      <md-button class="md-icon-button md-raised md-primary" v-on:click="edit">
-        <md-icon>add</md-icon>
-      </md-button>
       <md-table
         v-model="tablePages.mdData"
         md-sort="id"
@@ -17,7 +13,6 @@
             <md-tooltip> Create new Assignment </md-tooltip>
           </md-button>
         </md-table-toolbar>
-        <!-- <router-link :to="item.id"> -->
         <md-table-row
           slot="md-table-row"
           slot-scope="{ item }"
@@ -136,7 +131,7 @@ export default class Assignments extends Vue {
   createDialogBox = new DialogBox("createDialogBox");
   loadingDialogBox = new DialogBox("loadingDialogBox");
   informDialogBox = new DialogBox("informDialogBox");
-  creationType = 'assignment';
+  creationType = "assignment";
   tablePages = {
     mdCount: null as number | null,
     mdPage: null as number | null,
