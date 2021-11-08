@@ -306,7 +306,10 @@ export default class Assignments extends Vue {
       };
     }
     // TODO: After User API is ready, Edit these line to get data from it..
-    return null;
+    return {
+      displayName: "Unknown",
+      profileImage: null,
+    };
   }
 }
 </script>
