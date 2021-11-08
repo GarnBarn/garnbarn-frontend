@@ -170,7 +170,8 @@ export default class AssignmentDetailView extends Vue {
               buttonContent: "Ok",
               buttonClass: "md-secondary",
               onClick: async () => {
-                this.informDialogBox.dismiss();
+                await this.informDialogBox.dismiss();
+                this.$router.back();
               },
             },
           ],
@@ -182,6 +183,15 @@ export default class AssignmentDetailView extends Vue {
             title: "Error",
             content: e.message,
           },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                await this.informDialogBox.dismiss();
+              },
+            },
+          ],
         });
       });
   }
@@ -196,16 +206,15 @@ export default class AssignmentDetailView extends Vue {
         {
           buttonContent: "Confirm",
           buttonClass: "md-primary",
-          onClick: (): void => {
-            this.deleteAssignment();
+          onClick: async ()  => {
+            await this.deleteAssignment();
             this.informDialogBox.dismiss();
-            this.$router.back();
           },
         },
         {
           buttonContent: "Cancel",
           buttonClass: "md-secondary",
-          onClick: (): void => {
+          onClick: () => {
             this.informDialogBox.dismiss();
           },
         },
