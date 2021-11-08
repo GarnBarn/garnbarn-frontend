@@ -141,6 +141,7 @@ export default class AssignmentView extends Vue {
     id: undefined,
     name: undefined,
     description: undefined,
+    reminderTime: [],
     dueDate: undefined,
     tagId: undefined,
   };

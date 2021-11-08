@@ -19,14 +19,72 @@
       <md-textarea v-model="assignmentData.description"></md-textarea>
     </md-field>
 
-    <label>Due Date:</label>
-    <date-picker
-      v-model="assignmentData.dueDate"
-      type="datetime"
-      value-type="timestamp"
-      :minute-step="30"
-      format="DD/MM/YY HH:mm"
-    ></date-picker>
+      <label>Due Date:</label>
+      <date-picker
+        v-model="apiData.dueDate"
+        type="datetime"
+        value-type="timestamp"
+        :minute-step="30"
+        format="DD/MM/YY HH:mm"
+      ></date-picker>
+      <br>
+      <label>Reminder Time:</label>
+        <md-checkbox
+          v-model="apiData.reminderTime"
+          :value="this.getReminderTime(7)"
+          >1 Week</md-checkbox
+        >
+        <md-checkbox
+          v-model="apiData.reminderTime"
+          :value="this.getReminderTime(1)"
+          >1 Day</md-checkbox
+        >
+        <md-checkbox
+          v-model="apiData.reminderTime"
+          :value="this.getReminderTime(0.5)"
+          >12 hours</md-checkbox
+        >
+        <md-checkbox
+          v-model="apiData.reminderTime"
+          :value="this.getReminderTime(0.25)"
+          >6 hours</md-checkbox
+        >
+    <div v-if="creationType === 'tag'" class="overflow">
+      <div>
+        <md-field>
+          <label>Tag name:</label>
+          <md-input v-model="apiData.name" required></md-input>
+        </md-field>
+      </div>
+      <div>
+        <label>Reminder Time:</label>
+        <md-checkbox
+          v-model="apiData.reminderTime"
+          :value="this.getReminderTime(7)"
+          >1 Week</md-checkbox
+        >
+        <md-checkbox
+          v-model="apiData.reminderTime"
+          :value="this.getReminderTime(1)"
+          >1 Day</md-checkbox
+        >
+        <md-checkbox
+          v-model="apiData.reminderTime"
+          :value="this.getReminderTime(0.5)"
+          >12 hours</md-checkbox
+        >
+        <md-checkbox
+          v-model="apiData.reminderTime"
+          :value="this.getReminderTime(0.25)"
+          >6 hours</md-checkbox
+        >
+      </div>
+
+      <div>
+        <label>Color:</label><br />
+        <v-swatches v-model="apiData.color"></v-swatches>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -67,7 +125,7 @@ export default class Create extends Vue {
 
 <style scoped>
 .detail {
-  margin: 2rem 5rem;
+  margin: 2rem 4rem;
 }
 
 .flex-col {
