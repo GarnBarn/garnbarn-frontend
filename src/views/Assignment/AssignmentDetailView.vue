@@ -136,6 +136,16 @@ export default class AssignmentDetailView extends Vue {
           title: "Error",
           content: `Can't fetch data from GarnBarn API, Please try again or contact Administrator.`,
         },
+        dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                await this.informDialogBox.dismiss();
+                this.$router.back();
+              },
+            },
+          ],
       });
     }
   }
@@ -152,6 +162,16 @@ export default class AssignmentDetailView extends Vue {
             title: "Error",
             content: e.message,
           },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                await this.informDialogBox.dismiss();
+                this.$router.back();
+              },
+            },
+          ],
         });
       });
   }
