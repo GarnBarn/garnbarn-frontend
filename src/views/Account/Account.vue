@@ -119,7 +119,7 @@ export default class Account extends Vue {
         this.informDialogBox.show({
           dialogBoxContent: {
             title: "An error occurred",
-            content: e,
+            content: e.message,
           },
           dialogBoxActions: [
             {
@@ -146,8 +146,8 @@ export default class Account extends Vue {
           buttonContent: "Yes",
           buttonClass: "md-secondary",
           onClick: () => {
-            this.informDialogBox.dismiss();
             this.idTokenData.isShow = true;
+            this.informDialogBox.dismiss();
           },
         },
         {
@@ -204,6 +204,25 @@ export default class Account extends Vue {
       .then(() => {
         this.informDialogBox.dismiss();
         this.$router.replace("/");
+      })
+      .catch((e) => {
+        console.error(e);
+        this.informDialogBox.dismiss();
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "An error occurred",
+            content: e.message,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Close",
+              buttonClass: "md-primary",
+              onClick: () => {
+                this.informDialogBox.dismiss();
+              },
+            },
+          ],
+        });
       });
   }
 

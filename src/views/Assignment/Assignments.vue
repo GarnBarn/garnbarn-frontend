@@ -7,13 +7,14 @@
         @md-selected="onSelected"
       >
         <md-table-toolbar>
-          <div class="md-title left-align">All Assignments</div>
+          <div class="md-title left-align">
+            All Assignments <md-chip>Still in development</md-chip>
+          </div>
           <md-button class="md-icon-button md-raised md-primary" @click="edit">
             <md-icon>add</md-icon>
             <md-tooltip> Create new Assignment </md-tooltip>
           </md-button>
         </md-table-toolbar>
-        <!-- <router-link :to="item.id"> -->
         <md-table-row
           slot="md-table-row"
           slot-scope="{ item }"
@@ -22,14 +23,32 @@
           <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
             item.id
           }}</md-table-cell>
+          <md-table-cell md-label="Name" md-sort-by="name">{{
+            item.name
+          }}</md-table-cell>
+          <md-table-cell md-label="Author" md-sort-by="author">
+            <div
+              v-if="item.author"
+              :set="(authorDetail = getAuthorDetail(item.author))"
+            >
+              <img
+                v-if="authorDetail.profileImage"
+                class="profile-image"
+                :src="authorDetail.profileImage"
+              />
+              <img
+                v-else
+                class="profile-image"
+                src="@/assets/images/account_placeholder.png"
+              />
+              <md-tooltip>{{ authorDetail.displayName }}</md-tooltip>
+            </div>
+          </md-table-cell>
           <md-table-cell md-label="Tag" md-sort-by="tag">
             <div v-if="item.tag">
               {{ item.tag.name }}
             </div>
           </md-table-cell>
-          <md-table-cell md-label="Name" md-sort-by="name">{{
-            item.name
-          }}</md-table-cell>
           <md-table-cell md-label="Due Date" md-sort-by="dueDate">
             <div v-if="item.dueDate">
               {{ getHumanReadableTime(item.dueDate) }}
@@ -132,7 +151,7 @@ export default class Assignments extends Vue {
   createDialogBox = new DialogBox("createDialogBox");
   loadingDialogBox = new DialogBox("loadingDialogBox");
   informDialogBox = new DialogBox("informDialogBox");
-  creationType = 'assignment';
+  creationType = "assignment";
   tablePages = {
     mdCount: null as number | null,
     mdPage: null as number | null,
@@ -278,6 +297,17 @@ export default class Assignments extends Vue {
       minute: "numeric",
     });
   }
+
+  getAuthorDetail(uid: string) {
+    if (uid === this.firebaseUser?.uid) {
+      return {
+        displayName: this.firebaseUser.displayName,
+        profileImage: this.firebaseUser.photoURL,
+      };
+    }
+    // TODO: After User API is ready, Edit these line to get data from it..
+    return null;
+  }
 }
 </script>
 
@@ -297,5 +327,10 @@ export default class Assignments extends Vue {
 
 .left-align {
   text-align: left;
+}
+.profile-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 100px;
 }
 </style>
