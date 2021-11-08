@@ -39,6 +39,7 @@ export default class LinkAccount extends Vue {
               buttonContent: "Close",
               buttonClass: "md-primary",
               onClick: () => {
+                this.informDialogBox.dismiss();
                 this.$router.replace("/account/");
               },
             },
