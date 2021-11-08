@@ -146,8 +146,8 @@ export default class Account extends Vue {
           buttonContent: "Yes",
           buttonClass: "md-secondary",
           onClick: () => {
-            this.informDialogBox.dismiss();
             this.idTokenData.isShow = true;
+            this.informDialogBox.dismiss();
           },
         },
         {
