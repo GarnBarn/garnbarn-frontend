@@ -7,7 +7,9 @@
         @md-selected="onSelected"
       >
         <md-table-toolbar>
-          <div class="md-title left-align">All Assignments</div>
+          <div class="md-title left-align">
+            All Assignments <md-chip>Still in development</md-chip>
+          </div>
           <md-button class="md-icon-button md-raised md-primary" @click="edit">
             <md-icon>add</md-icon>
             <md-tooltip> Create new Assignment </md-tooltip>
