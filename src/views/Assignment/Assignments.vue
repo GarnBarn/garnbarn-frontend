@@ -305,6 +305,7 @@ export default class Assignments extends Vue {
         profileImage: this.firebaseUser.photoURL,
       };
     }
+    // TODO: After User API is ready, Edit these line to get data from it..
     return null;
   }
 }
