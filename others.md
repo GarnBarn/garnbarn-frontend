@@ -1,5 +1,8 @@
 # Other Links
 
+## Code Review Checklist
+[Google Doc](https://docs.google.com/document/d/1bpxfy-nf5u7Zf4hKvc7ZUUSoRVnqi0qStNeyfaBsuX0/edit#)
+
 ## API Documentation
 Please visit https://garnbarn.github.io/garnbarn-backend/#/ for the documentation/.
 
