@@ -3,7 +3,9 @@
     <div class="name title">
       <p>{{ assignment.name }}</p>
     </div>
-    <div v-if="assignment.tag" class="tag">
+    <div v-if="assignment.tag" class="tag" 
+        @click="navigateToTagPage(assignment.tag.id)"
+    >
       <tag-box :tag="assignment.tag"></tag-box>
     </div>
     <div class="description text-gray">
@@ -85,6 +87,10 @@ export default class AssignmentDetail extends Vue {
     }
     return formatTime;
   }
+
+  navigateToTagPage(tagId: number): void {
+    this.$router.push(`/tag/${tagId}`);
+  }
 }
 </script>
 
@@ -127,5 +133,9 @@ export default class AssignmentDetail extends Vue {
 
 .text-gray {
   color: #616161;
+}
+
+.tag {
+  cursor: pointer;
 }
 </style>

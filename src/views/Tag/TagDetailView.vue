@@ -1,15 +1,16 @@
 <template>
   <layout :callback="callback">
-    <div class="detail">
-      <AssignmentDetail :assignment="assignment"></AssignmentDetail>
+    <div>
       <md-button class="md-primary md-raised" v-on:click="edit">Edit</md-button>
       <md-button class="md-accent md-raised" v-on:click="confirmDelete"
         >Delete</md-button
       >
-      <md-button class="md-secondary" @click="popBack">Back</md-button>
+      <router-link to="/home">
+        <md-button class="md-secondary">Back</md-button>
+      </router-link>
     </div>
     <DialogBoxComponent
-      :dialogBoxId="'editAssignmentDialogBox'"
+      :dialogBoxId="'editTagDialogBox'"
       :isCustomDialogBox="true"
       class="blur"
     >
@@ -17,9 +18,8 @@
         <md-tabs md-dynamic-height>
           <md-tab md-label="Assignment">
             <Create
-              :apiData="assignmentApi"
+              :apiData="tagApi"
               :creationType="creationType"
-              :firebaseUser="firebaseUser"
               md-dynamic-height
             ></Create>
           </md-tab>
@@ -64,11 +64,11 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Assignment } from "@/types/garnbarn/Assignment";
-import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
+import { Tag } from "@/types/garnbarn/Tag";
+import { TagApi } from "@/types/GarnBarnApi/TagApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import Create from "@/components/Create.vue";
-import AssignmentDetail from "@/components/AssignmentDetail.vue";
+import TagDetail from "@/components/TagDetail.vue";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
@@ -77,59 +77,48 @@ import firebase from "firebase";
 @Component({
   components: {
     Layout,
-    AssignmentDetail,
+    TagDetail,
     Create,
     DialogBoxComponent,
   },
 })
-export default class AssignmentDetailView extends Vue {
+export default class TagDetailView extends Vue {
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
-  creationType = "assignment";
   editing = false;
+  creationType = 'tag';
+  firebaseUser: firebase.User | undefined = undefined;
   informDialogBox = new DialogBox("informDialogBox");
-  editAssignmentDialogBox = new DialogBox("editAssignmentDialogBox");
-  assignmentId = Number(this.$route.params.id);
-  assignment: Assignment = {
-    id: this.assignmentId,
-    name: "Test 1",
-    author: "A",
-    tag: {
-      id: 1,
-      author: "1",
-      name: "Test Tag",
-      color: "#30475E",
-    },
-    reminderTime: [50, 50, 50],
-    description:
-      "The overflow-wrap property in CSS allows you to specify that the browser can break a line of text inside the targeted element onto multiple lines in an otherwise unbreakable place. This helps to avoid an unusually long string of text causing layout problems due to overflow.",
-    dueDate: 1635439072,
-  };
-  assignmentApi: AssignmentApi = {
-    id: undefined,
+  editTagDialogBox = new DialogBox("editTagDialogBox");
+  tagId = Number(this.$route.params.id);
+  tag: Tag = {
+      id: this.tagId,
+      name: "",
+      author: this.firebaseUser?.uid as string,
+      color: "",
+      reminderTime: [],
+      subscriber: undefined
+  }
+  tagApi: TagApi = {
     name: undefined,
-    reminderTime: undefined,
-    description: undefined,
-    dueDate: undefined,
-    tagId: undefined,
+    color: undefined,
+    reminderTime: [],
+    subscriber: undefined,
   };
-  firebaseUser: firebase.User | null = null;
 
   callback(user: firebase.User, loadingDialogBox: DialogBox): void {
     this.garnBarnAPICaller = new GarnBarnApi(user);
-    this.firebaseUser = user;
     this.get();
+    this.firebaseUser = user
     loadingDialogBox.dismiss();
   }
 
   async get(): Promise<void> {
     try {
-      const apiResponse = await this.garnBarnAPICaller?.v1.assignments.get(
-        this.assignmentId
+      const apiResponse = await this.garnBarnAPICaller?.v1.tags.get(
+        this.tagId
       );
-      this.assignment = apiResponse?.data as Assignment;
-      this.assignmentApi = this.extractAssignmentToAssignmentApi(
-        this.assignment
-      );
+      this.tag = apiResponse?.data as Tag;
+      this.tagApi = this.extractTagToTagApi(this.tag);
     } catch (e) {
       this.informDialogBox.show({
         dialogBoxContent: {
@@ -141,10 +130,10 @@ export default class AssignmentDetailView extends Vue {
   }
 
   async update(): Promise<void> {
-    this.garnBarnAPICaller?.v1.assignments
-      .update(this.assignmentId, this.assignmentApi as AssignmentApi)
+    this.garnBarnAPICaller?.v1.tags
+      .update(this.tagId, this.tagApi as TagApi)
       .then((apiResponse) => {
-        this.assignment = apiResponse.data as Assignment;
+        this.tag = apiResponse.data as Tag;
       })
       .catch((e) => {
         this.informDialogBox.show({
@@ -156,14 +145,14 @@ export default class AssignmentDetailView extends Vue {
       });
   }
 
-  async deleteAssignment(): Promise<void> {
-    this.garnBarnAPICaller?.v1.assignments
-      .delete(this.assignmentId)
+   async deleteTag(): Promise<void> {
+    this.garnBarnAPICaller?.v1.tags
+      .delete(this.tagId)
       .then((apiResponse) => {
         this.informDialogBox.show({
           dialogBoxContent: {
-            title: "Assignment deleted",
-            content: `Your assignment has been deleted.`,
+            title: "Tag deleted",
+            content: `Your tag has been deleted.`,
           },
           dialogBoxActions: [
             {
@@ -197,9 +186,9 @@ export default class AssignmentDetailView extends Vue {
           buttonContent: "Confirm",
           buttonClass: "md-primary",
           onClick: (): void => {
-            this.deleteAssignment();
+            this.deleteTag();
             this.informDialogBox.dismiss();
-            this.$router.back();
+            this.$router.push('/home');
           },
         },
         {
@@ -214,13 +203,13 @@ export default class AssignmentDetailView extends Vue {
   }
 
   edit(): void {
-    this.editAssignmentDialogBox.show({
+    this.editTagDialogBox.show({
       dialogBoxActions: [
         {
           buttonContent: "Save",
           buttonClass: "md-primary md-raised",
           onClick: (): void => {
-            this.editAssignmentDialogBox.dismiss();
+            this.editTagDialogBox.dismiss();
             this.update();
           },
         },
@@ -228,37 +217,30 @@ export default class AssignmentDetailView extends Vue {
           buttonContent: "Exit",
           buttonClass: "md-secondary",
           onClick: (): void => {
-            this.editAssignmentDialogBox.dismiss();
+            this.editTagDialogBox.dismiss();
           },
         },
       ],
     });
   }
-
-  extractAssignmentToAssignmentApi(assignment: Assignment): AssignmentApi {
-    let assignmentApi: AssignmentApi = {
-      id: undefined,
+  
+  extractTagToTagApi(tag: Tag): TagApi {
+    let tagApi: TagApi = {
       name: undefined,
+      color: undefined,
       reminderTime: [],
-      description: undefined,
-      dueDate: undefined,
-      tagId: undefined,
+      subscriber: []
     };
-    assignmentApi.name = assignment.name;
-    if (assignment.reminderTime) {
-      assignmentApi.reminderTime = assignment.reminderTime;
+    tagApi.name = tag.name;
+    if (tag.reminderTime) {
+      tagApi.reminderTime = tag.reminderTime;
     }
-    assignmentApi.description = assignment.description;
-    assignmentApi.dueDate = assignment.dueDate;
-    if (assignment.tag) {
-      assignmentApi.tagId = assignment.tag.id;
+    tagApi.color = tag.color;
+    if (tag.subscriber) {
+      tagApi.subscriber = tag.subscriber
     }
-
-    return assignmentApi;
-  }
-
-  popBack() {
-    this.$router.back();
+    
+    return tagApi;
   }
 }
 </script>

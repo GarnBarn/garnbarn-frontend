@@ -5,6 +5,8 @@ import Home from "@/views/Home.vue";
 import SignIn from "@/views/SignIn.vue";
 import AssignmentDetailView from "@/views/Assignment/AssignmentDetailView.vue";
 import Assignments from "@/views/Assignment/Assignments.vue";
+import Tags from "@/views/Tag/Tags.vue"
+import TagDetailView from "@/views/Tag/TagDetailView.vue";
 import Account from "@/views/Account/Account.vue";
 import LinkAccount from "@/views/Account/LinkAccount.vue";
 
@@ -35,6 +37,16 @@ const routes: Array<RouteConfig> = [
     path: "/assignment/:id",
     name: "AssignmentDetailPage",
     component: AssignmentDetailView,
+  },
+  {
+    path: "/tag",
+    name: "Tags",
+    component: Tags,
+  },
+  {
+    path: "/tag/:id",
+    name: "TagDetailPage",
+    component: TagDetailView
   },
   {
     path: "/account",
