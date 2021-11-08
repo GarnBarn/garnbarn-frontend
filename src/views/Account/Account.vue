@@ -204,6 +204,25 @@ export default class Account extends Vue {
       .then(() => {
         this.informDialogBox.dismiss();
         this.$router.replace("/");
+      })
+      .catch((e) => {
+        console.error(e);
+        this.informDialogBox.dismiss();
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "An error occurred",
+            content: e.message,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Close",
+              buttonClass: "md-primary",
+              onClick: () => {
+                this.informDialogBox.dismiss();
+              },
+            },
+          ],
+        });
       });
   }
 
