@@ -15,10 +15,10 @@
           <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
             item.id
           }}</md-table-cell>
-          <md-table-cell md-label="Name" md-sort-by="name">{{
+          <md-table-cell md-label="Name" md-sort-by="name" class="left-align">{{
             item.name
           }}</md-table-cell>
-          <md-table-cell md-label="Color"
+          <md-table-cell md-label="Color" class="left-align"
             ><md-chip
               v-if="item.color"
               :style="`background-color: ${
@@ -29,6 +29,49 @@
             <md-chip v-else :style="`background-color: #f9f9f9 !important;`"
               >#f9f9f9</md-chip
             >
+          </md-table-cell>
+          <md-table-cell md-label="Subscriber">
+            <div
+              v-if="item.subscriber !== null && item.subscriber.length !== 0"
+              class="flex-start"
+            >
+              <div
+                v-for="subscriber in item.subscriber"
+                :key="item.subscriber.indexOf(subscriber)"
+                :set="(subscriberDetail = getSubscriberDetail(subscriber))"
+                
+              >
+                <img
+                  v-if="subscriberDetail.profileImage"
+                  class="profile-image"
+                  :src="subscriberDetail.profileImage"
+                />
+                <img
+                  v-else
+                  class="profile-image"
+                  src="@/assets/images/account_placeholder.png"
+                />
+              </div>
+            </div>
+          </md-table-cell>
+          <md-table-cell md-numeric>
+            <md-menu md-size="small" md-align-trigger>
+              <md-button md-menu-trigger class="md-icon-button">
+                <md-icon> more_horiz </md-icon>
+              </md-button>
+
+              <md-menu-content>
+                <md-menu-item
+                  v-if="!isUserSubscribed(firebaseUser, item.subscriber)"
+                  @click="subscribe(item)"
+                >
+                  Subscribe
+                </md-menu-item>
+                <md-menu-item v-else @click="unsubscribe(item)">
+                  Unsubscribe
+                </md-menu-item>
+              </md-menu-content>
+            </md-menu>
           </md-table-cell>
         </md-table-row>
       </md-table>
@@ -126,6 +169,7 @@ export default class Tags extends Vue {
     subscriber: undefined,
   };
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
+  firebaseUser: firebase.User | undefined = undefined;
   tags: Array<Tag> = [];
   getNextData: GetAllTagApiNextFunctionWrapper | null = null;
 
@@ -136,6 +180,7 @@ export default class Tags extends Vue {
       this.getNextData = apiResponse.data.next;
       loadingDialogBox.dismiss();
     });
+    this.firebaseUser = user;
   }
 
   hexToRgb(hex: string): Array<number> {
@@ -246,6 +291,107 @@ export default class Tags extends Vue {
         });
       });
   }
+
+  subscribe(tag: Tag): void {
+    this.garnBarnAPICaller?.v1.tags
+      .subscribe(tag.id)
+      .then((apiResponse) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Tag subscribed",
+            content: `You have subscribed to ${tag.name}.`,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                this.informDialogBox.dismiss();
+              },
+            },
+          ],
+        });
+      })
+      .catch((e) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Error",
+            content: e.message,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                await this.informDialogBox.dismiss();
+              },
+            },
+          ],
+        });
+      });
+  }
+
+  unsubscribe(tag: Tag): void {
+    this.garnBarnAPICaller?.v1.tags
+      .unsubscribe(tag.id)
+      .then((apiResponse) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Tag unsubscribed",
+            content: `You have unsubscribed from ${tag.name}.`,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                await this.informDialogBox.dismiss();
+              },
+            },
+          ],
+        });
+      })
+      .catch((e) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Error",
+            content: e.message,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                await this.informDialogBox.dismiss();
+              },
+            },
+          ],
+        });
+      });
+  }
+
+  getSubscriberDetail(uid: string) {
+    if (uid === this.firebaseUser?.uid) {
+      return {
+        displayName: this.firebaseUser.displayName,
+        profileImage: this.firebaseUser.photoURL,
+      };
+    }
+    // TODO: After User API is ready, Edit these line to get data from it..
+    return {
+      displayName: "Unknown",
+      profileImage: null,
+    };
+  }
+
+  isUserSubscribed(user: firebase.User, subscribers: Array<string>) {
+    if (subscribers !== null) {
+      if (subscribers.includes(user.uid)) {
+        return true;
+      }
+      return false;
+    }
+  }
 }
 </script>
 
@@ -258,5 +404,21 @@ export default class Tags extends Vue {
 
 .left-align {
   text-align: left;
+}
+
+.profile-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 100px;
+}
+
+.flex-start {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.left-align {
+  margin-left: 0;
+  margin-right: auto;
 }
 </style>
