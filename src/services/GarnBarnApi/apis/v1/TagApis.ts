@@ -122,4 +122,17 @@ export default class TagApis extends api {
       AxiosResponse<Tag>
     >;
   }
+
+  /**
+   * Call Unsubscribe Tag API
+   * TODO: Link to be filled.
+   * 
+   * @param id the ID of the tag to unsubscribe
+   * @returns Promise of AxiosResponse for the request in fulfilled state.
+   */
+  unsubscribe(id: number): Promise<AxiosResponse<Tag>> {
+    return this.sendRequest("POST", `${this.API_BASE_URL}/${id}/unsubscribe/`) as Promise<
+      AxiosResponse<Tag>
+    >;
+  }
 }
