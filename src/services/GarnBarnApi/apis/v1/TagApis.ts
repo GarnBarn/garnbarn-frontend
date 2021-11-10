@@ -104,8 +104,21 @@ export default class TagApis extends api {
    * @param id The ID of the tag to delete
    * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
-  delete(id: number): Promise<AxiosResponse> {
+  delete(id: number): Promise<AxiosResponse<Tag>> {
     return this.sendRequest("DELETE", `${this.API_BASE_URL}/${id}/`) as Promise<
+      AxiosResponse<Tag>
+    >;
+  }
+
+  /**
+   * Call Subscribe Tag API
+   * TODO: Link to be filled.
+   * 
+   * @param id The ID of the tag to subscribe
+   * @returns Promise of AxiosResponse for the request in fulfilled state.
+   */
+  subscribe(id: number): Promise<AxiosResponse<Tag>> {
+    return this.sendRequest("POST", `${this.API_BASE_URL}/${id}/subscribe/`) as Promise<
       AxiosResponse<Tag>
     >;
   }
