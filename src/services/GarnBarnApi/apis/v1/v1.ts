@@ -1,5 +1,6 @@
 import { AxiosStatic } from "axios";
 import firebase from "firebase";
+import AccountApis from "./AccountApis";
 import { AssignmentApis } from "./AssignmentApis";
 import TagApis from "./TagApis";
 
@@ -28,5 +29,14 @@ export class v1 {
    */
   get tags(): TagApis {
     return new TagApis(this._firebaseUser, this._axiosInstance);
+  }
+
+  /**
+   * This will generate thje AccountApis instance with the stored firebaseUser
+   *
+   * @returns Instance of AccountApis
+   */
+  get accounts(): AccountApis {
+    return new AccountApis(this._firebaseUser, this._axiosInstance);
   }
 }
