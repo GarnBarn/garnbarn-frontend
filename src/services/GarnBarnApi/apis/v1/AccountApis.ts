@@ -42,7 +42,7 @@ export default class AccountApis extends api {
       platform: platform,
       credential: credential,
     };
-    return this.sendRequest("POST", `${this.API_BASE_URL}/account/link/`, body);
+    return this.sendRequest("POST", `${this.API_BASE_URL}/link/`, body);
   }
 
   /**
@@ -56,10 +56,6 @@ export default class AccountApis extends api {
     const body = {
       platform: platform,
     };
-    return this.sendRequest(
-      "POST",
-      `${this.API_BASE_URL}/account/unlink/`,
-      body
-    );
+    return this.sendRequest("POST", `${this.API_BASE_URL}/unlink/`, body);
   }
 }
