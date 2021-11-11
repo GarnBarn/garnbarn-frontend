@@ -8,6 +8,9 @@ import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import Layout from "@/layouts/Main.vue";
 import firebase from "firebase";
+import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
+import { SupportThirdPartyPlatform } from "@/types/GarnBarnApi/AccountApi";
+import GarnBarnApiconfig from "@/GarnBarnApiConfig.json";
 
 @Component({
   components: {
@@ -17,8 +20,16 @@ import firebase from "firebase";
 })
 export default class LinkAccount extends Vue {
   informDialogBox = new DialogBox("informDialogBox");
+  garnBarnApiCaller: GarnBarnApi | null = null;
   callback(firebaseUser: firebase.User, loadingDialogBox: DialogBox) {
+    if (
+      this.$router.currentRoute.query.state !== "line" ||
+      !this.$router.currentRoute.query.code
+    ) {
+      this.$router.replace("/account");
+    }
     loadingDialogBox.dismiss();
+    this.garnBarnApiCaller = new GarnBarnApi(firebaseUser);
     this.informDialogBox
       .show({
         dialogBoxContent: {
@@ -28,11 +39,43 @@ export default class LinkAccount extends Vue {
         dialogBoxActions: [],
       })
       .then(() => {
+        return this.garnBarnApiCaller?.v1.accounts.linkAccount(
+          SupportThirdPartyPlatform.LINE,
+          {
+            code: this.$router.currentRoute.query.code as string,
+            clientId: GarnBarnApiconfig.lineClientId,
+            redirectUri: `${window.location.origin}${window.location.pathname}`,
+          }
+        );
+      })
+      .then((apiResponse) => {
         this.informDialogBox.dismiss();
         this.informDialogBox.show({
           dialogBoxContent: {
-            title: "This feature is still in development",
-            content: "You will be redirected back to account setting page.",
+            title: "Successfully",
+            content:
+              "We are able to link your account with LINE Account. You will be redirect back to Account Setting Page.",
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Close",
+              buttonClass: "md-primary",
+              onClick: () => {
+                this.informDialogBox.dismiss();
+                this.$router.replace("/account/");
+              },
+            },
+          ],
+        });
+      })
+      .catch((e) => {
+        this.informDialogBox.dismiss();
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "An error occurred",
+            content:
+              e.message +
+              ". You will be redirect back to Account Setting Page.",
           },
           dialogBoxActions: [
             {
