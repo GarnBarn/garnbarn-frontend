@@ -35,7 +35,7 @@
               <p>{{ uid }}</p>
             </AccountDetailCard>
             <AccountDetailCard title="Third party platform">
-              <h3>LINE: <md-chip>Still in development</md-chip></h3>
+              <h3>LINE:</h3>
               <div v-if="!profile.platform.line">
                 <md-button class="line-green" @click="onClickLineLogin"
                   ><img
