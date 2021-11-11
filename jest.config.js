@@ -15,4 +15,5 @@ module.exports = {
       compiler: "ttypescript",
     },
   },
+  coveragePathIgnorePatterns: ["src/types"],
 };
