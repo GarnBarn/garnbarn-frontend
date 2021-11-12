@@ -3,13 +3,7 @@
     <div>
       <md-table v-model="tags" md-sort="id">
         <md-table-toolbar>
-          <div class="md-title left-align">
-            All Tags <md-chip>Still in development</md-chip>
-          </div>
-          <md-button class="md-icon-button md-raised md-primary" @click="edit">
-            <md-icon>add</md-icon>
-            <md-tooltip> Create new Tag </md-tooltip>
-          </md-button>
+          <div class="md-title left-align">All Tags</div>
         </md-table-toolbar>
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
@@ -18,13 +12,6 @@
           <md-table-cell md-label="Name" md-sort-by="name" class="left-align">{{
             item.name
           }}</md-table-cell>
-          <md-table-cell md-label="Color" class="left-align"
-            ><md-chip
-              v-if="item.color"
-              :style="`background-color: ${
-                item.color
-              } !important; color: ${getFontColor(item.color)} !important`"
-              >{{ item.color }}</md-chip>
           <md-table-cell md-label="Author">
             <UserProfileIcon
               :uid="item.author"
@@ -52,44 +39,13 @@
           <md-table-cell md-label="Color">
             <TagBoxChip :color="item.color" :text="item.color"></TagBoxChip>
           </md-table-cell>
-          <md-table-cell md-label="Subscriber">
-            <div
-              v-if="item.subscriber !== null && item.subscriber.length !== 0"
-              class="flex-start"
-            >
-              <div
-                v-for="subscriber in item.subscriber"
-                :key="item.subscriber.indexOf(subscriber)"
-                :set="(subscriberDetail = getSubscriberDetail(subscriber))"
-                
-              >
-                <img
-                  v-if="subscriberDetail.profileImage"
-                  class="profile-image"
-                  :src="subscriberDetail.profileImage"
-                />
-                <img
-                  v-else
-                  class="profile-image"
-                  src="@/assets/images/account_placeholder.png"
-                />
-              </div>
-            </div>
-          </md-table-cell>
           <md-table-cell md-numeric>
             <md-menu md-size="small" md-align-trigger>
               <md-button md-menu-trigger class="md-icon-button">
                 <md-icon> more_horiz </md-icon>
               </md-button>
-
               <md-menu-content>
-                <md-menu-item
-                  v-if="!isUserSubscribed(firebaseUser, item.subscriber)"
-                  @click="subscribe(item)"
-                >
-                  Subscribe
-                </md-menu-item>
-                <md-menu-item v-else @click="unsubscribe(item)">
+                <md-menu-item @click="unsubscribe(item)">
                   Unsubscribe
                 </md-menu-item>
               </md-menu-content>
@@ -103,6 +59,24 @@
         >
         <h3 v-else><i>That all Tags you got.</i> ƪ(=ｘωｘ=ƪ)</h3>
       </div>
+        <md-speed-dial :class="bottomPosition" class="md-bottom-right">
+        <md-speed-dial-target class="md-primary">
+          <md-icon class="md-morph-initial">menu</md-icon>
+          <md-icon class="md-morph-final">edit</md-icon>
+        </md-speed-dial-target>
+
+        <md-speed-dial-content>
+          <md-button class="md-icon-button" @click="edit">
+            <md-icon>add</md-icon>
+            <md-tooltip> Create new Tag </md-tooltip>
+          </md-button>
+
+          <md-button class="md-icon-button" @click="subscribe">
+            <md-icon>notification_add</md-icon>
+            <md-tooltip> Subscribe to a Tag </md-tooltip>
+          </md-button>
+        </md-speed-dial-content>
+      </md-speed-dial>
       <DialogBoxComponent
         :dialogBoxId="'createDialogBox'"
         :isCustomDialogBox="true"
@@ -111,6 +85,57 @@
         <md-card-content>
           <md-tabs md-dynamic-height>
             <md-tab md-label="Create">
+              <Create
+                :apiData="tagData"
+                :creationType="creationType"
+                md-dynamic-height
+                ref="tagCreate"
+              ></Create>
+            </md-tab>
+
+            <md-tab md-disabled>
+              <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+                mollitia dolorum dolores quae commodi impedit possimus qui,
+                atque at voluptates cupiditate. Neque quae culpa suscipit
+                praesentium inventore ducimus ipsa aut.
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+                mollitia dolorum dolores quae commodi impedit possimus qui,
+                atque at voluptates cupiditate. Neque quae culpa suscipit
+                praesentium inventore ducimus ipsa aut.
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+                mollitia dolorum dolores quae commodi impedit possimus qui,
+                atque at voluptates cupiditate. Neque quae culpa suscipit
+                praesentium inventore ducimus ipsa aut.
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+                mollitia dolorum dolores quae commodi impedit possimus qui,
+                atque at voluptates cupiditate. Neque quae culpa suscipit
+                praesentium inventore ducimus ipsa aut.
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+                mollitia dolorum dolores quae commodi impedit possimus qui,
+                atque at voluptates cupiditate. Neque quae culpa suscipit
+                praesentium inventore ducimus ipsa aut.
+              </p>
+            </md-tab>
+          </md-tabs>
+        </md-card-content>
+      </DialogBoxComponent>
+            <DialogBoxComponent
+        :dialogBoxId="'subscribeDialogBox'"
+        :isCustomDialogBox="true"
+        class="blur"
+      >
+        <md-card-content>
+          <md-tabs md-dynamic-height>
+            <md-tab md-label="Subscribe">
               <Create
                 :apiData="tagData"
                 :creationType="creationType"
@@ -154,6 +179,7 @@
           </md-tabs>
         </md-card-content>
       </DialogBoxComponent>
+
     </div>
   </layout>
 </template>
@@ -392,15 +418,6 @@ export default class Tags extends Vue {
       displayName: "Unknown",
       profileImage: null,
     };
-  }
-
-  isUserSubscribed(user: firebase.User, subscribers: Array<string>) {
-    if (subscribers !== null) {
-      if (subscribers.includes(user.uid)) {
-        return true;
-      }
-      return false;
-    }
   }
 }
 </script>
