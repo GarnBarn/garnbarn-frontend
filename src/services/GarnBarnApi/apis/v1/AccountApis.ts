@@ -8,7 +8,7 @@ import { api, ApiSpecError } from "./api";
 
 export default class AccountApis extends api {
   API_BASE_URL = "/api/v1/account";
-
+  SESSION_STORAGE_KEY = "accounts";
   /**
    * Call Get Account Detail Api
    * TODO: Specify the API document url
@@ -16,14 +16,60 @@ export default class AccountApis extends api {
    * @param uid The uid of the user you want to get their profile.
    * @returns The Promise of AxiosResponse of AccountDetail in fulled state.
    */
-  getAccountDetail(uid?: string): Promise<AxiosResponse<AccountDetail>> {
+  async getAccountDetail(uid?: string): Promise<AxiosResponse<AccountDetail>> {
+    const cachedAccountDetail = this.getAccountFromSessionStorage(
+      uid ?? this.getFirebaseUser().uid
+    );
+    if (cachedAccountDetail) {
+      return new Promise((resolve, reject) => {
+        resolve({
+          data: cachedAccountDetail,
+        } as AxiosResponse<AccountDetail>);
+      });
+    }
     let url = `${this.API_BASE_URL}/`;
     if (uid) {
       url += `?uid=${uid}`;
     }
-    return this.sendRequest("GET", url) as Promise<
-      AxiosResponse<AccountDetail>
-    >;
+    const apiResponse = (await this.sendRequest(
+      "GET",
+      url
+    )) as AxiosResponse<AccountDetail>;
+
+    this.addAccountToSessionStorage(
+      uid ?? this.getFirebaseUser().uid,
+      apiResponse.data
+    );
+    return apiResponse;
+  }
+
+  private getAccountFromSessionStorage(uid: string): AccountDetail | null {
+    const accounts = window.sessionStorage.getItem(this.SESSION_STORAGE_KEY);
+    if (!accounts) {
+      window.sessionStorage.setItem(
+        this.SESSION_STORAGE_KEY,
+        JSON.stringify({})
+      );
+      return null;
+    }
+    const accountJson = JSON.parse(accounts);
+    if (!accountJson[uid]) {
+      return null;
+    }
+    return accountJson[uid];
+  }
+
+  private addAccountToSessionStorage(
+    uid: string,
+    accountDetial: AccountDetail
+  ): void {
+    const accounts = window.sessionStorage.getItem(this.SESSION_STORAGE_KEY);
+    const accountJson = accounts ? JSON.parse(accounts) : {};
+    accountJson[uid] = accountDetial;
+    window.sessionStorage.setItem(
+      this.SESSION_STORAGE_KEY,
+      JSON.stringify(accountJson)
+    );
   }
 
   /**
