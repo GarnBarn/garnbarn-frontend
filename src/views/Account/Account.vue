@@ -132,7 +132,7 @@ export default class Account extends Vue {
         loadingDialogBox.dismiss();
         this.user = user;
         this.garnBarnApiCaller = new GarnBarnApi(user);
-        return this.garnBarnApiCaller.v1.accounts.getAccountDetail();
+        return this.garnBarnApiCaller.v1.accounts.getAccountDetail(true);
       })
       .then((apiResponse) => {
         this.profile = apiResponse.data;
