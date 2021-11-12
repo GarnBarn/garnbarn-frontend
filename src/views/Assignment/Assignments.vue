@@ -26,27 +26,16 @@
           <md-table-cell md-label="Name" md-sort-by="name">{{
             item.name
           }}</md-table-cell>
-          <md-table-cell md-label="Author" md-sort-by="author">
-            <div
-              v-if="item.author"
-              :set="(authorDetail = getAuthorDetail(item.author))"
-            >
-              <img
-                v-if="authorDetail.profileImage"
-                class="profile-image"
-                :src="authorDetail.profileImage"
-              />
-              <img
-                v-else
-                class="profile-image"
-                src="@/assets/images/account_placeholder.png"
-              />
-              <md-tooltip>{{ authorDetail.displayName }}</md-tooltip>
-            </div>
+          <md-table-cell md-label="Author">
+            <UserProfileIcon
+              :uid="item.author"
+              :garnBarnApiCaller="garnBarnAPICaller"
+            ></UserProfileIcon>
           </md-table-cell>
-          <md-table-cell md-label="Tag" md-sort-by="tag">
+          <md-table-cell md-label="Tag" md-sort-by="tag.id">
             <div v-if="item.tag">
-              {{ item.tag.name }}
+              <TagBoxChip :color="item.tag.color" :text="item.tag.name">
+              </TagBoxChip>
             </div>
           </md-table-cell>
           <md-table-cell md-label="Due Date" md-sort-by="dueDate">
@@ -56,13 +45,6 @@
             <div v-else><i>No due date</i></div>
           </md-table-cell>
         </md-table-row>
-
-        <md-table-pagination
-          :md-page-size="rowsPerPage"
-          :md-page-options="[10]"
-          :md-update="updatePagination"
-          :md-data.sync="tablePages"
-        />
       </md-table>
       <div class="load-next-box">
         <md-button class="md-secondary" v-if="getNextData" @click="processNext"
@@ -134,15 +116,19 @@ import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import Create from "@/components/Create.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import { GetAllAssignmentApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
+import UserProfileIcon from "@/components/UserProfileIcon.vue";
+import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
 
 @Component({
   components: {
     Layout,
     DialogBoxComponent,
     Create,
+    UserProfileIcon,
+    TagBoxChip,
   },
 })
 export default class Assignments extends Vue {
@@ -305,20 +291,6 @@ export default class Assignments extends Vue {
       hour: "numeric",
       minute: "numeric",
     });
-  }
-
-  getAuthorDetail(uid: string) {
-    if (uid === this.firebaseUser?.uid) {
-      return {
-        displayName: this.firebaseUser.displayName,
-        profileImage: this.firebaseUser.photoURL,
-      };
-    }
-    // TODO: After User API is ready, Edit these line to get data from it..
-    return {
-      displayName: "Unknown",
-      profileImage: null,
-    };
   }
 }
 </script>

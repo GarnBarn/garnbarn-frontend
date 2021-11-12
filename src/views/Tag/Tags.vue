@@ -24,11 +24,33 @@
               :style="`background-color: ${
                 item.color
               } !important; color: ${getFontColor(item.color)} !important`"
-              >{{ item.color }}</md-chip
+              >{{ item.color }}</md-chip>
+          <md-table-cell md-label="Author">
+            <UserProfileIcon
+              :uid="item.author"
+              :garnBarnApiCaller="garnBarnAPICaller"
             >
-            <md-chip v-else :style="`background-color: #f9f9f9 !important;`"
-              >#f9f9f9</md-chip
+            </UserProfileIcon>
+          </md-table-cell>
+          <md-table-cell md-label="Subscriber">
+            <div
+              v-if="item.subscriber && item.subscriber.length !== 0"
+              class="row-flex"
             >
+              <UserProfileIcon
+                v-for="[index, subscriberUid] of item.subscriber.entries()"
+                :key="index"
+                :uid="subscriberUid"
+                :garnBarnApiCaller="garnBarnAPICaller"
+              >
+              </UserProfileIcon>
+            </div>
+            <div v-else>
+              <md-icon>minimize</md-icon>
+            </div>
+          </md-table-cell>
+          <md-table-cell md-label="Color">
+            <TagBoxChip :color="item.color" :text="item.color"></TagBoxChip>
           </md-table-cell>
           <md-table-cell md-label="Subscriber">
             <div
@@ -144,15 +166,19 @@ import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import Create from "@/components/Create.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import { Tag } from "@/types/garnbarn/Tag";
 import { GetAllTagApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
+import UserProfileIcon from "@/components/UserProfileIcon.vue";
+import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
 
 @Component({
   components: {
     Layout,
     DialogBoxComponent,
     Create,
+    UserProfileIcon,
+    TagBoxChip,
   },
 })
 export default class Tags extends Vue {
@@ -181,22 +207,6 @@ export default class Tags extends Vue {
       loadingDialogBox.dismiss();
     });
     this.firebaseUser = user;
-  }
-
-  hexToRgb(hex: string): Array<number> {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return [r, g, b];
-  }
-
-  getFontColor(hex: string): string {
-    const rgb = this.hexToRgb(hex);
-    if (rgb[0] * 0.299 + rgb[1] * 0.587 + rgb[2] * 0.114 > 186) {
-      return "#000000";
-    } else {
-      return "#ffffff";
-    }
   }
 
   processNext(): void {
@@ -420,5 +430,12 @@ export default class Tags extends Vue {
 .left-align {
   margin-left: 0;
   margin-right: auto;
+}
+
+.row-flex {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  max-width: 500px;
 }
 </style>

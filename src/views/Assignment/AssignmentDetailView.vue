@@ -72,7 +72,7 @@ import AssignmentDetail from "@/components/AssignmentDetail.vue";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
-import firebase from "firebase";
+import firebase from "firebase/app";
 
 @Component({
   components: {
@@ -137,15 +137,15 @@ export default class AssignmentDetailView extends Vue {
           content: `Can't fetch data from GarnBarn API, Please try again or contact Administrator.`,
         },
         dialogBoxActions: [
-            {
-              buttonContent: "Ok",
-              buttonClass: "md-secondary",
-              onClick: async () => {
-                await this.informDialogBox.dismiss();
-                this.$router.back();
-              },
+          {
+            buttonContent: "Ok",
+            buttonClass: "md-secondary",
+            onClick: async () => {
+              await this.informDialogBox.dismiss();
+              this.$router.back();
             },
-          ],
+          },
+        ],
       });
     }
   }
@@ -226,7 +226,7 @@ export default class AssignmentDetailView extends Vue {
         {
           buttonContent: "Confirm",
           buttonClass: "md-primary",
-          onClick: async ()  => {
+          onClick: async () => {
             await this.deleteAssignment();
             this.informDialogBox.dismiss();
           },
