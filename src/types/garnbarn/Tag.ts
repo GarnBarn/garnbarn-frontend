@@ -5,4 +5,5 @@ export type Tag = {
   color?: string;
   reminderTime?: Array<number>;
   subscriber?: Array<number>;
+  secretKeyTotp?: string;
 };
