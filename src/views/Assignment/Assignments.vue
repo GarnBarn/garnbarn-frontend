@@ -26,13 +26,13 @@
           <md-table-cell md-label="Name" md-sort-by="name">{{
             item.name
           }}</md-table-cell>
-          <md-table-cell md-label="Author" md-sort-by="author">
+          <md-table-cell md-label="Author">
             <UserProfileIcon
               :uid="item.author"
               :garnBarnApiCaller="garnBarnAPICaller"
             ></UserProfileIcon>
           </md-table-cell>
-          <md-table-cell md-label="Tag" md-sort-by="tag">
+          <md-table-cell md-label="Tag" md-sort-by="tag.id">
             <div v-if="item.tag">
               <TagBoxChip :color="item.tag.color" :text="item.tag.name">
               </TagBoxChip>
