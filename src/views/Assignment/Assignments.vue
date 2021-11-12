@@ -35,7 +35,8 @@
           </md-table-cell>
           <md-table-cell md-label="Tag" md-sort-by="tag">
             <div v-if="item.tag">
-              {{ item.tag.name }}
+              <TagBoxChip :color="item.tag.color" :text="item.tag.name">
+              </TagBoxChip>
             </div>
           </md-table-cell>
           <md-table-cell md-label="Due Date" md-sort-by="dueDate">
@@ -127,6 +128,7 @@ import firebase from "firebase";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import { GetAllAssignmentApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
 import UserProfileIcon from "@/components/UserProfileIcon.vue";
+import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
 
 @Component({
   components: {
@@ -134,6 +136,7 @@ import UserProfileIcon from "@/components/UserProfileIcon.vue";
     DialogBoxComponent,
     Create,
     UserProfileIcon,
+    TagBoxChip,
   },
 })
 export default class Assignments extends Vue {
