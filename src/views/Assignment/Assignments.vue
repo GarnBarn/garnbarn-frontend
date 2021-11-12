@@ -28,7 +28,6 @@
           }}</md-table-cell>
           <md-table-cell md-label="Author" md-sort-by="author">
             <UserProfileIcon
-              v-if="item.author"
               :uid="item.author"
               :garnBarnApiCaller="garnBarnAPICaller"
             ></UserProfileIcon>
