@@ -13,19 +13,25 @@ export default class AccountApis extends api {
    * Call Get Account Detail Api
    * TODO: Specify the API document url
    *
+   * @param forceRefresh This caller has a cache feature. If this set to true, It will force refresh data from API. If false, It will try to get the data from session storage first.
    * @param uid The uid of the user you want to get their profile.
    * @returns The Promise of AxiosResponse of AccountDetail in fulled state.
    */
-  async getAccountDetail(uid?: string): Promise<AxiosResponse<AccountDetail>> {
-    const cachedAccountDetail = this.getAccountFromSessionStorage(
-      uid ?? this.getFirebaseUser().uid
-    );
-    if (cachedAccountDetail) {
-      return new Promise((resolve, reject) => {
-        resolve({
-          data: cachedAccountDetail,
-        } as AxiosResponse<AccountDetail>);
-      });
+  async getAccountDetail(
+    forceRefresh?: boolean,
+    uid?: string
+  ): Promise<AxiosResponse<AccountDetail>> {
+    if (!forceRefresh) {
+      const cachedAccountDetail = this.getAccountFromSessionStorage(
+        uid ?? this.getFirebaseUser().uid
+      );
+      if (cachedAccountDetail) {
+        return new Promise((resolve, reject) => {
+          resolve({
+            data: cachedAccountDetail,
+          } as AxiosResponse<AccountDetail>);
+        });
+      }
     }
     let url = `${this.API_BASE_URL}/`;
     if (uid) {

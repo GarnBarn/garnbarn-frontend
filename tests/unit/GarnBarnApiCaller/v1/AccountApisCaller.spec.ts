@@ -56,7 +56,7 @@ describe("Test Account APIs v1 Caller", () => {
       generateRequestDetail(ID_TOKEN, "GET", "/api/v1/account/")
     );
     // Test specify the uid number
-    await garnBarnApiCaller.v1.accounts.getAccountDetail("123456");
+    await garnBarnApiCaller.v1.accounts.getAccountDetail(true, "123456");
     expect(mockAxios).toHaveBeenCalledWith(
       generateRequestDetail(ID_TOKEN, "GET", "/api/v1/account/?uid=123456")
     );
