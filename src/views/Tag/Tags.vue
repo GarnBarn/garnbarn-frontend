@@ -26,7 +26,10 @@
             </UserProfileIcon>
           </md-table-cell>
           <md-table-cell md-label="Subscriber">
-            <div class="row-flex">
+            <div
+              v-if="item.subscriber && item.subscriber.length !== 0"
+              class="row-flex"
+            >
               <UserProfileIcon
                 v-for="[index, subscriberUid] of item.subscriber.entries()"
                 :key="index"
@@ -34,6 +37,9 @@
                 :garnBarnApiCaller="garnBarnAPICaller"
               >
               </UserProfileIcon>
+            </div>
+            <div v-else>
+              <md-icon>minimize</md-icon>
             </div>
           </md-table-cell>
           <md-table-cell md-label="Color"
