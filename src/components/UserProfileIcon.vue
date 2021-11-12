@@ -35,6 +35,10 @@ export default class UserProfileIcon extends Vue {
   }
 
   getDataFromAccountApi() {
+    if (!this.uid) {
+      this.isReady = true;
+      return;
+    }
     this.garnBarnApiCaller?.v1.accounts
       .getAccountDetail(false, this.uid)
       .then((apiResponse) => {
