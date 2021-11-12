@@ -18,6 +18,24 @@
           <md-table-cell md-label="Name" md-sort-by="name">{{
             item.name
           }}</md-table-cell>
+          <md-table-cell md-label="Author">
+            <UserProfileIcon
+              :uid="item.author"
+              :garnBarnApiCaller="garnBarnAPICaller"
+            >
+            </UserProfileIcon>
+          </md-table-cell>
+          <md-table-cell md-label="Subscriber">
+            <div class="row-flex">
+              <UserProfileIcon
+                v-for="[index, subscriberUid] of item.subscriber.entries()"
+                :key="index"
+                :uid="subscriberUid"
+                :garnBarnApiCaller="garnBarnAPICaller"
+              >
+              </UserProfileIcon>
+            </div>
+          </md-table-cell>
           <md-table-cell md-label="Color"
             ><md-chip
               v-if="item.color"
@@ -104,12 +122,14 @@ import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import firebase from "firebase";
 import { Tag } from "@/types/garnbarn/Tag";
 import { GetAllTagApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
+import UserProfileIcon from "@/components/UserProfileIcon.vue";
 
 @Component({
   components: {
     Layout,
     DialogBoxComponent,
     Create,
+    UserProfileIcon,
   },
 })
 export default class Tags extends Vue {
@@ -258,5 +278,12 @@ export default class Tags extends Vue {
 
 .left-align {
   text-align: left;
+}
+
+.row-flex {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  max-width: 500px;
 }
 </style>
