@@ -1,12 +1,11 @@
 <template>
-  <div>    
-  </div>
+  <div></div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Tag } from "@/types/garnbarn/Tag";
-import TagBox from "@/components/TagBox.vue";
+import TagBox from "@/components/Tag/TagBox.vue";
 
 @Component({
   components: {
@@ -18,5 +17,4 @@ export default class TagDetail extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -1,5 +1,5 @@
 import { AxiosStatic } from "axios";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import { v1 } from "./apis/v1/v1";
 
 export default class GarnBarnApi {
