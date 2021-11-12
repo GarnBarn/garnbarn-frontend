@@ -27,22 +27,11 @@
             item.name
           }}</md-table-cell>
           <md-table-cell md-label="Author" md-sort-by="author">
-            <div
+            <UserProfileIcon
               v-if="item.author"
-              :set="(authorDetail = getAuthorDetail(item.author))"
-            >
-              <img
-                v-if="authorDetail.profileImage"
-                class="profile-image"
-                :src="authorDetail.profileImage"
-              />
-              <img
-                v-else
-                class="profile-image"
-                src="@/assets/images/account_placeholder.png"
-              />
-              <md-tooltip>{{ authorDetail.displayName }}</md-tooltip>
-            </div>
+              :uid="item.author"
+              :garnBarnApiCaller="garnBarnAPICaller"
+            ></UserProfileIcon>
           </md-table-cell>
           <md-table-cell md-label="Tag" md-sort-by="tag">
             <div v-if="item.tag">
@@ -137,12 +126,14 @@ import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import firebase from "firebase";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import { GetAllAssignmentApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
+import UserProfileIcon from "@/components/UserProfileIcon.vue";
 
 @Component({
   components: {
     Layout,
     DialogBoxComponent,
     Create,
+    UserProfileIcon,
   },
 })
 export default class Assignments extends Vue {
@@ -305,20 +296,6 @@ export default class Assignments extends Vue {
       hour: "numeric",
       minute: "numeric",
     });
-  }
-
-  getAuthorDetail(uid: string) {
-    if (uid === this.firebaseUser?.uid) {
-      return {
-        displayName: this.firebaseUser.displayName,
-        profileImage: this.firebaseUser.photoURL,
-      };
-    }
-    // TODO: After User API is ready, Edit these line to get data from it..
-    return {
-      displayName: "Unknown",
-      profileImage: null,
-    };
   }
 }
 </script>
