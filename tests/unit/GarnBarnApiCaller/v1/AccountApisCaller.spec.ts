@@ -1,6 +1,6 @@
 import axios, { AxiosStatic, Method } from "axios";
 import { createMock } from "ts-auto-mock";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import GarnBarnApiConfig from "@/GarnBarnApiConfig.json";
 import { SupportThirdPartyPlatform } from "@/types/GarnBarnApi/AccountApi";

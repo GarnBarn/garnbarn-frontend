@@ -94,7 +94,7 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import Layout from "@/layouts/Main.vue";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import AccountDetailCard from "@/components/Account/AccountDetailCard.vue";
 import garnBarnApiConfig from "@/GarnBarnApiConfig.json";

@@ -1,5 +1,5 @@
 import { AxiosStatic } from "axios";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import AccountApis from "./AccountApis";
 import { AssignmentApis } from "./AssignmentApis";
 import TagApis from "./TagApis";

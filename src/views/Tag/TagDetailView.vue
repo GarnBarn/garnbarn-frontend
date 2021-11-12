@@ -72,7 +72,7 @@ import TagDetail from "@/components/TagDetail.vue";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
-import firebase from "firebase";
+import firebase from "firebase/app";
 
 @Component({
   components: {
@@ -85,19 +85,19 @@ import firebase from "firebase";
 export default class TagDetailView extends Vue {
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   editing = false;
-  creationType = 'tag';
+  creationType = "tag";
   firebaseUser: firebase.User | undefined = undefined;
   informDialogBox = new DialogBox("informDialogBox");
   editTagDialogBox = new DialogBox("editTagDialogBox");
   tagId = Number(this.$route.params.id);
   tag: Tag = {
-      id: this.tagId,
-      name: "",
-      author: this.firebaseUser?.uid as string,
-      color: "",
-      reminderTime: [],
-      subscriber: undefined
-  }
+    id: this.tagId,
+    name: "",
+    author: this.firebaseUser?.uid as string,
+    color: "",
+    reminderTime: [],
+    subscriber: undefined,
+  };
   tagApi: TagApi = {
     name: undefined,
     color: undefined,
@@ -108,15 +108,13 @@ export default class TagDetailView extends Vue {
   callback(user: firebase.User, loadingDialogBox: DialogBox): void {
     this.garnBarnAPICaller = new GarnBarnApi(user);
     this.get();
-    this.firebaseUser = user
+    this.firebaseUser = user;
     loadingDialogBox.dismiss();
   }
 
   async get(): Promise<void> {
     try {
-      const apiResponse = await this.garnBarnAPICaller?.v1.tags.get(
-        this.tagId
-      );
+      const apiResponse = await this.garnBarnAPICaller?.v1.tags.get(this.tagId);
       this.tag = apiResponse?.data as Tag;
       this.tagApi = this.extractTagToTagApi(this.tag);
     } catch (e) {
@@ -145,7 +143,7 @@ export default class TagDetailView extends Vue {
       });
   }
 
-   async deleteTag(): Promise<void> {
+  async deleteTag(): Promise<void> {
     this.garnBarnAPICaller?.v1.tags
       .delete(this.tagId)
       .then((apiResponse) => {
@@ -188,7 +186,7 @@ export default class TagDetailView extends Vue {
           onClick: (): void => {
             this.deleteTag();
             this.informDialogBox.dismiss();
-            this.$router.push('/home');
+            this.$router.push("/home");
           },
         },
         {
@@ -223,13 +221,13 @@ export default class TagDetailView extends Vue {
       ],
     });
   }
-  
+
   extractTagToTagApi(tag: Tag): TagApi {
     let tagApi: TagApi = {
       name: undefined,
       color: undefined,
       reminderTime: [],
-      subscriber: []
+      subscriber: [],
     };
     tagApi.name = tag.name;
     if (tag.reminderTime) {
@@ -237,9 +235,9 @@ export default class TagDetailView extends Vue {
     }
     tagApi.color = tag.color;
     if (tag.subscriber) {
-      tagApi.subscriber = tag.subscriber
+      tagApi.subscriber = tag.subscriber;
     }
-    
+
     return tagApi;
   }
 }

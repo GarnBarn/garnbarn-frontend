@@ -56,7 +56,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import "firebase/auth";

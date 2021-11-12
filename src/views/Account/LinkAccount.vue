@@ -7,7 +7,7 @@ import { Vue, Component } from "vue-property-decorator";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import Layout from "@/layouts/Main.vue";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import { SupportThirdPartyPlatform } from "@/types/GarnBarnApi/AccountApi";
 import GarnBarnApiconfig from "@/GarnBarnApiConfig.json";

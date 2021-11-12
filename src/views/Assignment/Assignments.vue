@@ -45,13 +45,6 @@
             <div v-else><i>No due date</i></div>
           </md-table-cell>
         </md-table-row>
-
-        <md-table-pagination
-          :md-page-size="rowsPerPage"
-          :md-page-options="[10]"
-          :md-update="updatePagination"
-          :md-data.sync="tablePages"
-        />
       </md-table>
       <div class="load-next-box">
         <md-button class="md-secondary" v-if="getNextData" @click="processNext"
@@ -123,7 +116,7 @@ import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import Create from "@/components/Create.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import { GetAllAssignmentApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
 import UserProfileIcon from "@/components/UserProfileIcon.vue";
