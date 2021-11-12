@@ -3,8 +3,10 @@
     <div class="name title">
       <p>{{ assignment.name }}</p>
     </div>
-    <div v-if="assignment.tag" class="tag" 
-        @click="navigateToTagPage(assignment.tag.id)"
+    <div
+      v-if="assignment.tag"
+      class="tag"
+      @click="navigateToTagPage(assignment.tag.id)"
     >
       <tag-box :tag="assignment.tag"></tag-box>
     </div>
@@ -27,7 +29,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Assignment } from "@/types/garnbarn/Assignment";
-import TagBox from "@/components/TagBox.vue";
+import TagBox from "@/components/Tag/TagBox.vue";
 
 @Component({
   components: {
@@ -48,7 +50,7 @@ export default class AssignmentDetail extends Vue {
       return date.toLocaleDateString("en-GB", {
         day: "numeric",
         month: "short",
-      })
+      });
     }
 
     return "Unknown";
@@ -58,9 +60,9 @@ export default class AssignmentDetail extends Vue {
     const date = this.convertUnixTimeToDate(this.assignment.dueDate as number);
     if (date) {
       return date.toLocaleTimeString("en-GB", {
-          hour: "numeric",
-          minute: "numeric",
-      })
+        hour: "numeric",
+        minute: "numeric",
+      });
     }
     return "Unknown";
   }
