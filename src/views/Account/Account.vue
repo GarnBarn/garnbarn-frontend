@@ -28,13 +28,13 @@
             >
           </center>
           <div class="user-info">
-            <AccountDetailCard title="Basic Information">
+            <DetailCard title="Basic Information">
               <h3>Display Name:</h3>
               <p>{{ displayName }}</p>
               <h3>UID:</h3>
               <p>{{ uid }}</p>
-            </AccountDetailCard>
-            <AccountDetailCard title="Third party platform">
+            </DetailCard>
+            <DetailCard title="Third party platform">
               <h3>LINE:</h3>
               <div v-if="!profile.platform.line">
                 <md-button class="line-green" @click="onClickLineLogin"
@@ -56,8 +56,8 @@
                   >Unlink LINE Account</md-button
                 >
               </div>
-            </AccountDetailCard>
-            <AccountDetailCard title="Account Management & Credential">
+            </DetailCard>
+            <DetailCard title="Account Management & Credential">
               <h3>
                 ID Token:
                 <md-icon
@@ -83,7 +83,7 @@
                   readonly
                 ></md-textarea>
               </md-field>
-            </AccountDetailCard>
+            </DetailCard>
           </div>
         </div>
       </md-card-content>
@@ -96,7 +96,7 @@ import { Vue, Component } from "vue-property-decorator";
 import Layout from "@/layouts/Main.vue";
 import firebase from "firebase/app";
 import DialogBox from "@/components/DialogBox/DialogBox";
-import AccountDetailCard from "@/components/Account/AccountDetailCard.vue";
+import DetailCard from "@/components/DetailCard.vue";
 import garnBarnApiConfig from "@/GarnBarnApiConfig.json";
 import {
   AccountDetail,
@@ -107,7 +107,7 @@ import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 @Component({
   components: {
     Layout,
-    AccountDetailCard,
+    DetailCard,
   },
 })
 export default class Account extends Vue {
