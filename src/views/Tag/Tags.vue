@@ -71,7 +71,7 @@
             <md-tooltip> Create new Tag </md-tooltip>
           </md-button>
 
-          <md-button class="md-icon-button" @click="subscribe">
+          <md-button class="md-icon-button" @click="enterSubscribeInfo">
             <md-icon>notification_add</md-icon>
             <md-tooltip> Subscribe to a Tag </md-tooltip>
           </md-button>
@@ -136,15 +136,11 @@
         <md-card-content>
           <md-tabs md-dynamic-height>
             <md-tab md-label="Subscribe">
-              <Create
-                :apiData="tagData"
-                :creationType="creationType"
-                md-dynamic-height
-                ref="tagCreate"
-              ></Create>
+              <tag-subscribe ref="tagSubscribe">
+              </tag-subscribe>
             </md-tab>
 
-            <md-tab md-label="Delete" md-disabled>
+            <md-tab md-disabled>
               <p>
                 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
                 mollitia dolorum dolores quae commodi impedit possimus qui,
@@ -186,11 +182,12 @@
 
 <script lang="ts">
 import { Component, Vue, Ref } from "vue-property-decorator";
-import { TagApi } from "@/types/GarnBarnApi/TagApi";
+import { TagApi, totpBody } from "@/types/GarnBarnApi/TagApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import Create from "@/components/Create.vue";
+import TagSubscribe from "@/components/Tag/TagSubscribe.vue"
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import firebase from "firebase/app";
 import { Tag } from "@/types/garnbarn/Tag";
@@ -205,12 +202,15 @@ import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
     Create,
     UserProfileIcon,
     TagBoxChip,
+    TagSubscribe,
   },
 })
 export default class Tags extends Vue {
   @Ref() readonly tagCreate!: Create;
+  @Ref() readonly tagSubscribe!: TagSubscribe;
 
   createDialogBox = new DialogBox("createDialogBox");
+  subscribeDialogBox = new DialogBox("subscribeDialogBox")
   loadingDialogBox = new DialogBox("loadingDialogBox");
   informDialogBox = new DialogBox("informDialogBox");
   creationType = "tag";
@@ -328,14 +328,36 @@ export default class Tags extends Vue {
       });
   }
 
-  subscribe(tag: Tag): void {
+  enterSubscribeInfo(): void {
+    this.subscribeDialogBox.show({
+      dialogBoxActions: [
+        {
+          buttonContent: "Confirm",
+          buttonClass: "md-primary md-raised",
+          onClick: async (): Promise<void> => {
+            this.subscribe(this.tagSubscribe.id, this.tagSubscribe.totpBody);
+            this.subscribeDialogBox.dismiss();
+          },
+        },
+        {
+          buttonContent: "Exit",
+          buttonClass: "md-secondary",
+          onClick: (): void => {
+            this.subscribeDialogBox.dismiss();
+          },
+        },
+      ],
+    })
+  }
+
+  subscribe(tagId: number | undefined, totpBody: totpBody): void {
     this.garnBarnAPICaller?.v1.tags
-      .subscribe(tag.id)
+      .subscribe(tagId, totpBody)
       .then((apiResponse) => {
         this.informDialogBox.show({
           dialogBoxContent: {
             title: "Tag subscribed",
-            content: `You have subscribed to ${tag.name}.`,
+            content: `You have subscribed to Tag ID:${tagId}.`,
           },
           dialogBoxActions: [
             {
