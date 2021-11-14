@@ -59,7 +59,7 @@
         >
         <h3 v-else><i>That all Tags you got.</i> ƪ(=ｘωｘ=ƪ)</h3>
       </div>
-        <md-speed-dial :class="bottomPosition" class="md-bottom-right">
+      <md-speed-dial :class="bottomPosition" class="md-bottom-right">
         <md-speed-dial-target class="md-primary">
           <md-icon class="md-morph-initial">menu</md-icon>
           <md-icon class="md-morph-final">edit</md-icon>
@@ -128,7 +128,7 @@
           </md-tabs>
         </md-card-content>
       </DialogBoxComponent>
-            <DialogBoxComponent
+      <DialogBoxComponent
         :dialogBoxId="'subscribeDialogBox'"
         :isCustomDialogBox="true"
         class="blur"
@@ -136,8 +136,7 @@
         <md-card-content>
           <md-tabs md-dynamic-height>
             <md-tab md-label="Subscribe">
-              <tag-subscribe ref="tagSubscribe">
-              </tag-subscribe>
+              <tag-subscribe ref="tagSubscribe"> </tag-subscribe>
             </md-tab>
 
             <md-tab md-disabled>
@@ -175,7 +174,6 @@
           </md-tabs>
         </md-card-content>
       </DialogBoxComponent>
-
     </div>
   </layout>
 </template>
@@ -187,7 +185,7 @@ import DialogBox from "@/components/DialogBox/DialogBox";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import Create from "@/components/Create.vue";
-import TagSubscribe from "@/components/Tag/TagSubscribe.vue"
+import TagSubscribe from "@/components/Tag/TagSubscribe.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import firebase from "firebase/app";
 import { Tag } from "@/types/garnbarn/Tag";
@@ -210,7 +208,7 @@ export default class Tags extends Vue {
   @Ref() readonly tagSubscribe!: TagSubscribe;
 
   createDialogBox = new DialogBox("createDialogBox");
-  subscribeDialogBox = new DialogBox("subscribeDialogBox")
+  subscribeDialogBox = new DialogBox("subscribeDialogBox");
   loadingDialogBox = new DialogBox("loadingDialogBox");
   informDialogBox = new DialogBox("informDialogBox");
   creationType = "tag";
@@ -347,7 +345,7 @@ export default class Tags extends Vue {
           },
         },
       ],
-    })
+    });
   }
 
   subscribe(tagId: number | undefined, totpBody: totpBody): void {
@@ -372,7 +370,8 @@ export default class Tags extends Vue {
                 this.tags = [];
                 this.callback(
                   this.garnBarnAPICaller?.v1.tags.getFirebaseUser(),
-                  this.loadingDialogBox);
+                  this.loadingDialogBox
+                );
               },
             },
           ],
@@ -382,7 +381,7 @@ export default class Tags extends Vue {
         this.informDialogBox.show({
           dialogBoxContent: {
             title: "Error",
-            content: e.message,
+            content: e.response.data.message,
           },
           dialogBoxActions: [
             {
@@ -419,7 +418,8 @@ export default class Tags extends Vue {
                 this.tags = [];
                 this.callback(
                   this.garnBarnAPICaller?.v1.tags.getFirebaseUser(),
-                  this.loadingDialogBox);
+                  this.loadingDialogBox
+                );
               },
             },
           ],
@@ -429,7 +429,7 @@ export default class Tags extends Vue {
         this.informDialogBox.show({
           dialogBoxContent: {
             title: "Error",
-            content: e.message,
+            content: e.response.data.message,
           },
           dialogBoxActions: [
             {
