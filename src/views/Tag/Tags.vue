@@ -365,6 +365,14 @@ export default class Tags extends Vue {
               buttonClass: "md-secondary",
               onClick: async () => {
                 this.informDialogBox.dismiss();
+                if (!this.garnBarnAPICaller?.v1.assignments.getFirebaseUser()) {
+                  return;
+                }
+                this.loadingDialogBox.show();
+                this.tags = [];
+                this.callback(
+                  this.garnBarnAPICaller?.v1.tags.getFirebaseUser(),
+                  this.loadingDialogBox);
               },
             },
           ],
@@ -403,7 +411,15 @@ export default class Tags extends Vue {
               buttonContent: "Ok",
               buttonClass: "md-secondary",
               onClick: async () => {
-                await this.informDialogBox.dismiss();
+                this.informDialogBox.dismiss();
+                if (!this.garnBarnAPICaller?.v1.assignments.getFirebaseUser()) {
+                  return;
+                }
+                this.loadingDialogBox.show();
+                this.tags = [];
+                this.callback(
+                  this.garnBarnAPICaller?.v1.tags.getFirebaseUser(),
+                  this.loadingDialogBox);
               },
             },
           ],
