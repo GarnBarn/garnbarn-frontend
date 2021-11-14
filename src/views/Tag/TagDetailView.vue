@@ -186,7 +186,7 @@ export default class TagDetailView extends Vue {
           onClick: (): void => {
             this.deleteTag();
             this.informDialogBox.dismiss();
-            this.$router.push("/home");
+            this.$router.back();
           },
         },
         {
