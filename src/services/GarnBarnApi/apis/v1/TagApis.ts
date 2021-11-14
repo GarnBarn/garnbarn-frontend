@@ -3,7 +3,7 @@ import {
   BulkApiResponse,
   GetAllTagApiNextFunctionWrapper,
 } from "@/types/GarnBarnApi/GarnBarnApiResponse";
-import { TagApi } from "@/types/GarnBarnApi/TagApi";
+import { TagApi, totpBody } from "@/types/GarnBarnApi/TagApi";
 import { AxiosResponse } from "axios";
 import { api, ApiSpecError } from "./api";
 
@@ -117,8 +117,13 @@ export default class TagApis extends api {
    * @param id The ID of the tag to subscribe
    * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
-  subscribe(id: number): Promise<AxiosResponse<Tag>> {
-    return this.sendRequest("POST", `${this.API_BASE_URL}/${id}/subscribe/`) as Promise<
+  subscribe(id: number | undefined, totpBody: totpBody): Promise<AxiosResponse<Tag>> {
+    if (!id) {
+      return Promise.reject(
+        new ApiSpecError("You can't subscribe a tag without an id")
+      );
+    }
+    return this.sendRequest("POST", `${this.API_BASE_URL}/${id}/subscribe/`, totpBody) as Promise<
       AxiosResponse<Tag>
     >;
   }
