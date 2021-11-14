@@ -4,3 +4,7 @@ export type TagApi = {
   reminderTime?: Array<number>;
   subscriber?: Array<number>;
 };
+
+export type totpBody = {
+  code: string;
+}
