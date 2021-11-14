@@ -1,11 +1,49 @@
 <template>
   <layout :callback="callback">
-    <div>
-      <md-button class="md-primary md-raised" v-on:click="edit">Edit</md-button>
-      <md-button class="md-accent md-raised" v-on:click="confirmDelete"
-        >Delete</md-button
-      >
-      <md-button class="md-secondary" @click="popBack">Back</md-button>
+    <div class="grid">
+      <div class="full-left-grid border">
+        <p class="md-display-3">{{ tag.name }}</p>
+        <div
+          class="color-square md"
+          :style="{ 'background-color': tag.color }"
+        ></div>
+      </div>
+      <div class="upper-right-grid">
+        <detail-card :title="detailCardTexts.author">
+          <UserProfileIcon
+            :uid="firebaseUser"
+            :garnBarnApiCaller="garnbarnAPICaller"
+          ></UserProfileIcon>
+        </detail-card>
+        <detail-card :title="detailCardTexts.subscriber">
+          <div
+            v-if="tag.subscriber && tag.subscriber.length !== 0"
+            class="subscribers"
+          >
+            <UserProfileIcon
+              v-for="[index, subscriberUid] of tag.subscriber.entries()"
+              :key="index"
+              :uid="subscriberUid"
+              :garnBarnApiCaller="garnBarnAPICaller"
+              class="subscribers"
+            >
+            </UserProfileIcon>
+          </div>
+          <div v-else>
+            <md-icon>minimize</md-icon>
+          </div>
+        </detail-card>
+        <detail-card :title="detailCardTexts.reminderTime"></detail-card>
+      </div>
+      <div class="lower-right-grid">
+        <md-button class="md-primary md-raised" v-on:click="edit"
+          >Edit</md-button
+        >
+        <md-button class="md-accent md-raised" v-on:click="confirmDelete"
+          >Delete</md-button
+        >
+        <md-button class="md-secondary" @click="popBack">Back</md-button>
+      </div>
     </div>
     <DialogBoxComponent
       :dialogBoxId="'editTagDialogBox'"
@@ -65,6 +103,8 @@ import { Component, Vue } from "vue-property-decorator";
 import { Tag } from "@/types/garnbarn/Tag";
 import { TagApi } from "@/types/GarnBarnApi/TagApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
+import UserProfileIcon from "@/components/UserProfileIcon.vue";
+import DetailCard from "@/components/DetailCard.vue";
 import Create from "@/components/Create.vue";
 import TagDetail from "@/components/TagDetail.vue";
 import Layout from "@/layouts/Main.vue";
@@ -78,10 +118,17 @@ import firebase from "firebase/app";
     TagDetail,
     Create,
     DialogBoxComponent,
+    UserProfileIcon,
+    DetailCard,
   },
 })
 export default class TagDetailView extends Vue {
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
+  detailCardTexts = {
+    author: "Author: ",
+    subscriber: "Subscribers: ",
+    reminderTime: "Reminder Time: ",
+  };
   editing = false;
   creationType = "tag";
   firebaseUser: firebase.User | undefined = undefined;
@@ -250,5 +297,34 @@ export default class TagDetailView extends Vue {
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+}
+
+.color-square {
+  height: 4rem;
+  width: 4rem;
+  border-radius: 15px;
+  margin: auto;
+}
+
+.border {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  border: 1px solid black;
+}
+
+.grid {
+  margin: 2rem 0rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.full-left-grid {
+  padding: 5rem;
+  grid-row: span 2 / span 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -1,12 +1,42 @@
 <template>
   <layout :callback="callback">
-    <div class="detail">
-      <AssignmentDetail :assignment="assignment"></AssignmentDetail>
-      <md-button class="md-primary md-raised" v-on:click="edit">Edit</md-button>
-      <md-button class="md-accent md-raised" v-on:click="confirmDelete"
-        >Delete</md-button
-      >
-      <md-button class="md-secondary" @click="popBack">Back</md-button>
+    <div class="grid">
+      <div class="full-left-grid border">
+        <p class="md-display-3">{{ assignment.name }}</p>
+        <div
+          v-if="assignment.tag"
+          @click="navigateToTagPage(assignment.tag.id)"
+        >
+        <TagBoxChip
+          :color="assignment.tag.color"
+          :text="assignment.tag.name"
+          class="tag"
+        ></TagBoxChip>
+        </div>
+        <p class="md-subheading">Due Date: {{this.getFormatDate}}</p>
+        <p class="md-subheading">Submission Time: {{this.getFormatTime}}</p>
+      </div>
+      <div class="upper-right-grid">
+        <detail-card :title="detailCardTexts.author">
+          <UserProfileIcon
+            :uid="firebaseUser"
+            :garnBarnApiCaller="garnbarnAPICaller"
+          ></UserProfileIcon>
+        </detail-card>
+        <detail-card :title="detailCardTexts.description">
+          <p class="content">{{assignment.description}}</p>
+        </detail-card>
+        <detail-card :title="detailCardTexts.reminderTime"></detail-card>
+      </div>
+      <div class="lower-right-grid">
+        <md-button class="md-primary md-raised" v-on:click="edit"
+          >Edit</md-button
+        >
+        <md-button class="md-accent md-raised" v-on:click="confirmDelete"
+          >Delete</md-button
+        >
+        <md-button class="md-secondary" @click="popBack">Back</md-button>
+      </div>
     </div>
     <DialogBoxComponent
       :dialogBoxId="'editAssignmentDialogBox'"
@@ -66,6 +96,9 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
+import DetailCard from "@/components/DetailCard.vue";
+import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
+import UserProfileIcon from "@/components/UserProfileIcon.vue";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import Create from "@/components/Create.vue";
 import AssignmentDetail from "@/components/AssignmentDetail.vue";
@@ -80,10 +113,18 @@ import firebase from "firebase/app";
     AssignmentDetail,
     Create,
     DialogBoxComponent,
+    DetailCard,
+    UserProfileIcon,
+    TagBoxChip,
   },
 })
 export default class AssignmentDetailView extends Vue {
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
+  detailCardTexts = {
+    author: "Author: ",
+    description: "Description: ",
+    reminderTime: "Reminder Time: ",
+  };
   creationType = "assignment";
   editing = false;
   informDialogBox = new DialogBox("informDialogBox");
@@ -289,6 +330,38 @@ export default class AssignmentDetailView extends Vue {
   popBack() {
     this.$router.back();
   }
+
+    convertUnixTimeToDate(unix_timestamp: number): Date {
+    var date = new Date(unix_timestamp);
+    return date;
+  }
+
+  get getFormatDate(): string {
+    const date = this.convertUnixTimeToDate(this.assignment.dueDate as number);
+    if (date) {
+      return date.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+      });
+    }
+
+    return "Unknown";
+  }
+
+  get getFormatTime(): string {
+    const date = this.convertUnixTimeToDate(this.assignment.dueDate as number);
+    if (date) {
+      return date.toLocaleTimeString("en-GB", {
+        hour: "numeric",
+        minute: "numeric",
+      });
+    }
+    return "Unknown";
+  }
+
+  navigateToTagPage(tagId: number): void {
+    this.$router.push(`/tag/${tagId}`);
+  }
 }
 </script>
 
@@ -297,5 +370,43 @@ export default class AssignmentDetailView extends Vue {
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+}
+
+.color-square {
+  height: 4rem;
+  width: 4rem;
+  border-radius: 15px;
+  margin: auto;
+}
+
+.border {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  border: 1px solid black;
+}
+
+.grid {
+  margin: 2rem 0rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.full-left-grid {
+  padding: 5rem;
+  grid-row: span 2 / span 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.content {
+  font-size: 1.2rem;
+  overflow-wrap: break-word;
+}
+
+.tag {
+  cursor: pointer;
 }
 </style>
