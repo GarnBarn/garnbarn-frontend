@@ -32,12 +32,14 @@
         </detail-card>
         <detail-card :title="detailCardTexts.reminderTime">
           <div v-if="tag.reminderTime && tag.reminderTime.length !== 0">
-            <tag-box-chip
+            <md-chip
               v-for="time in tag.reminderTime" 
               :key="time"
-              :color="tag.tag.color"
-              :text="getHumanReadableTime(time)">
-            </tag-box-chip>
+              :style="`background-color: ${tag.color} !important; color: ${getFontColor(
+                tag.color
+              )} !important`"
+              ><md-icon>notifications</md-icon>{{ getHumanReadableTime(time) }}</md-chip
+            >
           </div>
           <div v-else>
             <md-icon>minimize</md-icon>
@@ -319,6 +321,22 @@ export default class TagDetailView extends Vue {
     }
 
     return message;
+  }
+
+  hexToRgb(hex: string): Array<number> {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return [r, g, b];
+  }
+
+  getFontColor(hex: string): string {
+    const rgb = this.hexToRgb(hex);
+    if (rgb[0] * 0.299 + rgb[1] * 0.587 + rgb[2] * 0.114 > 186) {
+      return "#000000";
+    } else {
+      return "#ffffff";
+    }
   }
 
   popBack() {
