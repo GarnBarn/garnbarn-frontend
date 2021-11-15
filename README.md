@@ -1,6 +1,6 @@
 # garnbarn-frontend
 
-[![Build Status](https://app.travis-ci.com/GarnBarn/garnbarn-frontend.svg?branch=master)](https://app.travis-ci.com/GarnBarn/garnbarn-frontend)
+[![Vue Test](https://github.com/GarnBarn/garnbarn-frontend/actions/workflows/test.yml/badge.svg)](https://github.com/GarnBarn/garnbarn-frontend/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/GarnBarn/garnbarn-frontend/branch/master/graph/badge.svg?token=QwED3bFABW)](https://codecov.io/gh/GarnBarn/garnbarn-frontend)
 
 ## 📦 Build Steps
