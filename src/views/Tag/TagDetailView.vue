@@ -18,14 +18,13 @@
         <detail-card :title="detailCardTexts.subscriber">
           <div
             v-if="tag.subscriber && tag.subscriber.length !== 0"
-            class="subscribers"
+            class="flex"
           >
             <UserProfileIcon
               v-for="[index, subscriberUid] of tag.subscriber.entries()"
               :key="index"
               :uid="subscriberUid"
               :garnBarnApiCaller="garnBarnAPICaller"
-              class="subscribers"
             >
             </UserProfileIcon>
           </div>
@@ -326,5 +325,11 @@ export default class TagDetailView extends Vue {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 </style>
