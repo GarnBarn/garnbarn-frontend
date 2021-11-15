@@ -20,6 +20,7 @@
       <div class="upper-right-grid">
         <detail-card :title="detailCardTexts.author">
           <UserProfileIcon
+            v-if="isReady"
             :uid="assignment.author"
             :garnBarnApiCaller="garnBarnAPICaller"
           ></UserProfileIcon>
@@ -127,7 +128,7 @@ import firebase from "firebase/app";
   },
 })
 export default class AssignmentDetailView extends Vue {
-  garnBarnAPICaller: GarnBarnApi | undefined = undefined;
+  garnBarnAPICaller: GarnBarnApi | null = null;
   detailCardTexts = {
     author: "Author: ",
     description: "Description: ",
@@ -162,6 +163,7 @@ export default class AssignmentDetailView extends Vue {
     tagId: undefined,
   };
   firebaseUser: firebase.User | null = null;
+  isReady = false;
 
   callback(user: firebase.User, loadingDialogBox: DialogBox): void {
     this.garnBarnAPICaller = new GarnBarnApi(user);
@@ -197,6 +199,7 @@ export default class AssignmentDetailView extends Vue {
         ],
       });
     }
+    this.isReady = true;
   }
 
   async update(): Promise<void> {
