@@ -23,6 +23,7 @@
               :key="index"
               :uid="subscriberUid"
               :garnBarnApiCaller="garnBarnAPICaller"
+              class="padding"
             >
             </UserProfileIcon>
           </div>
@@ -363,6 +364,10 @@ export default class TagDetailView extends Vue {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 2rem;
+}
+
+.padding {
+  padding: 0px 5px;
 }
 
 .full-left-grid {
