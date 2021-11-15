@@ -105,39 +105,38 @@ export default class TagApis extends api {
    * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
   delete(id: number): Promise<AxiosResponse> {
-    return this.sendRequest("DELETE", `${this.API_BASE_URL}/${id}/`) as Promise<
-      AxiosResponse
-    >;
+    return this.sendRequest(
+      "DELETE",
+      `${this.API_BASE_URL}/${id}/`
+    ) as Promise<AxiosResponse>;
   }
 
   /**
    * Call Subscribe Tag API
    * TODO: Link to be filled.
-   * 
+   *
    * @param id The ID of the tag to subscribe
    * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
-  subscribe(id: number | undefined, totpBody: totpBody): Promise<AxiosResponse<Tag>> {
-    if (!id) {
-      return Promise.reject(
-        new ApiSpecError("You can't subscribe a tag without an id")
-      );
-    }
-    return this.sendRequest("POST", `${this.API_BASE_URL}/${id}/subscribe/`, totpBody) as Promise<
-      AxiosResponse<Tag>
-    >;
+  subscribe(id: number, totpBody: totpBody): Promise<AxiosResponse<Tag>> {
+    return this.sendRequest(
+      "POST",
+      `${this.API_BASE_URL}/${id}/subscribe/`,
+      totpBody
+    ) as Promise<AxiosResponse<Tag>>;
   }
 
   /**
    * Call Unsubscribe Tag API
    * TODO: Link to be filled.
-   * 
+   *
    * @param id the ID of the tag to unsubscribe
    * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
   unsubscribe(id: number): Promise<AxiosResponse> {
-    return this.sendRequest("POST", `${this.API_BASE_URL}/${id}/unsubscribe/`) as Promise<
-      AxiosResponse
-    >;
+    return this.sendRequest(
+      "POST",
+      `${this.API_BASE_URL}/${id}/unsubscribe/`
+    ) as Promise<AxiosResponse>;
   }
 }

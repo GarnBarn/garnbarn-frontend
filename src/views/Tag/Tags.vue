@@ -369,7 +369,10 @@ export default class Tags extends Vue {
           buttonContent: "Confirm",
           buttonClass: "md-primary md-raised",
           onClick: async (): Promise<void> => {
-            this.subscribe(this.tagSubscribe.id, this.tagSubscribe.totpBody);
+            this.subscribe(
+              this.tagSubscribe.parsedId,
+              this.tagSubscribe.totpBody
+            );
             this.subscribeDialogBox.dismiss();
           },
         },
@@ -384,7 +387,7 @@ export default class Tags extends Vue {
     });
   }
 
-  subscribe(tagId: number | undefined, totpBody: totpBody): void {
+  subscribe(tagId: number, totpBody: totpBody): void {
     this.garnBarnAPICaller?.v1.tags
       .subscribe(tagId, totpBody)
       .then((apiResponse) => {
