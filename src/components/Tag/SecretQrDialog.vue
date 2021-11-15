@@ -16,6 +16,7 @@
           tag
         </div>
         <img
+          id="secret-qr-code"
           :src="`https://chart.googleapis.com/chart?cht=qr&chl=${getAuthAppUrl()}&chs=180x180&choe=UTF-8`"
         />
         <p>Or manually enter secret: {{ tag.secretKeyTotp }}</p>
