@@ -2,6 +2,7 @@
   <layout :callback="callback">
     <div class="grid">
       <div class="full-left-grid border">
+        <p><md-icon class="md-size-2x">assignment</md-icon></p>
         <p class="md-display-3">{{ assignment.name }}</p>
         <div
           v-if="assignment.tag"
@@ -372,13 +373,6 @@ export default class AssignmentDetailView extends Vue {
   -webkit-backdrop-filter: blur(4px);
 }
 
-.color-square {
-  height: 4rem;
-  width: 4rem;
-  border-radius: 15px;
-  margin: auto;
-}
-
 .border {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
   border-radius: 10px;
@@ -408,5 +402,9 @@ export default class AssignmentDetailView extends Vue {
 
 .tag {
   cursor: pointer;
+}
+
+.left-align {
+  text-align: left;
 }
 </style>

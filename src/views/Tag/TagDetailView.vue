@@ -2,6 +2,7 @@
   <layout :callback="callback">
     <div class="grid">
       <div class="full-left-grid border">
+        <p><md-icon class="md-size-2x">tag</md-icon></p>
         <p class="md-display-3">{{ tag.name }}</p>
         <tag-box-chip :color="tag.color" :text="tag.name"></tag-box-chip>
       </div>
