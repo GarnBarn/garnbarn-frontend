@@ -1,34 +1,63 @@
 <template>
   <layout :callback="callback">
     <div>
-      <md-table v-model="tags" md-sort="id">
+      <md-table v-model="tags" md-sort="id" @md-selected="onSelected">
         <md-table-toolbar>
-          <div class="md-title left-align">
-            All Tags <md-chip>Still in development</md-chip>
-          </div>
-          <md-button class="md-icon-button md-raised md-primary" @click="edit">
-            <md-icon>add</md-icon>
-            <md-tooltip> Create new Tag </md-tooltip>
-          </md-button>
+          <div class="md-title left-align">All Tags</div>
         </md-table-toolbar>
-        <md-table-row slot="md-table-row" slot-scope="{ item }">
+        <md-table-row
+          slot="md-table-row"
+          slot-scope="{ item }"
+          md-selectable="single"
+        >
           <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
             item.id
           }}</md-table-cell>
-          <md-table-cell md-label="Name" md-sort-by="name">{{
+          <md-table-cell md-label="Name" md-sort-by="name" class="left-align">{{
             item.name
           }}</md-table-cell>
-          <md-table-cell md-label="Color"
-            ><md-chip
-              v-if="item.color"
-              :style="`background-color: ${
-                item.color
-              } !important; color: ${getFontColor(item.color)} !important`"
-              >{{ item.color }}</md-chip
+          <md-table-cell md-label="Author">
+            <UserProfileIcon
+              :uid="item.author"
+              :garnBarnApiCaller="garnBarnAPICaller"
             >
-            <md-chip v-else :style="`background-color: #f9f9f9 !important;`"
-              >#f9f9f9</md-chip
+            </UserProfileIcon>
+          </md-table-cell>
+          <md-table-cell md-label="Subscriber">
+            <div
+              v-if="item.subscriber && item.subscriber.length !== 0"
+              class="row-flex"
             >
+              <UserProfileIcon
+                v-for="[index, subscriberUid] of item.subscriber.entries()"
+                :key="index"
+                :uid="subscriberUid"
+                :garnBarnApiCaller="garnBarnAPICaller"
+              >
+              </UserProfileIcon>
+            </div>
+            <div v-else>
+              <md-icon>minimize</md-icon>
+            </div>
+          </md-table-cell>
+          <md-table-cell md-label="Color">
+            <TagBoxChip :color="item.color" :text="item.color"></TagBoxChip>
+          </md-table-cell>
+          <md-table-cell md-numeric>
+            <md-menu
+              v-if="item.author !== firebaseUser.uid"
+              md-size="small"
+              md-align-trigger
+            >
+              <md-button md-menu-trigger class="md-icon-button">
+                <md-icon> more_horiz </md-icon>
+              </md-button>
+              <md-menu-content>
+                <md-menu-item @click="unsubscribe(item)">
+                  Unsubscribe
+                </md-menu-item>
+              </md-menu-content>
+            </md-menu>
           </md-table-cell>
         </md-table-row>
       </md-table>
@@ -38,6 +67,24 @@
         >
         <h3 v-else><i>That all Tags you got.</i> ƪ(=ｘωｘ=ƪ)</h3>
       </div>
+      <md-speed-dial class="md-bottom-right">
+        <md-speed-dial-target class="md-primary">
+          <md-icon class="md-morph-initial">menu</md-icon>
+          <md-icon class="md-morph-final">edit</md-icon>
+        </md-speed-dial-target>
+
+        <md-speed-dial-content>
+          <md-button class="md-icon-button" @click="edit">
+            <md-icon>add</md-icon>
+            <md-tooltip> Create new Tag </md-tooltip>
+          </md-button>
+
+          <md-button class="md-icon-button" @click="enterSubscribeInfo">
+            <md-icon>notification_add</md-icon>
+            <md-tooltip> Subscribe to a Tag </md-tooltip>
+          </md-button>
+        </md-speed-dial-content>
+      </md-speed-dial>
       <DialogBoxComponent
         :dialogBoxId="'createDialogBox'"
         :isCustomDialogBox="true"
@@ -54,7 +101,7 @@
               ></Create>
             </md-tab>
 
-            <md-tab md-label="Delete" md-disabled>
+            <md-tab md-disabled>
               <p>
                 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
                 mollitia dolorum dolores quae commodi impedit possimus qui,
@@ -89,33 +136,90 @@
           </md-tabs>
         </md-card-content>
       </DialogBoxComponent>
+      <DialogBoxComponent
+        :dialogBoxId="'subscribeDialogBox'"
+        :isCustomDialogBox="true"
+        class="blur"
+      >
+        <md-card-content>
+          <md-tabs md-dynamic-height>
+            <md-tab md-label="Subscribe">
+              <tag-subscribe ref="tagSubscribe"> </tag-subscribe>
+            </md-tab>
+
+            <md-tab md-disabled>
+              <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+                mollitia dolorum dolores quae commodi impedit possimus qui,
+                atque at voluptates cupiditate. Neque quae culpa suscipit
+                praesentium inventore ducimus ipsa aut.
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+                mollitia dolorum dolores quae commodi impedit possimus qui,
+                atque at voluptates cupiditate. Neque quae culpa suscipit
+                praesentium inventore ducimus ipsa aut.
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+                mollitia dolorum dolores quae commodi impedit possimus qui,
+                atque at voluptates cupiditate. Neque quae culpa suscipit
+                praesentium inventore ducimus ipsa aut.
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+                mollitia dolorum dolores quae commodi impedit possimus qui,
+                atque at voluptates cupiditate. Neque quae culpa suscipit
+                praesentium inventore ducimus ipsa aut.
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+                mollitia dolorum dolores quae commodi impedit possimus qui,
+                atque at voluptates cupiditate. Neque quae culpa suscipit
+                praesentium inventore ducimus ipsa aut.
+              </p>
+            </md-tab>
+          </md-tabs>
+        </md-card-content>
+      </DialogBoxComponent>
+      <SecretQrDialog :tag="responseCreatedTag"> </SecretQrDialog>
     </div>
   </layout>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Ref } from "vue-property-decorator";
-import { TagApi } from "@/types/GarnBarnApi/TagApi";
+import { TagApi, totpBody } from "@/types/GarnBarnApi/TagApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import Create from "@/components/Create.vue";
+import TagSubscribe from "@/components/Tag/TagSubscribe.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import { Tag } from "@/types/garnbarn/Tag";
 import { GetAllTagApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
+import UserProfileIcon from "@/components/UserProfileIcon.vue";
+import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
+import SecretQrDialog from "@/components/Tag/SecretQrDialog.vue";
 
 @Component({
   components: {
     Layout,
     DialogBoxComponent,
     Create,
+    UserProfileIcon,
+    TagBoxChip,
+    TagSubscribe,
+    SecretQrDialog,
   },
 })
 export default class Tags extends Vue {
   @Ref() readonly tagCreate!: Create;
+  @Ref() readonly tagSubscribe!: TagSubscribe;
 
   createDialogBox = new DialogBox("createDialogBox");
+  subscribeDialogBox = new DialogBox("subscribeDialogBox");
   loadingDialogBox = new DialogBox("loadingDialogBox");
   informDialogBox = new DialogBox("informDialogBox");
   creationType = "tag";
@@ -125,7 +229,14 @@ export default class Tags extends Vue {
     reminderTime: [],
     subscriber: undefined,
   };
+  responseCreatedTag: Tag = {
+    id: 0,
+    name: "",
+    secretKeyTotp: "",
+    author: "",
+  };
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
+  firebaseUser: firebase.User | undefined = undefined;
   tags: Array<Tag> = [];
   getNextData: GetAllTagApiNextFunctionWrapper | null = null;
 
@@ -136,22 +247,7 @@ export default class Tags extends Vue {
       this.getNextData = apiResponse.data.next;
       loadingDialogBox.dismiss();
     });
-  }
-
-  hexToRgb(hex: string): Array<number> {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return [r, g, b];
-  }
-
-  getFontColor(hex: string): string {
-    const rgb = this.hexToRgb(hex);
-    if (rgb[0] * 0.299 + rgb[1] * 0.587 + rgb[2] * 0.114 > 186) {
-      return "#000000";
-    } else {
-      return "#ffffff";
-    }
+    this.firebaseUser = user;
   }
 
   processNext(): void {
@@ -202,26 +298,49 @@ export default class Tags extends Vue {
     this.garnBarnAPICaller?.v1.tags
       .create(this.tagCreate.apiData as TagApi)
       .then((apiResponse) => {
-        this.informDialogBox.show({
-          dialogBoxContent: {
-            title: "Tag created",
-            content: `Your Tag has been created with id ${apiResponse.data.id}`,
-          },
+        this.responseCreatedTag = apiResponse.data;
+        const secretQrCodeDialog = new DialogBox("secretQrDialog");
+        secretQrCodeDialog.show({
           dialogBoxActions: [
             {
-              buttonContent: "Ok",
+              buttonContent: "Close",
               buttonClass: "md-secondary",
-              onClick: async () => {
-                this.informDialogBox.dismiss();
-                if (!this.garnBarnAPICaller?.v1.assignments.getFirebaseUser()) {
-                  return;
-                }
-                this.loadingDialogBox.show();
-                this.tags = [];
-                this.callback(
-                  this.garnBarnAPICaller?.v1.tags.getFirebaseUser(),
-                  this.loadingDialogBox
-                );
+              onClick: () => {
+                this.informDialogBox.show({
+                  dialogBoxContent: {
+                    title: "Are you sure?",
+                    content:
+                      "This will only show only at the first time you create the tag. Loosing this key will lost tag subscriber control permanently",
+                  },
+                  dialogBoxActions: [
+                    {
+                      buttonContent: "Yes",
+                      buttonClass: "md-primary",
+                      onClick: () => {
+                        if (
+                          !this.garnBarnAPICaller?.v1.assignments.getFirebaseUser()
+                        ) {
+                          return;
+                        }
+                        this.loadingDialogBox.show();
+                        this.tags = [];
+                        this.callback(
+                          this.garnBarnAPICaller?.v1.tags.getFirebaseUser(),
+                          this.loadingDialogBox
+                        );
+                        this.informDialogBox.dismiss();
+                        secretQrCodeDialog.dismiss();
+                      },
+                    },
+                    {
+                      buttonContent: "No",
+                      buttonClass: "md-secondary",
+                      onClick: () => {
+                        this.informDialogBox.dismiss();
+                      },
+                    },
+                  ],
+                });
               },
             },
           ],
@@ -246,6 +365,162 @@ export default class Tags extends Vue {
         });
       });
   }
+
+  onSelected(item: Tag) {
+    this.$router.push("tag/" + item.id.toString());
+  }
+  
+  enterSubscribeInfo(): void {
+    this.subscribeDialogBox.show({
+      dialogBoxActions: [
+        {
+          buttonContent: "Confirm",
+          buttonClass: "md-primary md-raised",
+          onClick: async (): Promise<void> => {
+            if (!this.tagSubscribe.id) {
+              this.informDialogBox.show({
+                dialogBoxContent: {
+                  title: "Error",
+                  content:
+                    "Please enter the tag id that you want to subscribe.",
+                },
+              });
+              return;
+            }
+            if (isNaN(parseInt(this.tagSubscribe.id))) {
+              this.informDialogBox.show({
+                dialogBoxContent: {
+                  title: "Error",
+                  content: "The tag id can be only a number.",
+                },
+              });
+              return;
+            }
+            const parsedId = parseInt(this.tagSubscribe.id);
+            this.subscribe(parsedId, this.tagSubscribe.totpBody);
+            this.subscribeDialogBox.dismiss();
+          },
+        },
+        {
+          buttonContent: "Exit",
+          buttonClass: "md-secondary",
+          onClick: (): void => {
+            this.subscribeDialogBox.dismiss();
+          },
+        },
+      ],
+    });
+  }
+
+  subscribe(tagId: number, totpBody: totpBody): void {
+    this.garnBarnAPICaller?.v1.tags
+      .subscribe(tagId, totpBody)
+      .then((apiResponse) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Tag subscribed",
+            content: `You have subscribed to Tag ID:${tagId}.`,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                this.informDialogBox.dismiss();
+                if (!this.garnBarnAPICaller?.v1.assignments.getFirebaseUser()) {
+                  return;
+                }
+                this.loadingDialogBox.show();
+                this.tags = [];
+                this.callback(
+                  this.garnBarnAPICaller?.v1.tags.getFirebaseUser(),
+                  this.loadingDialogBox
+                );
+              },
+            },
+          ],
+        });
+      })
+      .catch((e) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Error",
+            content: e.response.data.message,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                await this.informDialogBox.dismiss();
+              },
+            },
+          ],
+        });
+      });
+  }
+
+  unsubscribe(tag: Tag): void {
+    this.garnBarnAPICaller?.v1.tags
+      .unsubscribe(tag.id)
+      .then((apiResponse) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Tag unsubscribed",
+            content: `You have unsubscribed from ${tag.name}.`,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                this.informDialogBox.dismiss();
+                if (!this.garnBarnAPICaller?.v1.assignments.getFirebaseUser()) {
+                  return;
+                }
+                this.loadingDialogBox.show();
+                this.tags = [];
+                this.callback(
+                  this.garnBarnAPICaller?.v1.tags.getFirebaseUser(),
+                  this.loadingDialogBox
+                );
+              },
+            },
+          ],
+        });
+      })
+      .catch((e) => {
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Error",
+            content: e.response.data.message,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                await this.informDialogBox.dismiss();
+              },
+            },
+          ],
+        });
+      });
+  }
+
+  getSubscriberDetail(uid: string) {
+    if (uid === this.firebaseUser?.uid) {
+      return {
+        displayName: this.firebaseUser.displayName,
+        profileImage: this.firebaseUser.photoURL,
+      };
+    }
+    // TODO: After User API is ready, Edit these line to get data from it..
+    return {
+      displayName: "Unknown",
+      profileImage: null,
+    };
+  }
 }
 </script>
 
@@ -258,5 +533,22 @@ export default class Tags extends Vue {
 
 .left-align {
   text-align: left;
+}
+
+.flex-start {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.left-align {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.row-flex {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  max-width: 500px;
 }
 </style>

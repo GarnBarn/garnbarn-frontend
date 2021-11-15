@@ -28,28 +28,36 @@
             >
           </center>
           <div class="user-info">
-            <AccountDetailCard title="Basic Information">
+            <DetailCard title="Basic Information">
               <h3>Display Name:</h3>
               <p>{{ displayName }}</p>
               <h3>UID:</h3>
               <p>{{ uid }}</p>
-            </AccountDetailCard>
-            <AccountDetailCard title="Third party platform">
-              <h3>LINE: <md-chip>Still in development</md-chip></h3>
-              <div>
+            </DetailCard>
+            <DetailCard title="Third party platform">
+              <h3>LINE:</h3>
+              <div v-if="!profile.platform.line">
                 <md-button class="line-green" @click="onClickLineLogin"
                   ><img
                     class="line-logo"
                     src="@/assets/images/line_logo.png"
-                  />Log In</md-button
+                  />log in</md-button
+                >
+                <div>
+                  <i
+                    >Link your GarnBarn Account with LINE to recieve assignment
+                    notfication on LINE
+                  </i>
+                </div>
+              </div>
+              <div v-else>
+                <p>Linked with LINE account {{ profile.platform.line }}</p>
+                <md-button class="md-accent" @click="onClickUnlinkLine"
+                  >Unlink LINE Account</md-button
                 >
               </div>
-              <i
-                >Link your GarnBarn Account with LINE to recieve assignment
-                notfication on LINE
-              </i>
-            </AccountDetailCard>
-            <AccountDetailCard title="Account Management & Credential">
+            </DetailCard>
+            <DetailCard title="Account Management & Credential">
               <h3>
                 ID Token:
                 <md-icon
@@ -75,7 +83,7 @@
                   readonly
                 ></md-textarea>
               </md-field>
-            </AccountDetailCard>
+            </DetailCard>
           </div>
         </div>
       </md-card-content>
@@ -86,15 +94,20 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import Layout from "@/layouts/Main.vue";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import DialogBox from "@/components/DialogBox/DialogBox";
-import AccountDetailCard from "@/components/Account/AccountDetailCard.vue";
+import DetailCard from "@/components/DetailCard.vue";
 import garnBarnApiConfig from "@/GarnBarnApiConfig.json";
+import {
+  AccountDetail,
+  SupportThirdPartyPlatform,
+} from "@/types/GarnBarnApi/AccountApi";
+import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 
 @Component({
   components: {
     Layout,
-    AccountDetailCard,
+    DetailCard,
   },
 })
 export default class Account extends Vue {
@@ -104,6 +117,12 @@ export default class Account extends Vue {
   };
   user: firebase.User | null = null;
   informDialogBox = new DialogBox("informDialogBox");
+  profile: AccountDetail = {
+    displayName: "",
+    profileImage: "",
+    platform: {},
+  };
+  garnBarnApiCaller: GarnBarnApi | null = null;
 
   callback(user: firebase.User, loadingDialogBox: DialogBox) {
     user
@@ -112,6 +131,11 @@ export default class Account extends Vue {
         this.idTokenData.idToken = idToken;
         loadingDialogBox.dismiss();
         this.user = user;
+        this.garnBarnApiCaller = new GarnBarnApi(user);
+        return this.garnBarnApiCaller.v1.accounts.getAccountDetail(true);
+      })
+      .then((apiResponse) => {
+        this.profile = apiResponse.data;
       })
       .catch((e) => {
         console.error(e);
@@ -266,6 +290,79 @@ export default class Account extends Vue {
         },
       ],
     });
+  }
+
+  onClickUnlinkLine() {
+    this.informDialogBox.show({
+      dialogBoxContent: {
+        title: "Are you sure?",
+        content: `Your account will be unlinked from LINE Account this LINE Account. You can link your account with LINE again anytime.`,
+      },
+      dialogBoxActions: [
+        {
+          buttonContent: "Yes",
+          buttonClass: "md-primary",
+          onClick: () => {
+            this.onUnlinkLineHandler();
+          },
+        },
+        {
+          buttonContent: "No",
+          buttonClass: "md-secondart",
+          onClick: () => {
+            this.informDialogBox.dismiss();
+          },
+        },
+      ],
+    });
+  }
+
+  onUnlinkLineHandler() {
+    this.informDialogBox.show({
+      dialogBoxContent: {
+        title: "Unlinking",
+        content: "We are working on your request, Please wait.",
+      },
+      dialogBoxActions: [],
+    });
+    this.garnBarnApiCaller?.v1.accounts
+      .unlinkAccount(SupportThirdPartyPlatform.LINE)
+      .then(() => {
+        this.informDialogBox.dismiss();
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "Successfully",
+            content: `We are able to unlink your account from LINE Account with user Id ${this.profile.platform.line} `,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Close",
+              buttonClass: "md-secondary",
+              onClick: () => {
+                window.location.reload();
+              },
+            },
+          ],
+        });
+      })
+      .catch((e) => {
+        this.informDialogBox.dismiss();
+        this.informDialogBox.show({
+          dialogBoxContent: {
+            title: "An error occurred",
+            content: e.message,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Close",
+              buttonClass: "md-secondary",
+              onClick: () => {
+                window.location.reload();
+              },
+            },
+          ],
+        });
+      });
   }
 
   get profileImage(): string | null | undefined {

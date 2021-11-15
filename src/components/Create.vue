@@ -28,28 +28,28 @@
         :minute-step="30"
         format="DD/MM/YY HH:mm"
       ></date-picker>
-      <br>
+      <br />
       <label>Reminder Time:</label>
-        <md-checkbox
-          v-model="apiData.reminderTime"
-          :value="this.getReminderTime(7)"
-          >1 Week</md-checkbox
-        >
-        <md-checkbox
-          v-model="apiData.reminderTime"
-          :value="this.getReminderTime(1)"
-          >1 Day</md-checkbox
-        >
-        <md-checkbox
-          v-model="apiData.reminderTime"
-          :value="this.getReminderTime(0.5)"
-          >12 hours</md-checkbox
-        >
-        <md-checkbox
-          v-model="apiData.reminderTime"
-          :value="this.getReminderTime(0.25)"
-          >6 hours</md-checkbox
-        >
+      <md-checkbox
+        v-model="apiData.reminderTime"
+        :value="this.getReminderTime(7)"
+        >1 Week</md-checkbox
+      >
+      <md-checkbox
+        v-model="apiData.reminderTime"
+        :value="this.getReminderTime(1)"
+        >1 Day</md-checkbox
+      >
+      <md-checkbox
+        v-model="apiData.reminderTime"
+        :value="this.getReminderTime(0.5)"
+        >12 hours</md-checkbox
+      >
+      <md-checkbox
+        v-model="apiData.reminderTime"
+        :value="this.getReminderTime(0.25)"
+        >6 hours</md-checkbox
+      >
     </div>
     <div v-if="creationType === 'tag'" class="overflow">
       <div>
@@ -98,7 +98,7 @@ import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
 import VSwatches from "vue-swatches";
 import "vue-swatches/dist/vue-swatches.css";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import { Tag } from "@/types/garnbarn/Tag";
 
@@ -111,7 +111,7 @@ import { Tag } from "@/types/garnbarn/Tag";
 export default class Create extends Vue {
   @Prop({ required: true }) creationType!: "assignment" | "tag";
   @Prop({ required: true }) apiData!: AssignmentApi | TagApi;
-  @Prop({ required: true }) firebaseUser!: firebase.User;
+  @Prop({ required: false }) firebaseUser!: firebase.User;
 
   garnBarnApiCaller: GarnBarnApi | null = null;
   tags: Array<Tag> = [];
@@ -129,7 +129,7 @@ export default class Create extends Vue {
     });
   }
   getReminderTime(timeBeforeDue: number): number {
-    var reminderTime = 24 * 60 * 60 * 1000 * timeBeforeDue; //time of timeBeforeDue days
+    var reminderTime = 24 * 60 * 60 * timeBeforeDue; //time of timeBeforeDue days
     return reminderTime;
   }
 }

@@ -46,7 +46,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Assignment, DateWithAssignments } from "@/types/garnbarn/Assignment";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import { GetAllAssignmentApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
 
 type mapPosWithData = {

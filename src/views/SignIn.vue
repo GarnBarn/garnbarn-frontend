@@ -16,8 +16,7 @@
 </template>
 
 <script lang="ts">
-import firebase from "firebase";
-import "firebase/auth";
+import firebase from "firebase/app";
 import * as firebaseUi from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 import { Component, Vue } from "vue-property-decorator";
