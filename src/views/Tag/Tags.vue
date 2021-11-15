@@ -1,17 +1,19 @@
 <template>
   <layout :callback="callback">
     <div>
-      <md-table v-model="tags" md-sort="id">
+      <md-table v-model="tags" md-sort="id" @md-selected="onSelected">
         <md-table-toolbar>
-          <div class="md-title left-align">
-            All Tags <md-chip>Still in development</md-chip>
-          </div>
+          <div class="md-title left-align">All Tags</div>
           <md-button class="md-icon-button md-raised md-primary" @click="edit">
             <md-icon>add</md-icon>
             <md-tooltip> Create new Tag </md-tooltip>
           </md-button>
         </md-table-toolbar>
-        <md-table-row slot="md-table-row" slot-scope="{ item }">
+        <md-table-row
+          slot="md-table-row"
+          slot-scope="{ item }"
+          md-selectable="single"
+        >
           <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
             item.id
           }}</md-table-cell>
@@ -280,6 +282,10 @@ export default class Tags extends Vue {
           ],
         });
       });
+  }
+
+  onSelected(item: Tag) {
+    this.$router.push("tag/" + item.id.toString());
   }
 }
 </script>
