@@ -36,7 +36,13 @@ export default class DateWithAssignment extends Vue {
   }
 
   get assignmentsSorted(): Array<Assignment> {
-    this.assignments.sort((a, b) => {
+    let assignmentCache = this.assignments;
+    for (let i = assignmentCache.length - 1; i >= 0; i--) {
+      if (!assignmentCache[i].dueDate) {
+        assignmentCache.splice(i, 1);
+      }
+    }
+    assignmentCache.sort((a, b) => {
       if (
         typeof a.dueDate === "undefined" ||
         typeof b.dueDate === "undefined"
@@ -48,7 +54,7 @@ export default class DateWithAssignment extends Vue {
       }
       return 1;
     });
-    return this.assignments;
+    return assignmentCache;
   }
 }
 </script>
