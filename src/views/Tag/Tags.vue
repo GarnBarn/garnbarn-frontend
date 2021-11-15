@@ -503,12 +503,6 @@ export default class Tags extends Vue {
   text-align: left;
 }
 
-.profile-image {
-  width: 30px;
-  height: 30px;
-  border-radius: 100px;
-}
-
 .flex-start {
   display: flex;
   justify-content: flex-start;
