@@ -8,24 +8,25 @@
           v-if="assignment.tag"
           @click="navigateToTagPage(assignment.tag.id)"
         >
-        <TagBoxChip
-          :color="assignment.tag.color"
-          :text="assignment.tag.name"
-          class="tag"
-        ></TagBoxChip>
+          <TagBoxChip
+            :color="assignment.tag.color"
+            :text="assignment.tag.name"
+            class="tag"
+          ></TagBoxChip>
         </div>
-        <p class="md-subheading">Due Date: {{this.getFormatDate}}</p>
-        <p class="md-subheading">Submission Time: {{this.getFormatTime}}</p>
+        <p class="md-subheading">Due Date: {{ this.getFormatDate }}</p>
+        <p class="md-subheading">Submission Time: {{ this.getFormatTime }}</p>
       </div>
       <div class="upper-right-grid">
         <detail-card :title="detailCardTexts.author">
           <UserProfileIcon
+            v-if="isReady"
             :uid="assignment.author"
             :garnBarnApiCaller="garnBarnAPICaller"
           ></UserProfileIcon>
         </detail-card>
         <detail-card :title="detailCardTexts.description">
-          <p class="content">{{assignment.description}}</p>
+          <p class="content">{{ assignment.description }}</p>
         </detail-card>
         <detail-card :title="detailCardTexts.reminderTime"></detail-card>
       </div>
@@ -120,7 +121,7 @@ import firebase from "firebase/app";
   },
 })
 export default class AssignmentDetailView extends Vue {
-  garnBarnAPICaller: GarnBarnApi | undefined = undefined;
+  garnBarnAPICaller: GarnBarnApi | null = null;
   detailCardTexts = {
     author: "Author: ",
     description: "Description: ",
@@ -155,6 +156,7 @@ export default class AssignmentDetailView extends Vue {
     tagId: undefined,
   };
   firebaseUser: firebase.User | null = null;
+  isReady = false;
 
   callback(user: firebase.User, loadingDialogBox: DialogBox): void {
     this.garnBarnAPICaller = new GarnBarnApi(user);
@@ -190,6 +192,7 @@ export default class AssignmentDetailView extends Vue {
         ],
       });
     }
+    this.isReady = true;
   }
 
   async update(): Promise<void> {
@@ -332,7 +335,7 @@ export default class AssignmentDetailView extends Vue {
     this.$router.back();
   }
 
-    convertUnixTimeToDate(unix_timestamp: number): Date {
+  convertUnixTimeToDate(unix_timestamp: number): Date {
     var date = new Date(unix_timestamp);
     return date;
   }
