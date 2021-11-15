@@ -369,10 +369,27 @@ export default class Tags extends Vue {
           buttonContent: "Confirm",
           buttonClass: "md-primary md-raised",
           onClick: async (): Promise<void> => {
-            this.subscribe(
-              this.tagSubscribe.parsedId,
-              this.tagSubscribe.totpBody
-            );
+            if (!this.tagSubscribe.id) {
+              this.informDialogBox.show({
+                dialogBoxContent: {
+                  title: "Error",
+                  content:
+                    "Please enter the tag id that you want to subscribe.",
+                },
+              });
+              return;
+            }
+            if (isNaN(parseInt(this.tagSubscribe.id))) {
+              this.informDialogBox.show({
+                dialogBoxContent: {
+                  title: "Error",
+                  content: "The tag id can be only a number.",
+                },
+              });
+              return;
+            }
+            const parsedId = parseInt(this.tagSubscribe.id);
+            this.subscribe(parsedId, this.tagSubscribe.totpBody);
             this.subscribeDialogBox.dismiss();
           },
         },

@@ -14,19 +14,14 @@
 <script lang="ts">
 import { totpBody } from "@/types/GarnBarnApi/TagApi";
 import { Component, Vue } from "vue-property-decorator";
+import DialogBox from "@/components/DialogBox/DialogBox";
 
 @Component
 export default class TagSubscribe extends Vue {
-  id: number | null = null;
+  id = "";
   totpBody: totpBody = {
     code: "",
   };
-
-  get parsedId(): number {
-    if (!this.id) {
-      throw new Error("The inputted id from user is null");
-    }
-    return this.id;
-  }
+  informDialogBox = new DialogBox("informDialogBox");
 }
 </script>
