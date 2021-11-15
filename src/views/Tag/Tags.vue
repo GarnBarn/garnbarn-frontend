@@ -40,7 +40,11 @@
             <TagBoxChip :color="item.color" :text="item.color"></TagBoxChip>
           </md-table-cell>
           <md-table-cell md-numeric>
-            <md-menu md-size="small" md-align-trigger>
+            <md-menu
+              v-if="item.author !== firebaseUser.uid"
+              md-size="small"
+              md-align-trigger
+            >
               <md-button md-menu-trigger class="md-icon-button">
                 <md-icon> more_horiz </md-icon>
               </md-button>
