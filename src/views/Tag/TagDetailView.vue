@@ -3,16 +3,13 @@
     <div class="grid">
       <div class="full-left-grid border">
         <p class="md-display-3">{{ tag.name }}</p>
-        <div
-          class="color-square md"
-          :style="{ 'background-color': tag.color }"
-        ></div>
+        <tag-box-chip :color="tag.color" :text="tag.name"></tag-box-chip>
       </div>
       <div class="upper-right-grid">
-        <detail-card :title="detailCardTexts.author">
+        <detail-card :title="detailCardTexts.author" v-if="tag.author">
           <UserProfileIcon
-            :uid="firebaseUser"
-            :garnBarnApiCaller="garnbarnAPICaller"
+            :uid="tag.author"
+            :garnBarnApiCaller="garnBarnAPICaller"
           ></UserProfileIcon>
         </detail-card>
         <detail-card :title="detailCardTexts.subscriber">
@@ -104,6 +101,7 @@ import { TagApi } from "@/types/GarnBarnApi/TagApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import UserProfileIcon from "@/components/UserProfileIcon.vue";
 import DetailCard from "@/components/DetailCard.vue";
+import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
 import Create from "@/components/Create.vue";
 import TagDetail from "@/components/TagDetail.vue";
 import Layout from "@/layouts/Main.vue";
@@ -119,6 +117,7 @@ import firebase from "firebase/app";
     DialogBoxComponent,
     UserProfileIcon,
     DetailCard,
+    TagBoxChip,
   },
 })
 export default class TagDetailView extends Vue {
@@ -296,13 +295,6 @@ export default class TagDetailView extends Vue {
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-}
-
-.color-square {
-  height: 4rem;
-  width: 4rem;
-  border-radius: 15px;
-  margin: auto;
 }
 
 .border {
