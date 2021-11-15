@@ -63,7 +63,7 @@
         >
         <h3 v-else><i>That all Tags you got.</i> ƪ(=ｘωｘ=ƪ)</h3>
       </div>
-      <md-speed-dial :class="bottomPosition" class="md-bottom-right">
+      <md-speed-dial class="md-bottom-right">
         <md-speed-dial-target class="md-primary">
           <md-icon class="md-morph-initial">menu</md-icon>
           <md-icon class="md-morph-final">edit</md-icon>
