@@ -20,8 +20,8 @@
       <div class="upper-right-grid">
         <detail-card :title="detailCardTexts.author">
           <UserProfileIcon
-            :uid="firebaseUser"
-            :garnBarnApiCaller="garnbarnAPICaller"
+            :uid="assignment.author"
+            :garnBarnApiCaller="garnBarnAPICaller"
           ></UserProfileIcon>
         </detail-card>
         <detail-card :title="detailCardTexts.description">
