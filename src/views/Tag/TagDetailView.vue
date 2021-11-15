@@ -31,12 +31,17 @@
           </div>
         </detail-card>
         <detail-card :title="detailCardTexts.reminderTime">
-          <tag-box-chip
-            v-for="time in tag.reminderTime" 
-            :key="time"
-            :color="tag.color"
-            :text="getHumanReadableTime(time)">
-          </tag-box-chip>
+          <div v-if="tag.reminderTime && tag.reminderTime.length !== 0">
+            <tag-box-chip
+              v-for="time in tag.reminderTime" 
+              :key="time"
+              :color="tag.tag.color"
+              :text="getHumanReadableTime(time)">
+            </tag-box-chip>
+          </div>
+          <div v-else>
+            <md-icon>minimize</md-icon>
+          </div>
         </detail-card>
       </div>
       <div class="lower-right-grid">

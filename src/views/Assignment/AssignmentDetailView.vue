@@ -29,12 +29,17 @@
           <p class="content">{{ assignment.description }}</p>
         </detail-card>
         <detail-card :title="detailCardTexts.reminderTime">
-          <tag-box-chip
-            v-for="time in assignment.reminderTime" 
-            :key="time"
-            :color="assignment.tag.color"
-            :text="getHumanReadableTime(time)">
-          </tag-box-chip>
+          <div v-if="assignment.reminderTime && assignment.reminderTime.length !== 0">
+            <tag-box-chip
+              v-for="time in assignment.reminderTime" 
+              :key="time"
+              :color="assignment.tag.color"
+              :text="getHumanReadableTime(time)">
+            </tag-box-chip>
+          </div>
+          <div v-else>
+            <md-icon>minimize</md-icon>
+          </div>
         </detail-card>
       </div>
       <div class="lower-right-grid">
