@@ -14,7 +14,6 @@
 <script lang="ts">
 import { totpBody } from "@/types/GarnBarnApi/TagApi";
 import { Component, Vue } from "vue-property-decorator";
-import DialogBox from "@/components/DialogBox/DialogBox";
 
 @Component
 export default class TagSubscribe extends Vue {
@@ -22,6 +21,5 @@ export default class TagSubscribe extends Vue {
   totpBody: totpBody = {
     code: "",
   };
-  informDialogBox = new DialogBox("informDialogBox");
 }
 </script>
