@@ -8,14 +8,14 @@
           v-if="assignment.tag"
           @click="navigateToTagPage(assignment.tag.id)"
         >
-        <TagBoxChip
-          :color="assignment.tag.color"
-          :text="assignment.tag.name"
-          class="tag"
-        ></TagBoxChip>
+          <TagBoxChip
+            :color="assignment.tag.color"
+            :text="assignment.tag.name"
+            class="tag"
+          ></TagBoxChip>
         </div>
-        <p class="md-subheading">Due Date: {{this.getFormatDate}}</p>
-        <p class="md-subheading">Submission Time: {{this.getFormatTime}}</p>
+        <p class="md-subheading">Due Date: {{ this.getFormatDate }}</p>
+        <p class="md-subheading">Submission Time: {{ this.getFormatTime }}</p>
       </div>
       <div class="upper-right-grid">
         <detail-card :title="detailCardTexts.author">
@@ -25,9 +25,16 @@
           ></UserProfileIcon>
         </detail-card>
         <detail-card :title="detailCardTexts.description">
-          <p class="content">{{assignment.description}}</p>
+          <p class="content">{{ assignment.description }}</p>
         </detail-card>
-        <detail-card :title="detailCardTexts.reminderTime"></detail-card>
+        <detail-card :title="detailCardTexts.reminderTime">
+          <tag-box-chip
+            v-for="time in assignment.reminderTime" 
+            :key="time"
+            :color="assignment.tag.color"
+            :text="getHumanReadableTime(time)">
+          </tag-box-chip>
+        </detail-card>
       </div>
       <div class="lower-right-grid">
         <md-button class="md-primary md-raised" v-on:click="edit"
@@ -332,7 +339,7 @@ export default class AssignmentDetailView extends Vue {
     this.$router.back();
   }
 
-    convertUnixTimeToDate(unix_timestamp: number): Date {
+  convertUnixTimeToDate(unix_timestamp: number): Date {
     var date = new Date(unix_timestamp);
     return date;
   }
@@ -358,6 +365,30 @@ export default class AssignmentDetailView extends Vue {
       });
     }
     return "Unknown";
+  }
+
+  getHumanReadableTime(unixTime: number): string {
+    var message = "";
+
+    var day = Math.floor(unixTime / 86400);
+    unixTime -= day * 86400;
+    if (day >= 1) {
+      message += day > 1 ? `${day} Days` : `${day} Day`;
+    }
+
+    var hour = Math.floor(unixTime / 3600) % 24;
+    unixTime -= hour * 3600;
+    if (hour >= 1) {
+      message += hour > 1 ? `${hour} hours` : `${hour} hour`;
+    }
+
+    var minute = Math.floor(unixTime / 60) % 60;
+    unixTime -= minute * 60;
+    if (minute >= 1) {
+      message += minute > 1 ? `${minute} minutes` : `${minute} minute`;
+    }
+
+    return message;
   }
 
   navigateToTagPage(tagId: number): void {
