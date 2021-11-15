@@ -368,7 +368,8 @@ export default class Tags extends Vue {
 
   onSelected(item: Tag) {
     this.$router.push("tag/" + item.id.toString());
-
+  }
+  
   enterSubscribeInfo(): void {
     this.subscribeDialogBox.show({
       dialogBoxActions: [
