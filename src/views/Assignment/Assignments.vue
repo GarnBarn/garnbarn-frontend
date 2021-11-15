@@ -8,12 +8,8 @@
       >
         <md-table-toolbar>
           <div class="md-title left-align">
-            All Assignments <md-chip>Still in development</md-chip>
+            All Assignments
           </div>
-          <md-button class="md-icon-button md-raised md-primary" @click="edit">
-            <md-icon>add</md-icon>
-            <md-tooltip> Create new Assignment </md-tooltip>
-          </md-button>
         </md-table-toolbar>
         <md-table-row
           slot="md-table-row"
@@ -52,6 +48,19 @@
         >
         <h3 v-else><i>That all assignments you got.</i> ƪ(=ｘωｘ=ƪ)</h3>
       </div>
+      <md-speed-dial class="md-bottom-right">
+        <md-speed-dial-target class="md-primary">
+          <md-icon class="md-morph-initial">menu</md-icon>
+          <md-icon class="md-morph-final">edit</md-icon>
+        </md-speed-dial-target>
+
+        <md-speed-dial-content>
+          <md-button class="md-icon-button" @click="edit">
+            <md-icon>add</md-icon>
+            <md-tooltip> Create new assignment </md-tooltip>
+          </md-button>
+        </md-speed-dial-content>
+      </md-speed-dial>
       <DialogBoxComponent
         :dialogBoxId="'createDialogBox'"
         :isCustomDialogBox="true"
