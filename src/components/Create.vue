@@ -129,7 +129,7 @@ export default class Create extends Vue {
     });
   }
   getReminderTime(timeBeforeDue: number): number {
-    var reminderTime = 24 * 60 * 60 * 1000 * timeBeforeDue; //time of timeBeforeDue days
+    var reminderTime = 24 * 60 * 60 * timeBeforeDue; //time of timeBeforeDue days
     return reminderTime;
   }
 }

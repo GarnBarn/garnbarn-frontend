@@ -1,11 +1,15 @@
 <template>
   <layout :callback="callback">
     <div>
-      <md-table v-model="tags" md-sort="id">
+      <md-table v-model="tags" md-sort="id" @md-selected="onSelected">
         <md-table-toolbar>
           <div class="md-title left-align">All Tags</div>
         </md-table-toolbar>
-        <md-table-row slot="md-table-row" slot-scope="{ item }">
+        <md-table-row
+          slot="md-table-row"
+          slot-scope="{ item }"
+          md-selectable="single"
+        >
           <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
             item.id
           }}</md-table-cell>
@@ -362,6 +366,10 @@ export default class Tags extends Vue {
       });
   }
 
+  onSelected(item: Tag) {
+    this.$router.push("tag/" + item.id.toString());
+  }
+  
   enterSubscribeInfo(): void {
     this.subscribeDialogBox.show({
       dialogBoxActions: [
