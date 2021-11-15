@@ -5,9 +5,7 @@
       <md-button class="md-accent md-raised" v-on:click="confirmDelete"
         >Delete</md-button
       >
-      <router-link to="/home">
-        <md-button class="md-secondary">Back</md-button>
-      </router-link>
+      <md-button class="md-secondary" @click="popBack">Back</md-button>
     </div>
     <DialogBoxComponent
       :dialogBoxId="'editTagDialogBox'"
@@ -239,6 +237,10 @@ export default class TagDetailView extends Vue {
     }
 
     return tagApi;
+  }
+
+  popBack() {
+    this.$router.back();
   }
 }
 </script>

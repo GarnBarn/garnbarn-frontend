@@ -174,6 +174,7 @@
           </md-tabs>
         </md-card-content>
       </DialogBoxComponent>
+      <SecretQrDialog :tag="responseCreatedTag"> </SecretQrDialog>
     </div>
   </layout>
 </template>
@@ -192,6 +193,7 @@ import { Tag } from "@/types/garnbarn/Tag";
 import { GetAllTagApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
 import UserProfileIcon from "@/components/UserProfileIcon.vue";
 import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
+import SecretQrDialog from "@/components/Tag/SecretQrDialog.vue";
 
 @Component({
   components: {
@@ -201,6 +203,7 @@ import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
     UserProfileIcon,
     TagBoxChip,
     TagSubscribe,
+    SecretQrDialog,
   },
 })
 export default class Tags extends Vue {
@@ -217,6 +220,12 @@ export default class Tags extends Vue {
     color: undefined,
     reminderTime: [],
     subscriber: undefined,
+  };
+  responseCreatedTag: Tag = {
+    id: 0,
+    name: "",
+    secretKeyTotp: "",
+    author: "",
   };
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   firebaseUser: firebase.User | undefined = undefined;
@@ -281,26 +290,49 @@ export default class Tags extends Vue {
     this.garnBarnAPICaller?.v1.tags
       .create(this.tagCreate.apiData as TagApi)
       .then((apiResponse) => {
-        this.informDialogBox.show({
-          dialogBoxContent: {
-            title: "Tag created",
-            content: `Your Tag has been created with id ${apiResponse.data.id}`,
-          },
+        this.responseCreatedTag = apiResponse.data;
+        const secretQrCodeDialog = new DialogBox("secretQrDialog");
+        secretQrCodeDialog.show({
           dialogBoxActions: [
             {
-              buttonContent: "Ok",
+              buttonContent: "Close",
               buttonClass: "md-secondary",
-              onClick: async () => {
-                this.informDialogBox.dismiss();
-                if (!this.garnBarnAPICaller?.v1.assignments.getFirebaseUser()) {
-                  return;
-                }
-                this.loadingDialogBox.show();
-                this.tags = [];
-                this.callback(
-                  this.garnBarnAPICaller?.v1.tags.getFirebaseUser(),
-                  this.loadingDialogBox
-                );
+              onClick: () => {
+                this.informDialogBox.show({
+                  dialogBoxContent: {
+                    title: "Are you sure?",
+                    content:
+                      "This will only show only at the first time you create the tag. Loosing this key will lost tag subscriber control permanently",
+                  },
+                  dialogBoxActions: [
+                    {
+                      buttonContent: "Yes",
+                      buttonClass: "md-primary",
+                      onClick: () => {
+                        if (
+                          !this.garnBarnAPICaller?.v1.assignments.getFirebaseUser()
+                        ) {
+                          return;
+                        }
+                        this.loadingDialogBox.show();
+                        this.tags = [];
+                        this.callback(
+                          this.garnBarnAPICaller?.v1.tags.getFirebaseUser(),
+                          this.loadingDialogBox
+                        );
+                        this.informDialogBox.dismiss();
+                        secretQrCodeDialog.dismiss();
+                      },
+                    },
+                    {
+                      buttonContent: "No",
+                      buttonClass: "md-secondary",
+                      onClick: () => {
+                        this.informDialogBox.dismiss();
+                      },
+                    },
+                  ],
+                });
               },
             },
           ],

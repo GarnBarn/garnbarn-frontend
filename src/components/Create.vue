@@ -111,7 +111,7 @@ import { Tag } from "@/types/garnbarn/Tag";
 export default class Create extends Vue {
   @Prop({ required: true }) creationType!: "assignment" | "tag";
   @Prop({ required: true }) apiData!: AssignmentApi | TagApi;
-  @Prop({ required: true }) firebaseUser!: firebase.User;
+  @Prop({ required: false }) firebaseUser!: firebase.User;
 
   garnBarnApiCaller: GarnBarnApi | null = null;
   tags: Array<Tag> = [];
