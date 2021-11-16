@@ -13,8 +13,8 @@
             class="tag"
           ></TagBoxChip>
         </div>
-        <p class="md-subheading">Due Date: {{ this.getFormatDate }}</p>
-        <p class="md-subheading">Submission Time: {{ this.getFormatTime }}</p>
+        <p class="md-subheading">Due Date: {{ assignment.dueDate ? this.getFormatDate : "-"}}</p>
+        <p class="md-subheading">Submission Time: {{ assignment.dueDate ? this.getFormatTime : "-" }}</p>
       </div>
       <div class="upper-right-grid">
         <detail-card :title="detailCardTexts.author">
