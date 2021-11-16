@@ -57,6 +57,6 @@ describe("Test Assignment Display Time", () => {
       description: "Write test with > 100% coverage",
     };
     const wrapper = createWrapper(assignment);
-    expect(wrapper.text()).toContain("No Due Date");
+    expect(wrapper.text()).toContain("-");
   });
 });
