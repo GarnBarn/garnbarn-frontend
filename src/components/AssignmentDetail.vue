@@ -35,14 +35,26 @@
               assignment.reminderTime && assignment.reminderTime.length !== 0
             "
           >
-            <md-chip
-              v-for="time in assignment.reminderTime" 
-              :key="time"
-              :style="`background-color: ${assignment.tag.color} !important; color: ${getFontColor(
-                assignment.tag.color
-              )} !important`"
-              ><md-icon>notifications</md-icon>{{ getHumanReadableTime(time) }}</md-chip
-            >
+            <div v-if="assignment.tag">
+              <md-chip
+                v-for="time in assignment.reminderTime" 
+                :key="time"
+                :style="`background-color: ${assignment.tag.color} !important; color: ${getFontColor(
+                  assignment.tag.color
+                )} !important`"
+                ><md-icon>notifications</md-icon>{{ getHumanReadableTime(time) }}</md-chip
+              >
+            </div>
+            <div v-else>
+              <md-chip
+                v-for="time in assignment.reminderTime" 
+                :key="time"
+                :style="`background-color: #cef4eb !important; color: ${getFontColor(
+                  `#cef4eb`
+                )} !important`"
+                ><md-icon>notifications</md-icon>{{ getHumanReadableTime(time) }}</md-chip
+              >
+            </div>
           </div>
           <div v-else>
             <md-icon>minimize</md-icon>
