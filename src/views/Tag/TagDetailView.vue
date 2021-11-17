@@ -89,7 +89,7 @@ import UserProfileIcon from "@/components/UserProfileIcon.vue";
 import DetailCard from "@/components/DetailCard.vue";
 import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
 import Create from "@/components/Create.vue";
-import TagDetail from "@/components/TagDetail.vue";
+import TagDetail from "@/components/Tag/TagDetail.vue";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";

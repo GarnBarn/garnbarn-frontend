@@ -81,7 +81,7 @@ import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
 import UserProfileIcon from "@/components/UserProfileIcon.vue";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import Create from "@/components/Create.vue";
-import AssignmentDetail from "@/components/AssignmentDetail.vue";
+import AssignmentDetail from "@/components/Assignment/AssignmentDetail.vue";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
