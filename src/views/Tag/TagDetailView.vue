@@ -42,37 +42,10 @@
             ></Create>
           </md-tab>
 
-          <md-tab md-label="Notification Settings" md-disabled>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
+          <md-tab md-label="Notification Settings">
+            <notification-setting 
+            :reminderTime="tagApi.reminderTime"
+            ref="notificationSetting"></notification-setting>
           </md-tab>
         </md-tabs>
       </md-card-content>
@@ -81,10 +54,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Ref } from "vue-property-decorator";
 import { Tag } from "@/types/garnbarn/Tag";
 import { TagApi } from "@/types/GarnBarnApi/TagApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
+import NotificationSetting from "@/components/NotificationSetting.vue"
 import UserProfileIcon from "@/components/UserProfileIcon.vue";
 import DetailCard from "@/components/DetailCard.vue";
 import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
@@ -95,6 +69,11 @@ import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import firebase from "firebase/app";
 
+type TimeData = {
+  time: number,
+  unit: number
+}
+
 @Component({
   components: {
     Layout,
@@ -104,9 +83,12 @@ import firebase from "firebase/app";
     UserProfileIcon,
     DetailCard,
     TagBoxChip,
+    NotificationSetting,
   },
 })
 export default class TagDetailView extends Vue {
+  @Ref() readonly notificationSetting!: NotificationSetting
+
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   editing = false;
   creationType = "tag";
@@ -152,6 +134,7 @@ export default class TagDetailView extends Vue {
   }
 
   async update(): Promise<void> {
+    this.tagApi.reminderTime = this.processTimeDataToReminderTime(this.notificationSetting.timeData) as number[]
     this.garnBarnAPICaller?.v1.tags
       .update(this.tagId, this.tagApi as TagApi)
       .then((apiResponse) => {
@@ -263,6 +246,19 @@ export default class TagDetailView extends Vue {
     }
 
     return tagApi;
+  }
+
+  getUnixTimeFromTimeData(timeData: TimeData): number {
+    return timeData.time * timeData.unit;
+  }
+
+  processTimeDataToReminderTime(timeData: TimeData[] | null): number[] | null {
+    if (timeData) {
+      return timeData.map((time) => 
+        this.getUnixTimeFromTimeData(time)
+      )    
+    }
+    return null;
   }
 
   popBack() {

@@ -79,7 +79,6 @@
             </md-tab>
 
             <md-tab md-label="Delete">
-              <notification-setting></notification-setting>
             </md-tab>
           </md-tabs>
         </md-card-content>
@@ -93,7 +92,6 @@ import { Component, Vue, Ref } from "vue-property-decorator";
 import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import Layout from "@/layouts/Main.vue";
 import DialogBox from "@/components/DialogBox/DialogBox";
-import NotificationSetting from "@/components/NotificationSetting.vue"
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import Create from "@/components/Create.vue";
 import UserProfileIcon from "@/components/UserProfileIcon.vue";
@@ -110,7 +108,6 @@ import { GetAllAssignmentApiNextFunctionWrapper } from "@/types/GarnBarnApi/Garn
     Create,
     UserProfileIcon,
     TagBoxChip,
-    NotificationSetting,
   },
 })
 export default class Assignments extends Vue {
