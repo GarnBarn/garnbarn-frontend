@@ -78,7 +78,11 @@
               ></Create>
             </md-tab>
 
-            <md-tab md-label="Delete">
+            <md-tab md-disabled>
+              Hello
+              Hello
+              Hello
+              Hello
             </md-tab>
           </md-tabs>
         </md-card-content>
