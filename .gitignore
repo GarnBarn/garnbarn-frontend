@@ -30,3 +30,7 @@ src/firebaseConfig.json
 
 # Ignore Backend Config file
 src/GarnBarnApiConfig.json
+
+# Ignore Cypress Test Result file
+tests/cypress/videos/
+tests/cypress/screenshots/
