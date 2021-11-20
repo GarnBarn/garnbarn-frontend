@@ -5,7 +5,7 @@ export type Assignment = {
   name: string;
   author: string;
   description?: string;
-  reminderTime?: Array<Number>;
+  reminderTime?: Array<number>;
   dueDate?: number;
   tag?: Tag;
 };
