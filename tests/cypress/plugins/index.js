@@ -14,6 +14,7 @@
 
 const { startDevServer } = require("@cypress/webpack-dev-server");
 const webpackConfig = require("@vue/cli-service/webpack.config.js");
+const dotenvPlugin = require('cypress-dotenv');
 
 /**
  * @type {Cypress.PluginConfig}
@@ -22,6 +23,11 @@ const webpackConfig = require("@vue/cli-service/webpack.config.js");
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
+  config = dotenvPlugin(config)
+  
+  config.env.googleRefreshToken = process.env.GOOGLE_REFRESH_TOKEN
+  config.env.googleClientId = process.env.VUE_APP_GOOGLE_CLIENTID
+  config.env.googleClientSecret = process.env.VUE_APP_GOOGLE_CLIENT_SECRET
   on("dev-server:start", (options) =>
     startDevServer({
       options,
