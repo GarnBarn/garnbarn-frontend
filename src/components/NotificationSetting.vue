@@ -1,15 +1,20 @@
 <template>
   <div class="flex-col">
-    <div v-for="(time, index) in timeData" :key="index" class="small-box flex-row">
-      <md-field>
-        <md-input 
-        v-model="time.time"
-        @change="informDuplicate">
-        </md-input>
+    <div
+      v-for="(time, index) in timeData"
+      :key="index"
+      class="small-box flex-row"
+    >
+      <md-field class="margin">
+        <md-input v-model="time.time"> </md-input>
       </md-field>
-      <md-field>
-        <md-select v-model="time.unit" @change="informDuplicate">
-          <md-option :value="value" v-for="(value, key) in timeUnits" :key="key">
+      <md-field class="margin">
+        <md-select v-model="time.unit">
+          <md-option
+            :value="value"
+            v-for="(value, key) in timeUnits"
+            :key="key"
+          >
             {{ key }}
           </md-option>
         </md-select>
@@ -30,8 +35,8 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import DialogBox from "@/components/DialogBox/DialogBox";
 
 export type TimeData = {
-  time: number;
-  unit: number;
+  time: number | null;
+  unit: number | null;
 };
 
 @Component
@@ -65,13 +70,12 @@ export default class NotificationSetting extends Vue {
               this.informDialogBox.dismiss();
             },
           },
-      ],
+        ],
       });
-    } 
-    else {
+    } else {
       this.timeData?.push({
-        time: 6,
-        unit: 3600,
+        time: null,
+        unit: null,
       });
     }
   }
@@ -80,7 +84,9 @@ export default class NotificationSetting extends Vue {
     this.timeData?.splice(index, 1);
   }
 
-  processReminderTimetoTimeData(reminderTime: number[] | null): TimeData[] | null {
+  processReminderTimetoTimeData(
+    reminderTime: number[] | null
+  ): TimeData[] | null {
     if (reminderTime) {
       var timeData: Array<TimeData> = [];
 
@@ -90,7 +96,7 @@ export default class NotificationSetting extends Vue {
 
       return timeData;
     }
-    
+
     return null;
   }
 
@@ -123,46 +129,6 @@ export default class NotificationSetting extends Vue {
 
     return timeData;
   }
-
-  getUnixTimeFromTimeData(timeData: TimeData): number {
-    return timeData.time * timeData.unit;
-  }
-
-  processTimeDataToReminderTime(timeData: TimeData[] | null): number[] | null {
-    if (timeData) {
-      return timeData.map((time) => 
-        this.getUnixTimeFromTimeData(time)
-      )    
-    }
-    return null;
-  }
-
-  reminderTimeHasDuplicate(timeData: TimeData[] | null): boolean {
-    return new Set(this.processTimeDataToReminderTime(timeData)).size !== timeData?.length;
-  }
-
-  informDuplicate(): void {
-    if (this.reminderTimeHasDuplicate(this.timeData)) {
-      this.informDialogBox.show({
-        dialogBoxContent: {
-            title: "Duplicate reminder time",
-            content: `You can't have the same reminder time.`,
-          },
-          dialogBoxActions: [
-            {
-              buttonContent: "Ok",
-              buttonClass: "md-secondary",
-              onClick: async () => {
-                this.timeData = this.processReminderTimetoTimeData(
-                  [...new Set(this.processTimeDataToReminderTime(this.timeData))]
-                  )
-                this.informDialogBox.dismiss();
-              },
-            },
-        ],
-      })
-    }
-  }
 }
 </script>
 
@@ -170,17 +136,20 @@ export default class NotificationSetting extends Vue {
 .flex-row {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: baseline;
 }
 
 .flex-col {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: baseline;
 }
 
 .small-box {
   width: 10% !important;
 }
 
+.margin {
+  margin: 0px 10px;
+}
 </style>
