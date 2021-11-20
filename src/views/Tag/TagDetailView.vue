@@ -134,7 +134,7 @@ export default class TagDetailView extends Vue {
   }
 
   async update(): Promise<void> {
-    this.tagApi.reminderTime = this.processTimeDataToReminderTime(this.notificationSetting.timeData) as number[]
+    this.tagApi.reminderTime = this.processTimeDataToReminderTime(this.notificationSetting.timeData as TimeData[]);
     this.garnBarnAPICaller?.v1.tags
       .update(this.tagId, this.tagApi as TagApi)
       .then((apiResponse) => {
@@ -252,13 +252,12 @@ export default class TagDetailView extends Vue {
     return timeData.time * timeData.unit;
   }
 
-  processTimeDataToReminderTime(timeData: TimeData[] | null): number[] | null {
+  processTimeDataToReminderTime(timeData: TimeData[] | null): number[] | undefined {
     if (timeData) {
       return timeData.map((time) => 
         this.getUnixTimeFromTimeData(time)
       )    
     }
-    return null;
   }
 
   popBack() {
