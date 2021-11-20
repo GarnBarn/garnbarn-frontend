@@ -1,6 +1,6 @@
 describe("navigate through the web", () => {
     beforeEach(() => {
-        cy.visit('https://garnbarn.web.app');
+        cy.visit('https://garnbarn.web.app/home');
         cy.loginByGoogleApi();
     })
 
