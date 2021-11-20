@@ -1,4 +1,5 @@
 {
+  "projectId": "8sc6n4",
   "component": {
     "componentFolder": "tests/cypress/component/",
     "testFiles": "**/*.spec.ts"

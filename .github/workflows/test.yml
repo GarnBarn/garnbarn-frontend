@@ -11,6 +11,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "14"
+      - name: Set up Cypress dependency
+        run: |
+          apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
       - name: Install Yarn
         run: npm install --global yarn
       - name: Install Dependency
@@ -27,8 +30,12 @@ jobs:
         shell: bash
         env:
           GARNBARN_BACKEND_CONFIG: ${{secrets.GARNBARN_BACKEND_CONFIG}}
-      - name: Run Test
+      - name: Run Unit Test
         run: yarn test:unit
+      - name: Run Component Test
+        run: yarn run cypress run-ct --record --key $CYPRESS_RECOARD_KEY
+        env:
+          CYPRESS_RECOARD_KEY: ${{secrets.CYPRESS_RECOARD_KEY}}
 
   Coverage:
     runs-on: ubuntu-latest
