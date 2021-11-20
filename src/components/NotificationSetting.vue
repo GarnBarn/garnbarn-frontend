@@ -2,10 +2,13 @@
   <div class="flex-col">
     <div v-for="(time, index) in timeData" :key="index" class="small-box flex-row">
       <md-field>
-        <md-input v-model="time.time"></md-input>
+        <md-input 
+        v-model="time.time"
+        @change="informDuplicate">
+        </md-input>
       </md-field>
       <md-field>
-        <md-select v-model="time.unit">
+        <md-select v-model="time.unit" @change="informDuplicate">
           <md-option :value="value" v-for="(value, key) in timeUnits" :key="key">
             {{ key }}
           </md-option>
@@ -62,7 +65,7 @@ export default class NotificationSetting extends Vue {
               this.informDialogBox.dismiss();
             },
           },
-        ],
+      ],
       });
     } 
     else {
@@ -121,6 +124,45 @@ export default class NotificationSetting extends Vue {
     return timeData;
   }
 
+  getUnixTimeFromTimeData(timeData: TimeData): number {
+    return timeData.time * timeData.unit;
+  }
+
+  processTimeDataToReminderTime(timeData: TimeData[] | null): number[] | null {
+    if (timeData) {
+      return timeData.map((time) => 
+        this.getUnixTimeFromTimeData(time)
+      )    
+    }
+    return null;
+  }
+
+  reminderTimeHasDuplicate(timeData: TimeData[] | null): boolean {
+    return new Set(this.processTimeDataToReminderTime(timeData)).size !== timeData?.length;
+  }
+
+  informDuplicate(): void {
+    if (this.reminderTimeHasDuplicate(this.timeData)) {
+      this.informDialogBox.show({
+        dialogBoxContent: {
+            title: "Duplicate reminder time",
+            content: `You can't have the same reminder time.`,
+          },
+          dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                this.timeData = this.processReminderTimetoTimeData(
+                  [...new Set(this.processTimeDataToReminderTime(this.timeData))]
+                  )
+                this.informDialogBox.dismiss();
+              },
+            },
+        ],
+      })
+    }
+  }
 }
 </script>
 
