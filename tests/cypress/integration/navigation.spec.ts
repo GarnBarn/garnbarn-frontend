@@ -1,7 +1,11 @@
 describe("navigate through the web", () => {
     beforeEach(() => {
-        cy.visit('https://garnbarn.web.app/home');
-        cy.loginByGoogleApi();
+        cy.visit('http://localhost:8080/home');
+        cy.login();
+    })
+
+    it("land at home page after login", () => {
+        cy.url().should('include', '/home');
     })
 
     it("click assignment box", () => {
@@ -26,5 +30,11 @@ describe("navigate through the web", () => {
         cy.get('.logo').click();
 
         cy.url().should('include', '/home');
+    })
+
+    it("click profile image", () => {
+        cy.get('.profile-image').click();
+
+        cy.url().should('include', '/account');
     })
 })
