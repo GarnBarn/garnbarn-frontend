@@ -24,6 +24,8 @@ pnpm-debug.log*
 
 # Coverage File
 coverage/
+jest-coverage/
+cypress-coverage/
 
 # Ignore firebase config file
 src/firebaseConfig.json
