@@ -1,6 +1,5 @@
 <template>
   <layout :callback="callback">
-    {{this.prevRoute}}
     <assignment-detail :assignment="assignment">
       <template v-slot:authorPicture>
         <UserProfileIcon
