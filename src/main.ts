@@ -18,7 +18,10 @@ firebase.initializeApp(firebaseConfig);
 
 Vue.config.productionTip = false;
 
+const vuetify = new Vuetify();
+
 new Vue({
   router,
+  vuetify,
   render: (h) => h(App),
 }).$mount("#app");
