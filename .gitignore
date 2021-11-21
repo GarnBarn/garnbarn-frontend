@@ -27,6 +27,7 @@ coverage/
 jest-coverage/
 cypress-coverage/
 .nyc_output/
+reports/
 
 # Ignore firebase config file
 src/firebaseConfig.json

@@ -10,7 +10,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "test:coverage": "vue-cli-service test:unit --coverage",
+    "test:cypress:integration": "cypress run",
+    "test:cypress:component": "cypress run-ct",
+    "merge-coverage": "merge-cypress-jest-coverage",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -56,6 +58,7 @@
     "firebase-admin": "^10.0.0",
     "jest": "^27.3.1",
     "jest-ts-auto-mock": "^2.0.0",
+    "merge-cypress-jest-coverage": "^1.7.0",
     "nyc": "^15.1.0",
     "prettier": "^2.2.1",
     "ts-auto-mock": "^3.5.0",
