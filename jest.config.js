@@ -16,5 +16,4 @@ module.exports = {
     },
   },
   coveragePathIgnorePatterns: ["src/types"],
-  coverageDirectory: "jest-coverage",
 };
