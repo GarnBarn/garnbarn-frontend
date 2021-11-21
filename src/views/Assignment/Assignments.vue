@@ -79,10 +79,11 @@
             </md-tab>
 
             <md-tab md-disabled>
-              Hello
-              Hello
-              Hello
-              Hello
+              <md-tab md-label="Notification Settings">
+                <notification-setting 
+                :reminderTime="assignmentData.reminderTime"
+                ref="notificationSetting"></notification-setting>
+              </md-tab>
             </md-tab>
           </md-tabs>
         </md-card-content>
@@ -98,12 +99,18 @@ import Layout from "@/layouts/Main.vue";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import Create from "@/components/Create.vue";
+import NotificationSetting from "@/components/NotificationSetting.vue"
 import UserProfileIcon from "@/components/UserProfileIcon.vue";
 import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import firebase from "firebase/app";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import { GetAllAssignmentApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
+
+type TimeData = {
+  time: number,
+  unit: number
+}
 
 @Component({
   components: {
@@ -112,10 +119,12 @@ import { GetAllAssignmentApiNextFunctionWrapper } from "@/types/GarnBarnApi/Garn
     Create,
     UserProfileIcon,
     TagBoxChip,
+    NotificationSetting
   },
 })
 export default class Assignments extends Vue {
   @Ref() readonly assignmentCreate!: Create;
+  @Ref() readonly notificationSetting!: NotificationSetting;
 
   createDialogBox = new DialogBox("createDialogBox");
   loadingDialogBox = new DialogBox("loadingDialogBox");
@@ -217,6 +226,9 @@ export default class Assignments extends Vue {
   }
 
   createAssignment(): void {
+    this.assignmentData.reminderTime = this.filterValidReminderTime(
+      this.processTimeDataToReminderTime(this.notificationSetting.timeData as TimeData[])
+    );
     this.garnBarnAPICaller?.v1.assignments
       .create(this.assignmentCreate.apiData)
       .then((apiResponse) => {
@@ -274,6 +286,24 @@ export default class Assignments extends Vue {
       hour: "numeric",
       minute: "numeric",
     });
+  }
+
+  getUnixTimeFromTimeData(timeData: TimeData): number {
+    return timeData.time * timeData.unit;
+  }
+
+  processTimeDataToReminderTime(timeData: TimeData[] | null): number[] | undefined {
+    if (timeData) {
+      return timeData.map((time) => 
+        this.getUnixTimeFromTimeData(time)
+      )    
+    }
+  }
+
+  filterValidReminderTime(reminderTime: number[] | undefined): number[] | undefined{
+    if (reminderTime) {
+      return reminderTime.filter(time => time > 0)
+    }
   }
 }
 </script>
