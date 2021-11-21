@@ -3,7 +3,8 @@ name: Vue Test
 on: [push, pull_request]
 
 jobs:
-  Test:
+  Test-Coverage:
+    name: "Test & Coverage"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -32,36 +33,15 @@ jobs:
           GARNBARN_BACKEND_CONFIG: ${{secrets.GARNBARN_BACKEND_CONFIG}}
       - name: Run Unit Test
         run: yarn test:unit
-      - name: Run Component Test
-        run: yarn run cypress run-ct --record --key $CYPRESS_RECOARD_KEY
+      - name: Run Integration Test
+        run: yarn test:cypress:integration --record --key $CYPRESS_RECOARD_KEY
         env:
           CYPRESS_RECOARD_KEY: ${{secrets.CYPRESS_RECOARD_KEY}}
-
-  Coverage:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Node 14
-        uses: actions/setup-node@v2
-        with:
-          node-version: "14"
-      - name: Install Yarn
-        run: npm install --global yarn
-      - name: Install Dependency
-        run: yarn install --frozen-lockfile
-      - name: "Mount Firebase Config File"
-        run: |
-          echo "$FIREBASE_SERVICE_CONFIG" > src/firebaseConfig.json
-        shell: bash
+      - name: Run Component Test
+        run: yarn test:cypress:component --record --key $CYPRESS_RECOARD_KEY
         env:
-          FIREBASE_SERVICE_CONFIG: ${{secrets.FIREBASE_SERVICE_CONFIG}}
-      - name: "Mount GarnBarn Backend Config File"
-        run: |
-          echo "$GARNBARN_BACKEND_CONFIG" > src/GarnBarnApiConfig.json
-        shell: bash
-        env:
-          GARNBARN_BACKEND_CONFIG: ${{secrets.GARNBARN_BACKEND_CONFIG}}
-      - name: Run Coverage
-        run: yarn test:coverage
+          CYPRESS_RECOARD_KEY: ${{secrets.CYPRESS_RECOARD_KEY}}
+      - name: Merge coverage data
+        run: yarn merge-coverage
       - name: Submit coverage data to Codecov
         run: bash <(curl -s https://codecov.io/bash)
