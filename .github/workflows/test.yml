@@ -35,6 +35,8 @@ jobs:
         run: yarn test:unit
       - name: Cypress run
         uses: cypress-io/github-action@v2
+        with:
+          start: yarn serve
       - name: Merge coverage data
         run: yarn merge-coverage
       - name: Submit coverage data to Codecov
