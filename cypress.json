@@ -11,5 +11,8 @@
   "videosFolder": "tests/cypress/videos",
   "downloadsFolder": "tests/cypress/downloads",
   "supportFile": "tests/cypress/support/index.js",
-  "ignoreTestFiles": ["tests/unit/**"]
+  "ignoreTestFiles": ["tests/unit/**"],
+  "env": {
+    "UID": "EXAMPLE_USER"
+  }
 }

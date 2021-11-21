@@ -31,12 +31,23 @@ jobs:
         shell: bash
         env:
           GARNBARN_BACKEND_CONFIG: ${{secrets.GARNBARN_BACKEND_CONFIG}}
+      - name: "Mount Firebase Service Account for Cypress Test"
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > serviceAccount.json
+        shell: bash
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{secrets.FIREBASE_SERVICE_ACCOUNT}}
       - name: Run Unit Test
         run: yarn test:unit
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
           start: yarn serve
+          record: true
+          parallel: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Merge coverage data
         run: yarn merge-coverage
       - name: Submit coverage data to Codecov
