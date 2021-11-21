@@ -1,5 +1,7 @@
 <template>
   <div class="flex-col">
+    <p class="md-title">Reminder time:</p>
+    <p class="md-body-1">Time to notify before due date.</p>
     <div v-for="(time, index) in timeData" :key="index" class="small-box flex-row">
       <md-field>
         <md-input v-model="time.time"></md-input>
