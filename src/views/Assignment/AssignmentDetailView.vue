@@ -1,5 +1,6 @@
 <template>
   <layout :callback="callback">
+    {{this.prevRoute}}
     <assignment-detail :assignment="assignment">
       <template v-slot:authorPicture>
         <UserProfileIcon
@@ -141,7 +142,7 @@ export default class AssignmentDetailView extends Vue {
             buttonClass: "md-secondary",
             onClick: async () => {
               await this.informDialogBox.dismiss();
-              this.$router.back();
+              this.popBack();
             },
           },
         ],

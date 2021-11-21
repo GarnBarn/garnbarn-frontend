@@ -128,7 +128,17 @@ export default class TagDetailView extends Vue {
         dialogBoxContent: {
           title: "Error",
           content: `Can't fetch data from GarnBarn API, Please try again or contact Administrator.`,
-        },
+        },          
+        dialogBoxActions: [
+            {
+              buttonContent: "Ok",
+              buttonClass: "md-secondary",
+              onClick: async () => {
+                await this.informDialogBox.dismiss();
+                this.popBack()
+              },
+            },
+          ],
       });
     }
   }
