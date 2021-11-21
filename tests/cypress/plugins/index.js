@@ -14,7 +14,8 @@
 
 const { startDevServer } = require("@cypress/webpack-dev-server");
 const webpackConfig = require("@vue/cli-service/webpack.config.js");
-const dotenvPlugin = require('cypress-dotenv');
+const admin = require("firebase-admin");
+const cypressFirebasePlugin = require("cypress-firebase").plugin;
 
 /**
  * @type {Cypress.PluginConfig}
@@ -23,11 +24,8 @@ const dotenvPlugin = require('cypress-dotenv');
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-  config = dotenvPlugin(config)
-  
-  config.env.googleRefreshToken = process.env.GOOGLE_REFRESH_TOKEN
-  config.env.googleClientId = process.env.VUE_APP_GOOGLE_CLIENTID
-  config.env.googleClientSecret = process.env.VUE_APP_GOOGLE_CLIENT_SECRET
+  const extendedConfig = cypressFirebasePlugin(on, config, admin);
+
   on("dev-server:start", (options) =>
     startDevServer({
       options,
@@ -35,5 +33,5 @@ module.exports = (on, config) => {
     })
   );
 
-  return config;
+  return extendedConfig;
 };

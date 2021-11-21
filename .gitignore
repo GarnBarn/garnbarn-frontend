@@ -34,3 +34,6 @@ src/GarnBarnApiConfig.json
 # Ignore Cypress Test Result file
 tests/cypress/videos/
 tests/cypress/screenshots/
+
+# Ignore Cypress Firebase Service Account
+serviceAccount.json
