@@ -15,15 +15,21 @@
 
 // Import commands.js using ES2015 syntax:
 import "./commands";
+import "@cypress/code-coverage/support";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
-module.exports = (on, config) => {
-  on("task", require("@cypress/code-coverage/task"));
-  // add other tasks to be registered here
+// module.exports = (on, config) => {
+//   registerCodeCoverageTasks(on, config);
+//   // tell Cypress to use .babelrc file
+//   // and instrument the specs files
+//   // only the extra application files will be instrumented
+//   // not the spec files themselves
+//   on("file:preprocessor", useBarbelRc);
+//   // add other tasks to be registered here
 
-  // IMPORTANT to return the config object
-  // with the any changed environment variables
-  return config;
-};
+//   // IMPORTANT to return the config object
+//   // with the any changed environment variables
+//   return config;
+// };

@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "nyc": {
-    "report-dir": "cypress-coverage"
+    "report-dir": "cypress-coverage",
+    "excludeAfterRemap": false
   },
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -27,9 +28,11 @@
     "vue2-datepicker": "^3.10.2"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
     "@cypress/code-coverage": "^3.9.11",
     "@cypress/vue": "^2.2.3",
     "@cypress/webpack-dev-server": "^1.7.0",
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@types/jest": "^24.0.19",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
