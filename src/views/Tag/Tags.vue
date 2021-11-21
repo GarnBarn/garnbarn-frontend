@@ -106,36 +106,12 @@
             </md-tab>
 
             <md-tab md-disabled>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
+              <md-tab md-label="Notification Settings">
+                <notification-setting
+                  :reminderTime="tagData.reminderTime"
+                  ref="notificationSetting"
+                ></notification-setting>
+              </md-tab>
             </md-tab>
           </md-tabs>
         </md-card-content>
@@ -197,6 +173,7 @@ import { TagApi, totpBody } from "@/types/GarnBarnApi/TagApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
+import NotificationSetting from "@/components/NotificationSetting.vue";
 import Create from "@/components/Create.vue";
 import TagSubscribe from "@/components/Tag/TagSubscribe.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
@@ -207,6 +184,11 @@ import UserProfileIcon from "@/components/UserProfileIcon.vue";
 import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
 import SecretQrDialog from "@/components/Tag/SecretQrDialog.vue";
 
+type TimeData = {
+  time: number;
+  unit: number;
+};
+
 @Component({
   components: {
     Layout,
@@ -216,11 +198,13 @@ import SecretQrDialog from "@/components/Tag/SecretQrDialog.vue";
     TagBoxChip,
     TagSubscribe,
     SecretQrDialog,
+    NotificationSetting,
   },
 })
 export default class Tags extends Vue {
   @Ref() readonly tagCreate!: Create;
   @Ref() readonly tagSubscribe!: TagSubscribe;
+  @Ref() readonly notificationSetting!: NotificationSetting;
 
   createDialogBox = new DialogBox("createDialogBox");
   subscribeDialogBox = new DialogBox("subscribeDialogBox");
@@ -302,6 +286,11 @@ export default class Tags extends Vue {
     let tagApiData = this.tagCreate.apiData as any;
     tagApiData.color = tagApiData.color.hex;
 
+    tagApiData.reminderTime = this.filterValidReminderTime(
+      this.processTimeDataToReminderTime(
+        this.notificationSetting.timeData as TimeData[]
+      )
+    );
     this.garnBarnAPICaller?.v1.tags
       .create(tagApiData as TagApi)
       .then((apiResponse) => {
@@ -513,6 +502,26 @@ export default class Tags extends Vue {
           ],
         });
       });
+  }
+
+  getUnixTimeFromTimeData(timeData: TimeData): number {
+    return timeData.time * timeData.unit;
+  }
+
+  processTimeDataToReminderTime(
+    timeData: TimeData[] | null
+  ): number[] | undefined {
+    if (timeData) {
+      return timeData.map((time) => this.getUnixTimeFromTimeData(time));
+    }
+  }
+
+  filterValidReminderTime(
+    reminderTime: number[] | undefined
+  ): number[] | undefined {
+    if (reminderTime) {
+      return reminderTime.filter((time) => time > 0);
+    }
   }
 
   getSubscriberDetail(uid: string) {
