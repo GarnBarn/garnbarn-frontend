@@ -33,10 +33,8 @@ jobs:
           GARNBARN_BACKEND_CONFIG: ${{secrets.GARNBARN_BACKEND_CONFIG}}
       - name: Run Unit Test
         run: yarn test:unit
-      - name: Run Component Test
-        run: yarn test:cypress:component --record --key $CYPRESS_RECOARD_KEY
-        env:
-          CYPRESS_RECOARD_KEY: ${{secrets.CYPRESS_RECOARD_KEY}}
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
       - name: Merge coverage data
         run: yarn merge-coverage
       - name: Submit coverage data to Codecov
