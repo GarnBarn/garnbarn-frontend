@@ -48,7 +48,5 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Merge coverage data
-        run: yarn merge-coverage
       - name: Submit coverage data to Codecov
         run: bash <(curl -s https://codecov.io/bash)
