@@ -6,9 +6,13 @@
       <md-field>
         <md-input v-model="time.time"></md-input>
       </md-field>
-      <md-field>
+      <md-field class="margin">
         <md-select v-model="time.unit">
-          <md-option :value="value" v-for="(value, key) in timeUnits" :key="key">
+          <md-option
+            :value="value"
+            v-for="(value, key) in timeUnits"
+            :key="key"
+          >
             {{ key }}
           </md-option>
         </md-select>
@@ -29,8 +33,8 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import DialogBox from "@/components/DialogBox/DialogBox";
 
 export type TimeData = {
-  time: number;
-  unit: number;
+  time: number | null;
+  unit: number | null;
 };
 
 @Component
@@ -66,11 +70,10 @@ export default class NotificationSetting extends Vue {
           },
         ],
       });
-    } 
-    else {
+    } else {
       this.timeData?.push({
-        time: 6,
-        unit: 3600,
+        time: null,
+        unit: null,
       });
     }
   }
@@ -79,7 +82,9 @@ export default class NotificationSetting extends Vue {
     this.timeData?.splice(index, 1);
   }
 
-  processReminderTimetoTimeData(reminderTime: number[] | null): TimeData[] | null {
+  processReminderTimetoTimeData(
+    reminderTime: number[] | null
+  ): TimeData[] | null {
     if (reminderTime) {
       var timeData: Array<TimeData> = [];
 
@@ -89,7 +94,7 @@ export default class NotificationSetting extends Vue {
 
       return timeData;
     }
-    
+
     return null;
   }
 
@@ -122,7 +127,6 @@ export default class NotificationSetting extends Vue {
 
     return timeData;
   }
-
 }
 </script>
 
@@ -130,17 +134,20 @@ export default class NotificationSetting extends Vue {
 .flex-row {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: baseline;
 }
 
 .flex-col {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: baseline;
 }
 
 .small-box {
   width: 10% !important;
 }
 
+.margin {
+  margin: 0px 10px;
+}
 </style>
