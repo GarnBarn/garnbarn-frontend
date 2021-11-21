@@ -260,8 +260,17 @@ export default class TagDetailView extends Vue {
     }
   }
 
+  hasHistory(): boolean {
+    return window.history.length > 2;
+  }
+
   popBack() {
-    this.$router.back();
+    if (this.hasHistory()) {
+      this.$router.back();
+    }
+    else {
+      this.$router.push('/tag');
+    }
   }
 }
 </script>
