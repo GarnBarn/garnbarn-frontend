@@ -1,29 +1,33 @@
 <template>
   <layout :callback="callback">
     <div>
-      <md-table v-model="tags" md-sort="id" @md-selected="onSelected">
+      <md-table v-model="tags" md-sort="id">
         <md-table-toolbar>
           <div class="md-title left-align">All Tags</div>
         </md-table-toolbar>
-        <md-table-row
-          slot="md-table-row"
-          slot-scope="{ item }"
-          md-selectable="single"
-        >
-          <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
-            item.id
-          }}</md-table-cell>
-          <md-table-cell md-label="Name" md-sort-by="name" class="left-align">{{
-            item.name
-          }}</md-table-cell>
-          <md-table-cell md-label="Author">
+        <md-table-row slot="md-table-row" slot-scope="{ item }">
+          <md-table-cell
+            md-label="ID"
+            md-sort-by="id"
+            md-numeric
+            @click.native="onSelected(item)"
+            >{{ item.id }}</md-table-cell
+          >
+          <md-table-cell
+            md-label="Name"
+            md-sort-by="name"
+            class="left-align"
+            @click.native="onSelected(item)"
+            >{{ item.name }}</md-table-cell
+          >
+          <md-table-cell md-label="Author" @click.native="onSelected(item)">
             <UserProfileIcon
               :uid="item.author"
               :garnBarnApiCaller="garnBarnAPICaller"
             >
             </UserProfileIcon>
           </md-table-cell>
-          <md-table-cell md-label="Subscriber">
+          <md-table-cell md-label="Subscriber" @click.native="onSelected(item)">
             <div
               v-if="item.subscriber && item.subscriber.length !== 0"
               class="row-flex"
@@ -40,10 +44,10 @@
               <md-icon>minimize</md-icon>
             </div>
           </md-table-cell>
-          <md-table-cell md-label="Color">
+          <md-table-cell md-label="Color" @click.native="onSelected(item)">
             <TagBoxChip :color="item.color" :text="item.color"></TagBoxChip>
           </md-table-cell>
-          <md-table-cell md-numeric>
+          <md-table-cell>
             <md-menu
               v-if="item.author !== firebaseUser.uid"
               md-size="small"
@@ -369,7 +373,7 @@ export default class Tags extends Vue {
   onSelected(item: Tag) {
     this.$router.push("tag/" + item.id.toString());
   }
-  
+
   enterSubscribeInfo(): void {
     this.subscribeDialogBox.show({
       dialogBoxActions: [
