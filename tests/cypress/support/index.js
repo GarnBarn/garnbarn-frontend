@@ -14,7 +14,16 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+module.exports = (on, config) => {
+  on("task", require("@cypress/code-coverage/task"));
+  // add other tasks to be registered here
+
+  // IMPORTANT to return the config object
+  // with the any changed environment variables
+  return config;
+};
