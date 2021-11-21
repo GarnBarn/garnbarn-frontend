@@ -1,8 +1,8 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "sourceMap": false,
-    "outDir": "../dist/out-tsc/apps/garnbarn-e2e/src",
+    "outDir": "../../dist/out-tsc/apps/garnbarn-e2e/src",
     "types": ["cypress", "node"]
   }
 }
