@@ -151,7 +151,9 @@ export default class AssignmentDetailView extends Vue {
   }
 
   async update(): Promise<void> {
-    this.assignmentApi.reminderTime = this.processTimeDataToReminderTime(this.notificationSetting.timeData as TimeData[]);
+    this.assignmentApi.reminderTime = this.filterValidReminderTime(
+      this.processTimeDataToReminderTime(this.notificationSetting.timeData as TimeData[])
+    );
     this.garnBarnAPICaller?.v1.assignments
       .update(this.assignmentId, this.assignmentApi as AssignmentApi)
       .then((apiResponse) => {
@@ -296,6 +298,12 @@ export default class AssignmentDetailView extends Vue {
       return timeData.map((time) => 
         this.getUnixTimeFromTimeData(time)
       )    
+    }
+  }
+
+  filterValidReminderTime(reminderTime: number[] | undefined): number[] | undefined{
+    if (reminderTime) {
+      return reminderTime.filter(time => time > 0)
     }
   }
 
