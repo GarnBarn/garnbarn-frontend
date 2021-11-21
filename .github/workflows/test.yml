@@ -33,10 +33,6 @@ jobs:
           GARNBARN_BACKEND_CONFIG: ${{secrets.GARNBARN_BACKEND_CONFIG}}
       - name: Run Unit Test
         run: yarn test:unit
-      - name: Run Integration Test
-        run: yarn test:cypress:integration --record --key $CYPRESS_RECOARD_KEY
-        env:
-          CYPRESS_RECOARD_KEY: ${{secrets.CYPRESS_RECOARD_KEY}}
       - name: Run Component Test
         run: yarn test:cypress:component --record --key $CYPRESS_RECOARD_KEY
         env:
