@@ -1,5 +1,5 @@
 import { createLocalVue, mount, Wrapper } from "@vue/test-utils";
-import AssignmentDetail from "@/components/AssignmentDetail.vue";
+import AssignmentDetail from "@/components/Assignment/AssignmentDetail.vue";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import VueMaterial from "vue-material";
 

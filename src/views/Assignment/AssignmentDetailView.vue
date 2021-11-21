@@ -34,37 +34,10 @@
             ></Create>
           </md-tab>
 
-          <md-tab md-label="Notification Settings" md-disabled>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
+          <md-tab md-label="Notification Settings">
+            <notification-setting 
+            :reminderTime="assignmentApi.reminderTime"
+            ref="notificationSetting"></notification-setting>
           </md-tab>
         </md-tabs>
       </md-card-content>
@@ -73,19 +46,25 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Ref } from "vue-property-decorator";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import DetailCard from "@/components/DetailCard.vue";
+import NotificationSetting from "@/components/NotificationSetting.vue"
 import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
 import UserProfileIcon from "@/components/UserProfileIcon.vue";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import Create from "@/components/Create.vue";
-import AssignmentDetail from "@/components/AssignmentDetail.vue";
+import AssignmentDetail from "@/components/Assignment/AssignmentDetail.vue";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import firebase from "firebase/app";
+
+type TimeData = {
+  time: number,
+  unit: number
+}
 
 @Component({
   components: {
@@ -96,9 +75,12 @@ import firebase from "firebase/app";
     DetailCard,
     UserProfileIcon,
     TagBoxChip,
+    NotificationSetting
   },
 })
 export default class AssignmentDetailView extends Vue {
+  @Ref() readonly notificationSetting!: NotificationSetting;
+
   garnBarnAPICaller: GarnBarnApi | null = null;
   creationType = "assignment";
   editing = false;
@@ -159,7 +141,7 @@ export default class AssignmentDetailView extends Vue {
             buttonClass: "md-secondary",
             onClick: async () => {
               await this.informDialogBox.dismiss();
-              this.$router.back();
+              this.popBack();
             },
           },
         ],
@@ -169,6 +151,9 @@ export default class AssignmentDetailView extends Vue {
   }
 
   async update(): Promise<void> {
+    this.assignmentApi.reminderTime = this.filterValidReminderTime(
+      this.processTimeDataToReminderTime(this.notificationSetting.timeData as TimeData[])
+    );
     this.garnBarnAPICaller?.v1.assignments
       .update(this.assignmentId, this.assignmentApi as AssignmentApi)
       .then((apiResponse) => {
@@ -304,8 +289,35 @@ export default class AssignmentDetailView extends Vue {
     return assignmentApi;
   }
 
+  getUnixTimeFromTimeData(timeData: TimeData): number {
+    return timeData.time * timeData.unit;
+  }
+
+  processTimeDataToReminderTime(timeData: TimeData[] | null): number[] | undefined {
+    if (timeData) {
+      return timeData.map((time) => 
+        this.getUnixTimeFromTimeData(time)
+      )    
+    }
+  }
+
+  filterValidReminderTime(reminderTime: number[] | undefined): number[] | undefined{
+    if (reminderTime) {
+      return reminderTime.filter(time => time > 0)
+    }
+  }
+
+  hasHistory(): boolean {
+    return window.history.length > 2;
+  }
+
   popBack() {
-    this.$router.back();
+    if (this.hasHistory()) {
+      this.$router.back();
+    }
+    else {
+      this.$router.push('/assignment');
+    }
   }
 }
 </script>

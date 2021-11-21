@@ -1,9 +1,9 @@
 import { createLocalVue, mount, Wrapper } from "@vue/test-utils";
 import VueMaterial from "vue-material";
 
-import DateWithAssignment from "@/components/DateWithAssignment.vue";
+import DateWithAssignment from "@/components/Assignment/DateWithAssignment.vue";
 import { Assignment } from "@/types/garnbarn/Assignment";
-import AssignmentBox from "@/components/AssignmentBox.vue";
+import AssignmentBox from "@/components/Assignment/AssignmentBox.vue";
 
 jest.mock("@/services/GarnBarnApi/GarnBarnApi");
 

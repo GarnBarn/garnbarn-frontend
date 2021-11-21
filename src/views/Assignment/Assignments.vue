@@ -78,37 +78,11 @@
               ></Create>
             </md-tab>
 
-            <md-tab md-label="Delete" md-disabled>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
+            <md-tab md-disabled>
+              Hello
+              Hello
+              Hello
+              Hello
             </md-tab>
           </md-tabs>
         </md-card-content>
@@ -120,16 +94,16 @@
 <script lang="ts">
 import { Component, Vue, Ref } from "vue-property-decorator";
 import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
-import DialogBox from "@/components/DialogBox/DialogBox";
 import Layout from "@/layouts/Main.vue";
+import DialogBox from "@/components/DialogBox/DialogBox";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import Create from "@/components/Create.vue";
+import UserProfileIcon from "@/components/UserProfileIcon.vue";
+import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import firebase from "firebase/app";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import { GetAllAssignmentApiNextFunctionWrapper } from "@/types/GarnBarnApi/GarnBarnApiResponse";
-import UserProfileIcon from "@/components/UserProfileIcon.vue";
-import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
 
 @Component({
   components: {

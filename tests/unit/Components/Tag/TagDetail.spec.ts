@@ -1,5 +1,5 @@
 import { createLocalVue, mount, Wrapper } from "@vue/test-utils";
-import TagDetail from "@/components/TagDetail.vue";
+import TagDetail from "@/components/Tag/TagDetail.vue";
 import { Tag } from "@/types/garnbarn/Tag";
 import VueMaterial from "vue-material";
 
