@@ -21,7 +21,8 @@
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.2.0",
     "vue-swatches": "^2.1.1",
-    "vue2-datepicker": "^3.10.2"
+    "vue2-datepicker": "^3.10.2",
+    "vuetify": "^2.6.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.19",

@@ -299,8 +299,11 @@ export default class Tags extends Vue {
   }
 
   createTag(): void {
+    let tagApiData = this.tagCreate.apiData as any;
+    tagApiData.color = tagApiData.color.hex;
+
     this.garnBarnAPICaller?.v1.tags
-      .create(this.tagCreate.apiData as TagApi)
+      .create(tagApiData as TagApi)
       .then((apiResponse) => {
         this.responseCreatedTag = apiResponse.data;
         const secretQrCodeDialog = new DialogBox("secretQrDialog");
