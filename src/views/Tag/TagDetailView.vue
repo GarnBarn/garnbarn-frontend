@@ -144,9 +144,14 @@ export default class TagDetailView extends Vue {
   }
 
   async update(): Promise<void> {
-    this.tagApi.reminderTime = this.processTimeDataToReminderTime(this.notificationSetting.timeData as TimeData[]);
+    let tagApiData = this.tagApi as any;
+    tagApiData.color = tagApiData.color.hex;
+
+    tagApiData.reminderTime = this.filterValidReminderTime(
+      this.processTimeDataToReminderTime(this.notificationSetting.timeData as TimeData[])
+    )
     this.garnBarnAPICaller?.v1.tags
-      .update(this.tagId, this.tagApi as TagApi)
+      .update(this.tagId, tagApiData as TagApi)
       .then((apiResponse) => {
         this.tag = apiResponse.data as Tag;
       })
@@ -267,6 +272,14 @@ export default class TagDetailView extends Vue {
       return timeData.map((time) => 
         this.getUnixTimeFromTimeData(time)
       )    
+    }
+  }
+
+  filterValidReminderTime(
+    reminderTime: number[] | undefined
+  ): number[] | undefined {
+    if (reminderTime) {
+      return reminderTime.filter((time) => time > 0);
     }
   }
 
