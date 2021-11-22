@@ -28,28 +28,6 @@
         :minute-step="30"
         format="DD/MM/YY HH:mm"
       ></date-picker>
-      <br />
-      <label>Reminder Time:</label>
-      <md-checkbox
-        v-model="apiData.reminderTime"
-        :value="this.getReminderTime(7)"
-        >1 Week</md-checkbox
-      >
-      <md-checkbox
-        v-model="apiData.reminderTime"
-        :value="this.getReminderTime(1)"
-        >1 Day</md-checkbox
-      >
-      <md-checkbox
-        v-model="apiData.reminderTime"
-        :value="this.getReminderTime(0.5)"
-        >12 hours</md-checkbox
-      >
-      <md-checkbox
-        v-model="apiData.reminderTime"
-        :value="this.getReminderTime(0.25)"
-        >6 hours</md-checkbox
-      >
     </div>
     <div v-if="creationType === 'tag'" class="overflow">
       <div>
@@ -58,33 +36,19 @@
           <md-input v-model="apiData.name" required></md-input>
         </md-field>
       </div>
-      <div>
-        <label>Reminder Time:</label>
-        <md-checkbox
-          v-model="apiData.reminderTime"
-          :value="this.getReminderTime(7)"
-          >1 Week</md-checkbox
-        >
-        <md-checkbox
-          v-model="apiData.reminderTime"
-          :value="this.getReminderTime(1)"
-          >1 Day</md-checkbox
-        >
-        <md-checkbox
-          v-model="apiData.reminderTime"
-          :value="this.getReminderTime(0.5)"
-          >12 hours</md-checkbox
-        >
-        <md-checkbox
-          v-model="apiData.reminderTime"
-          :value="this.getReminderTime(0.25)"
-          >6 hours</md-checkbox
-        >
-      </div>
 
       <div>
         <label>Color:</label><br />
-        <v-swatches v-model="apiData.color"></v-swatches>
+        <v-color-picker
+          dot-size="25"
+          hide-canvas
+          hide-sliders
+          mode="hexa"
+          show-swatches
+          hide-mode-switch
+          swatches-max-height="100"
+          v-model="apiData.color"
+        ></v-color-picker>
       </div>
     </div>
   </div>
@@ -96,8 +60,6 @@ import { AssignmentApi } from "@/types/GarnBarnApi/AssignmentApi";
 import { TagApi } from "@/types/GarnBarnApi/TagApi";
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
-import VSwatches from "vue-swatches";
-import "vue-swatches/dist/vue-swatches.css";
 import firebase from "firebase/app";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import { Tag } from "@/types/garnbarn/Tag";
@@ -105,7 +67,6 @@ import { Tag } from "@/types/garnbarn/Tag";
 @Component({
   components: {
     DatePicker,
-    VSwatches,
   },
 })
 export default class Create extends Vue {
@@ -127,10 +88,6 @@ export default class Create extends Vue {
         nextFunction = response.data.next;
       }
     });
-  }
-  getReminderTime(timeBeforeDue: number): number {
-    var reminderTime = 24 * 60 * 60 * timeBeforeDue; //time of timeBeforeDue days
-    return reminderTime;
   }
 }
 </script>

@@ -54,7 +54,7 @@ export default class LinkAccount extends Vue {
           dialogBoxContent: {
             title: "Successfully",
             content:
-              "We are able to link your account with LINE Account. You will be redirect back to Account Setting Page.",
+              "We are able to link your account with LINE Account. You will be redirect back to Account Setting Page. (Important! Please also add friend with GarnBarn Official Account to receive the notification",
           },
           dialogBoxActions: [
             {

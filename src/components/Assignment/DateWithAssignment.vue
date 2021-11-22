@@ -16,7 +16,7 @@
 <script lang="ts">
 import { Assignment } from "@/types/garnbarn/Assignment";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import AssignmentBox from "@/components/AssignmentBox.vue";
+import AssignmentBox from "@/components/Assignment/AssignmentBox.vue";
 
 @Component({
   components: {

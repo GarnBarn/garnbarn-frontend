@@ -1,29 +1,33 @@
 <template>
   <layout :callback="callback">
     <div>
-      <md-table v-model="tags" md-sort="id" @md-selected="onSelected">
+      <md-table v-model="tags" md-sort="id">
         <md-table-toolbar>
           <div class="md-title left-align">All Tags</div>
         </md-table-toolbar>
-        <md-table-row
-          slot="md-table-row"
-          slot-scope="{ item }"
-          md-selectable="single"
-        >
-          <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
-            item.id
-          }}</md-table-cell>
-          <md-table-cell md-label="Name" md-sort-by="name" class="left-align">{{
-            item.name
-          }}</md-table-cell>
-          <md-table-cell md-label="Author">
+        <md-table-row slot="md-table-row" slot-scope="{ item }">
+          <md-table-cell
+            md-label="ID"
+            md-sort-by="id"
+            md-numeric
+            @click.native="onSelected(item)"
+            >{{ item.id }}</md-table-cell
+          >
+          <md-table-cell
+            md-label="Name"
+            md-sort-by="name"
+            class="left-align"
+            @click.native="onSelected(item)"
+            >{{ item.name }}</md-table-cell
+          >
+          <md-table-cell md-label="Author" @click.native="onSelected(item)">
             <UserProfileIcon
               :uid="item.author"
               :garnBarnApiCaller="garnBarnAPICaller"
             >
             </UserProfileIcon>
           </md-table-cell>
-          <md-table-cell md-label="Subscriber">
+          <md-table-cell md-label="Subscriber" @click.native="onSelected(item)">
             <div
               v-if="item.subscriber && item.subscriber.length !== 0"
               class="row-flex"
@@ -40,10 +44,10 @@
               <md-icon>minimize</md-icon>
             </div>
           </md-table-cell>
-          <md-table-cell md-label="Color">
+          <md-table-cell md-label="Color" @click.native="onSelected(item)">
             <TagBoxChip :color="item.color" :text="item.color"></TagBoxChip>
           </md-table-cell>
-          <md-table-cell md-numeric>
+          <md-table-cell>
             <md-menu
               v-if="item.author !== firebaseUser.uid"
               md-size="small"
@@ -102,36 +106,12 @@
             </md-tab>
 
             <md-tab md-disabled>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-                mollitia dolorum dolores quae commodi impedit possimus qui,
-                atque at voluptates cupiditate. Neque quae culpa suscipit
-                praesentium inventore ducimus ipsa aut.
-              </p>
+              <md-tab md-label="Notification Settings">
+                <notification-setting
+                  :reminderTime="tagData.reminderTime"
+                  ref="notificationSetting"
+                ></notification-setting>
+              </md-tab>
             </md-tab>
           </md-tabs>
         </md-card-content>
@@ -193,6 +173,7 @@ import { TagApi, totpBody } from "@/types/GarnBarnApi/TagApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
+import NotificationSetting from "@/components/NotificationSetting.vue";
 import Create from "@/components/Create.vue";
 import TagSubscribe from "@/components/Tag/TagSubscribe.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
@@ -203,6 +184,11 @@ import UserProfileIcon from "@/components/UserProfileIcon.vue";
 import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
 import SecretQrDialog from "@/components/Tag/SecretQrDialog.vue";
 
+type TimeData = {
+  time: number;
+  unit: number;
+};
+
 @Component({
   components: {
     Layout,
@@ -212,11 +198,13 @@ import SecretQrDialog from "@/components/Tag/SecretQrDialog.vue";
     TagBoxChip,
     TagSubscribe,
     SecretQrDialog,
+    NotificationSetting,
   },
 })
 export default class Tags extends Vue {
   @Ref() readonly tagCreate!: Create;
   @Ref() readonly tagSubscribe!: TagSubscribe;
+  @Ref() readonly notificationSetting!: NotificationSetting;
 
   createDialogBox = new DialogBox("createDialogBox");
   subscribeDialogBox = new DialogBox("subscribeDialogBox");
@@ -295,8 +283,16 @@ export default class Tags extends Vue {
   }
 
   createTag(): void {
+    let tagApiData = this.tagCreate.apiData as any;
+    tagApiData.color = tagApiData.color.hex;
+
+    tagApiData.reminderTime = this.filterValidReminderTime(
+      this.processTimeDataToReminderTime(
+        this.notificationSetting.timeData as TimeData[]
+      )
+    );
     this.garnBarnAPICaller?.v1.tags
-      .create(this.tagCreate.apiData as TagApi)
+      .create(tagApiData as TagApi)
       .then((apiResponse) => {
         this.responseCreatedTag = apiResponse.data;
         const secretQrCodeDialog = new DialogBox("secretQrDialog");
@@ -369,7 +365,7 @@ export default class Tags extends Vue {
   onSelected(item: Tag) {
     this.$router.push("tag/" + item.id.toString());
   }
-  
+
   enterSubscribeInfo(): void {
     this.subscribeDialogBox.show({
       dialogBoxActions: [
@@ -506,6 +502,26 @@ export default class Tags extends Vue {
           ],
         });
       });
+  }
+
+  getUnixTimeFromTimeData(timeData: TimeData): number {
+    return timeData.time * timeData.unit;
+  }
+
+  processTimeDataToReminderTime(
+    timeData: TimeData[] | null
+  ): number[] | undefined {
+    if (timeData) {
+      return timeData.map((time) => this.getUnixTimeFromTimeData(time));
+    }
+  }
+
+  filterValidReminderTime(
+    reminderTime: number[] | undefined
+  ): number[] | undefined {
+    if (reminderTime) {
+      return reminderTime.filter((time) => time > 0);
+    }
   }
 
   getSubscriberDetail(uid: string) {

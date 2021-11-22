@@ -1,5 +1,5 @@
 import { createLocalVue, mount, Wrapper } from "@vue/test-utils";
-import AssignmentDetail from "@/components/AssignmentDetail.vue";
+import AssignmentDetail from "@/components/Assignment/AssignmentDetail.vue";
 import { Assignment } from "@/types/garnbarn/Assignment";
 import VueMaterial from "vue-material";
 
@@ -57,6 +57,6 @@ describe("Test Assignment Display Time", () => {
       description: "Write test with > 100% coverage",
     };
     const wrapper = createWrapper(assignment);
-    expect(wrapper.text()).toContain("No Due Date");
+    expect(wrapper.text()).toContain("-");
   });
 });
