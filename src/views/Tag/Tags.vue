@@ -102,6 +102,7 @@
                 :creationType="creationType"
                 md-dynamic-height
                 ref="tagCreate"
+                :firebaseUser="firebaseUser"
               ></Create>
             </md-tab>
 
@@ -224,7 +225,7 @@ export default class Tags extends Vue {
     author: "",
   };
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
-  firebaseUser: firebase.User | undefined = undefined;
+  firebaseUser: firebase.User | null = null;
   tags: Array<Tag> = [];
   getNextData: GetAllTagApiNextFunctionWrapper | null = null;
 
@@ -284,7 +285,6 @@ export default class Tags extends Vue {
 
   createTag(): void {
     let tagApiData = this.tagCreate.apiData as any;
-    tagApiData.color = tagApiData.color.hex;
 
     tagApiData.reminderTime = this.filterValidReminderTime(
       this.processTimeDataToReminderTime(
