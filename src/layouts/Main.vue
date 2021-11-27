@@ -7,7 +7,7 @@
             <img
               src="@/assets/images/garnbarn_horizontal_logo.png"
               alt="GarnBarn Logo"
-              class="logo-img"
+              class="logo-img logo"
             />
           </router-link>
           <div class="itemBar">
