@@ -4,7 +4,11 @@
       <md-app-toolbar :md-elevation="config.toolBarElevation" class="nav-bar">
         <div class="md-toolbar-row">
           <router-link to="/home">
-            <div class="logo">GarnBarn</div>
+            <img
+              src="@/assets/images/garnbarn_horizontal_logo.png"
+              alt="GarnBarn Logo"
+              class="logo-img"
+            />
           </router-link>
           <div class="itemBar">
             <router-link to="/assignment">
@@ -134,5 +138,10 @@ export default class Layout extends Vue {
 .profile-button {
   width: 50px;
   height: 50px;
+}
+
+.logo-img {
+  width: 200px;
+  height: 40px;
 }
 </style>
