@@ -1,9 +1,9 @@
 <template>
   <div class="flex-col detail full-screen">
     <div v-if="creationType === 'assignment'">
-      <md-field>
+      <md-field :md-counter="false">
         <label>Assignment name:</label>
-        <md-input v-model="apiData.name" required></md-input>
+        <md-input v-model="apiData.name" maxlength="100" required></md-input>
       </md-field>
 
       <md-field>
@@ -15,9 +15,9 @@
         </md-select>
       </md-field>
 
-      <md-field>
+      <md-field :md-counter="false">
         <label>Description:</label>
-        <md-textarea v-model="apiData.description"></md-textarea>
+        <md-textarea v-model="apiData.description" maxlength="1000"></md-textarea>
       </md-field>
 
       <label>Due Date:</label>
@@ -31,9 +31,9 @@
     </div>
     <div v-if="creationType === 'tag'" class="overflow">
       <div>
-        <md-field>
+        <md-field :md-counter="false">
           <label>Tag name:</label>
-          <md-input v-model="apiData.name" required></md-input>
+          <md-input v-model="apiData.name" maxlength="20" required></md-input>
         </md-field>
       </div>
 
