@@ -1,7 +1,7 @@
 describe("navigate through the web", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:8080/home");
     cy.login(Cypress.env().UID);
+    cy.visit("http://localhost:8080/home");
   });
 
   it("land at home page after login", () => {
