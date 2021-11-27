@@ -3,7 +3,7 @@
     <div class="full-left-grid border">
       <p><md-icon class="md-size-2x">tag</md-icon></p>
       <p class="md-display-3">{{ tag.name }}</p>
-      <tag-box-chip :color="tag.color" :text="tag.name"></tag-box-chip>
+      <tag-box-chip :color="tag.color" :text="tag.color"></tag-box-chip>
     </div>
     <div class="upper-right-grid">
       <detail-card :title="detailCardTexts.author" v-if="tag.author">
@@ -101,7 +101,6 @@ export default class TagDetail extends Vue {
     }
   }
 }
-
 </script>
 
 <style scoped>

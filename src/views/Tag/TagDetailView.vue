@@ -3,17 +3,17 @@
     <tag-detail :tag="tag">
       <template v-slot:authorPicture>
         <UserProfileIcon
-            :uid="tag.author"
-            :garnBarnApiCaller="garnBarnAPICaller"
-          ></UserProfileIcon>
+          :uid="tag.author"
+          :garnBarnApiCaller="garnBarnAPICaller"
+        ></UserProfileIcon>
       </template>
       <template v-slot:subscriberPicture>
         <UserProfileIcon
-              v-for="[index, subscriberUid] of tag.subscriber.entries()"
-              :key="index"
-              :uid="subscriberUid"
-              :garnBarnApiCaller="garnBarnAPICaller"
-              class="padding"
+          v-for="[index, subscriberUid] of tag.subscriber.entries()"
+          :key="index"
+          :uid="subscriberUid"
+          :garnBarnApiCaller="garnBarnAPICaller"
+          class="padding"
         >
         </UserProfileIcon>
       </template>
@@ -26,7 +26,7 @@
         >
         <md-button class="md-secondary" @click="popBack">Back</md-button>
       </template>
-    </tag-detail>            
+    </tag-detail>
     <DialogBoxComponent
       :dialogBoxId="'editTagDialogBox'"
       :isCustomDialogBox="true"
@@ -38,14 +38,16 @@
             <Create
               :apiData="tagApi"
               :creationType="creationType"
+              :firebaseUser="firebaseUser"
               md-dynamic-height
             ></Create>
           </md-tab>
 
           <md-tab md-label="Notification Settings">
-            <notification-setting 
-            :reminderTime="tagApi.reminderTime"
-            ref="notificationSetting"></notification-setting>
+            <notification-setting
+              :reminderTime="tagApi.reminderTime"
+              ref="notificationSetting"
+            ></notification-setting>
           </md-tab>
         </md-tabs>
       </md-card-content>
@@ -58,7 +60,7 @@ import { Component, Vue, Ref } from "vue-property-decorator";
 import { Tag } from "@/types/garnbarn/Tag";
 import { TagApi } from "@/types/GarnBarnApi/TagApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
-import NotificationSetting from "@/components/NotificationSetting.vue"
+import NotificationSetting from "@/components/NotificationSetting.vue";
 import UserProfileIcon from "@/components/UserProfileIcon.vue";
 import DetailCard from "@/components/DetailCard.vue";
 import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
@@ -70,9 +72,9 @@ import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import firebase from "firebase/app";
 
 type TimeData = {
-  time: number,
-  unit: number
-}
+  time: number;
+  unit: number;
+};
 
 @Component({
   components: {
@@ -87,12 +89,12 @@ type TimeData = {
   },
 })
 export default class TagDetailView extends Vue {
-  @Ref() readonly notificationSetting!: NotificationSetting
+  @Ref() readonly notificationSetting!: NotificationSetting;
 
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   editing = false;
   creationType = "tag";
-  firebaseUser: firebase.User | undefined = undefined;
+  firebaseUser: firebase.User | null = null;
   informDialogBox = new DialogBox("informDialogBox");
   editTagDialogBox = new DialogBox("editTagDialogBox");
   tagId = Number(this.$route.params.id);
@@ -128,28 +130,29 @@ export default class TagDetailView extends Vue {
         dialogBoxContent: {
           title: "Error",
           content: `Can't fetch data from GarnBarn API, Please try again or contact Administrator.`,
-        },          
+        },
         dialogBoxActions: [
-            {
-              buttonContent: "Ok",
-              buttonClass: "md-secondary",
-              onClick: async () => {
-                await this.informDialogBox.dismiss();
-                this.popBack()
-              },
+          {
+            buttonContent: "Ok",
+            buttonClass: "md-secondary",
+            onClick: async () => {
+              await this.informDialogBox.dismiss();
+              this.popBack();
             },
-          ],
+          },
+        ],
       });
     }
   }
 
   async update(): Promise<void> {
     let tagApiData = this.tagApi as any;
-    tagApiData.color = tagApiData.color.hex;
 
     tagApiData.reminderTime = this.filterValidReminderTime(
-      this.processTimeDataToReminderTime(this.notificationSetting.timeData as TimeData[])
-    )
+      this.processTimeDataToReminderTime(
+        this.notificationSetting.timeData as TimeData[]
+      )
+    );
     this.garnBarnAPICaller?.v1.tags
       .update(this.tagId, tagApiData as TagApi)
       .then((apiResponse) => {
@@ -267,11 +270,11 @@ export default class TagDetailView extends Vue {
     return timeData.time * timeData.unit;
   }
 
-  processTimeDataToReminderTime(timeData: TimeData[] | null): number[] | undefined {
+  processTimeDataToReminderTime(
+    timeData: TimeData[] | null
+  ): number[] | undefined {
     if (timeData) {
-      return timeData.map((time) => 
-        this.getUnixTimeFromTimeData(time)
-      )    
+      return timeData.map((time) => this.getUnixTimeFromTimeData(time));
     }
   }
 
@@ -290,9 +293,8 @@ export default class TagDetailView extends Vue {
   popBack() {
     if (this.hasHistory()) {
       this.$router.back();
-    }
-    else {
-      this.$router.push('/tag');
+    } else {
+      this.$router.push("/tag");
     }
   }
 }
