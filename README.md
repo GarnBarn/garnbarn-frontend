@@ -1,5 +1,6 @@
 # garnbarn-frontend
 
+[![garnbarn-frontend](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/simple/8sc6n4/master&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/8sc6n4/runs)
 [![Vue Test](https://github.com/GarnBarn/garnbarn-frontend/actions/workflows/test.yml/badge.svg)](https://github.com/GarnBarn/garnbarn-frontend/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/GarnBarn/garnbarn-frontend/branch/master/graph/badge.svg?token=QwED3bFABW)](https://codecov.io/gh/GarnBarn/garnbarn-frontend)
 
