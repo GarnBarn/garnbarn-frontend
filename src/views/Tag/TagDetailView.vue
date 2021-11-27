@@ -38,6 +38,7 @@
             <Create
               :apiData="tagApi"
               :creationType="creationType"
+              :firebaseUser="firebaseUser"
               md-dynamic-height
             ></Create>
           </md-tab>
@@ -93,7 +94,7 @@ export default class TagDetailView extends Vue {
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   editing = false;
   creationType = "tag";
-  firebaseUser: firebase.User | undefined = undefined;
+  firebaseUser: firebase.User | null = null;
   informDialogBox = new DialogBox("informDialogBox");
   editTagDialogBox = new DialogBox("editTagDialogBox");
   tagId = Number(this.$route.params.id);
