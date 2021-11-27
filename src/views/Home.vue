@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import Layout from "@/layouts/Main.vue";
-import DateWithAssignment from "@/components/DateWithAssignment.vue";
+import DateWithAssignment from "@/components/Assignment/DateWithAssignment.vue";
 import { Component, Vue } from "vue-property-decorator";
 import { Assignment, DateWithAssignments } from "@/types/garnbarn/Assignment";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";

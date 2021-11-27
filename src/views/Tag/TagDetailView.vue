@@ -3,17 +3,17 @@
     <tag-detail :tag="tag">
       <template v-slot:authorPicture>
         <UserProfileIcon
-            :uid="tag.author"
-            :garnBarnApiCaller="garnBarnAPICaller"
-          ></UserProfileIcon>
+          :uid="tag.author"
+          :garnBarnApiCaller="garnBarnAPICaller"
+        ></UserProfileIcon>
       </template>
       <template v-slot:subscriberPicture>
         <UserProfileIcon
-              v-for="[index, subscriberUid] of tag.subscriber.entries()"
-              :key="index"
-              :uid="subscriberUid"
-              :garnBarnApiCaller="garnBarnAPICaller"
-              class="padding"
+          v-for="[index, subscriberUid] of tag.subscriber.entries()"
+          :key="index"
+          :uid="subscriberUid"
+          :garnBarnApiCaller="garnBarnAPICaller"
+          class="padding"
         >
         </UserProfileIcon>
       </template>
@@ -26,7 +26,7 @@
         >
         <md-button class="md-secondary" @click="popBack">Back</md-button>
       </template>
-    </tag-detail>            
+    </tag-detail>
     <DialogBoxComponent
       :dialogBoxId="'editTagDialogBox'"
       :isCustomDialogBox="true"
@@ -38,41 +38,16 @@
             <Create
               :apiData="tagApi"
               :creationType="creationType"
+              :firebaseUser="firebaseUser"
               md-dynamic-height
             ></Create>
           </md-tab>
 
-          <md-tab md-label="Notification Settings" md-disabled>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              mollitia dolorum dolores quae commodi impedit possimus qui, atque
-              at voluptates cupiditate. Neque quae culpa suscipit praesentium
-              inventore ducimus ipsa aut.
-            </p>
+          <md-tab md-label="Notification Settings">
+            <notification-setting
+              :reminderTime="tagApi.reminderTime"
+              ref="notificationSetting"
+            ></notification-setting>
           </md-tab>
         </md-tabs>
       </md-card-content>
@@ -81,19 +56,25 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Ref } from "vue-property-decorator";
 import { Tag } from "@/types/garnbarn/Tag";
 import { TagApi } from "@/types/GarnBarnApi/TagApi";
 import DialogBox from "@/components/DialogBox/DialogBox";
+import NotificationSetting from "@/components/NotificationSetting.vue";
 import UserProfileIcon from "@/components/UserProfileIcon.vue";
 import DetailCard from "@/components/DetailCard.vue";
 import TagBoxChip from "@/components/Tag/TagBoxChip.vue";
 import Create from "@/components/Create.vue";
-import TagDetail from "@/components/TagDetail.vue";
+import TagDetail from "@/components/Tag/TagDetail.vue";
 import Layout from "@/layouts/Main.vue";
 import DialogBoxComponent from "@/components/DialogBox/DialogBoxComponent.vue";
 import GarnBarnApi from "@/services/GarnBarnApi/GarnBarnApi";
 import firebase from "firebase/app";
+
+type TimeData = {
+  time: number;
+  unit: number;
+};
 
 @Component({
   components: {
@@ -104,13 +85,16 @@ import firebase from "firebase/app";
     UserProfileIcon,
     DetailCard,
     TagBoxChip,
+    NotificationSetting,
   },
 })
 export default class TagDetailView extends Vue {
+  @Ref() readonly notificationSetting!: NotificationSetting;
+
   garnBarnAPICaller: GarnBarnApi | undefined = undefined;
   editing = false;
   creationType = "tag";
-  firebaseUser: firebase.User | undefined = undefined;
+  firebaseUser: firebase.User | null = null;
   informDialogBox = new DialogBox("informDialogBox");
   editTagDialogBox = new DialogBox("editTagDialogBox");
   tagId = Number(this.$route.params.id);
@@ -147,13 +131,30 @@ export default class TagDetailView extends Vue {
           title: "Error",
           content: `Can't fetch data from GarnBarn API, Please try again or contact Administrator.`,
         },
+        dialogBoxActions: [
+          {
+            buttonContent: "Ok",
+            buttonClass: "md-secondary",
+            onClick: async () => {
+              await this.informDialogBox.dismiss();
+              this.popBack();
+            },
+          },
+        ],
       });
     }
   }
 
   async update(): Promise<void> {
+    let tagApiData = this.tagApi as any;
+
+    tagApiData.reminderTime = this.filterValidReminderTime(
+      this.processTimeDataToReminderTime(
+        this.notificationSetting.timeData as TimeData[]
+      )
+    );
     this.garnBarnAPICaller?.v1.tags
-      .update(this.tagId, this.tagApi as TagApi)
+      .update(this.tagId, tagApiData as TagApi)
       .then((apiResponse) => {
         this.tag = apiResponse.data as Tag;
       })
@@ -265,8 +266,36 @@ export default class TagDetailView extends Vue {
     return tagApi;
   }
 
+  getUnixTimeFromTimeData(timeData: TimeData): number {
+    return timeData.time * timeData.unit;
+  }
+
+  processTimeDataToReminderTime(
+    timeData: TimeData[] | null
+  ): number[] | undefined {
+    if (timeData) {
+      return timeData.map((time) => this.getUnixTimeFromTimeData(time));
+    }
+  }
+
+  filterValidReminderTime(
+    reminderTime: number[] | undefined
+  ): number[] | undefined {
+    if (reminderTime) {
+      return reminderTime.filter((time) => time > 0);
+    }
+  }
+
+  hasHistory(): boolean {
+    return window.history.length > 2;
+  }
+
   popBack() {
-    this.$router.back();
+    if (this.hasHistory()) {
+      this.$router.back();
+    } else {
+      this.$router.push("/tag");
+    }
   }
 }
 </script>
