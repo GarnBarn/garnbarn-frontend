@@ -1,70 +1,72 @@
 <template>
-    <div class="grid">
-      <div class="full-left-grid border">
-        <p><md-icon class="md-size-2x">assignment</md-icon></p>
-        <p class="md-display-3">{{ assignment.name }}</p>
-        <div
-          v-if="assignment.tag"
-          @click="navigateToTagPage(assignment.tag.id)"
-        >
-          <TagBoxChip
-            :color="assignment.tag.color"
-            :text="assignment.tag.name"
-            class="tag"
-          ></TagBoxChip>
-        </div>
-        <p class="md-subheading">Due Date: {{ assignment.dueDate ? this.getFormatDate : "-"}}</p>
-        <p class="md-subheading">Submission Time: {{ assignment.dueDate ? this.getFormatTime : "-" }}</p>
+  <div class="grid">
+    <div class="full-left-grid border">
+      <p><md-icon class="md-size-2x">assignment</md-icon></p>
+      <p class="md-display-3 wrap">{{ assignment.name }}</p>
+      <div v-if="assignment.tag" @click="navigateToTagPage(assignment.tag.id)">
+        <TagBoxChip
+          :color="assignment.tag.color"
+          :text="assignment.tag.name"
+          class="tag"
+        ></TagBoxChip>
       </div>
-      <div class="upper-right-grid">
-        <detail-card :title="detailCardTexts.author">
-          <slot name="authorPicture"></slot>
-        </detail-card>
-        <detail-card :title="detailCardTexts.description">
-          <div v-if="assignment.description">
-            <p class="content">{{ assignment.description }}</p>
-          </div>
-          <div v-else>
-            <md-icon>minimize</md-icon>
-          </div>
-
-        </detail-card>
-        <detail-card :title="detailCardTexts.reminderTime">
-          <div
-            v-if="
-              assignment.reminderTime && assignment.reminderTime.length !== 0
-            "
-          >
-            <div v-if="assignment.tag">
-              <md-chip
-                v-for="time in assignment.reminderTime" 
-                :key="time"
-                :style="`background-color: ${assignment.tag.color} !important; color: ${getFontColor(
-                  assignment.tag.color
-                )} !important`"
-                ><md-icon>notifications</md-icon>{{ getHumanReadableTime(time) }}</md-chip
-              >
-            </div>
-            <div v-else>
-              <md-chip
-                v-for="time in assignment.reminderTime" 
-                :key="time"
-                :style="`background-color: #cef4eb !important; color: ${getFontColor(
-                  `#cef4eb`
-                )} !important`"
-                ><md-icon>notifications</md-icon>{{ getHumanReadableTime(time) }}</md-chip
-              >
-            </div>
-          </div>
-          <div v-else>
-            <md-icon>minimize</md-icon>
-          </div>
-        </detail-card>
-      </div>
-      <div class="lower-right-grid">
-        <slot name="buttons"></slot>
-      </div>
+      <p class="md-subheading">
+        Due Date: {{ assignment.dueDate ? this.getFormatDate : "-" }}
+      </p>
+      <p class="md-subheading">
+        Submission Time: {{ assignment.dueDate ? this.getFormatTime : "-" }}
+      </p>
     </div>
+    <div class="upper-right-grid">
+      <detail-card :title="detailCardTexts.author">
+        <slot name="authorPicture"></slot>
+      </detail-card>
+      <detail-card :title="detailCardTexts.description">
+        <div v-if="assignment.description">
+          <p class="content">{{ assignment.description }}</p>
+        </div>
+        <div v-else>
+          <md-icon>minimize</md-icon>
+        </div>
+      </detail-card>
+      <detail-card :title="detailCardTexts.reminderTime">
+        <div
+          v-if="assignment.reminderTime && assignment.reminderTime.length !== 0"
+        >
+          <div v-if="assignment.tag">
+            <md-chip
+              v-for="time in assignment.reminderTime"
+              :key="time"
+              :style="`background-color: ${
+                assignment.tag.color
+              } !important; color: ${getFontColor(
+                assignment.tag.color
+              )} !important`"
+              ><md-icon>notifications</md-icon
+              >{{ getHumanReadableTime(time) }}</md-chip
+            >
+          </div>
+          <div v-else>
+            <md-chip
+              v-for="time in assignment.reminderTime"
+              :key="time"
+              :style="`background-color: #cef4eb !important; color: ${getFontColor(
+                `#cef4eb`
+              )} !important`"
+              ><md-icon>notifications</md-icon
+              >{{ getHumanReadableTime(time) }}</md-chip
+            >
+          </div>
+        </div>
+        <div v-else>
+          <md-icon>minimize</md-icon>
+        </div>
+      </detail-card>
+    </div>
+    <div class="lower-right-grid">
+      <slot name="buttons"></slot>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -192,5 +194,12 @@ export default class AssignmentDetail extends Vue {
 
 .left-align {
   text-align: left;
+}
+
+.wrap {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-wrap: break-word;
+  max-width: 500px;
 }
 </style>
