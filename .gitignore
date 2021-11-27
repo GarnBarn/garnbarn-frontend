@@ -24,9 +24,20 @@ pnpm-debug.log*
 
 # Coverage File
 coverage/
+jest-coverage/
+cypress-coverage/
+.nyc_output/
+reports/
 
 # Ignore firebase config file
 src/firebaseConfig.json
 
 # Ignore Backend Config file
 src/GarnBarnApiConfig.json
+
+# Ignore Cypress Test Result file
+tests/cypress/videos/
+tests/cypress/screenshots/
+
+# Ignore Cypress Firebase Service Account
+serviceAccount.json

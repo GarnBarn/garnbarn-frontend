@@ -33,5 +33,9 @@
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "tests/cypress/**/*.js",
+    "tests/cypress/**/*.spec.ts"
+  ]
 }
