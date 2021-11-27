@@ -47,7 +47,8 @@
           show-swatches
           hide-mode-switch
           swatches-max-height="100"
-          v-model="apiData.color"
+          :value="defaultColorCode"
+          @update:color="updateApiColor"
         ></v-color-picker>
       </div>
     </div>
@@ -74,8 +75,10 @@ export default class Create extends Vue {
   @Prop({ required: true }) apiData!: AssignmentApi | TagApi;
   @Prop({ required: false }) firebaseUser!: firebase.User;
 
+  defaultColorCode: any = "";
   garnBarnApiCaller: GarnBarnApi | null = null;
   tags: Array<Tag> = [];
+  isFirstSelectColor = true;
 
   mounted() {
     this.garnBarnApiCaller = new GarnBarnApi(this.firebaseUser);
@@ -88,6 +91,15 @@ export default class Create extends Vue {
         nextFunction = response.data.next;
       }
     });
+    this.defaultColorCode = (this.apiData as TagApi).color;
+  }
+
+  updateApiColor(color: any) {
+    if (this.isFirstSelectColor) {
+      this.isFirstSelectColor = false;
+      return;
+    }
+    (this.apiData as TagApi).color = color.hex;
   }
 }
 </script>
