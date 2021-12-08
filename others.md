@@ -1,5 +1,8 @@
 # Other Links
 
+## Presentation Slide
+[Google Slide](https://docs.google.com/presentation/d/1-emY_hP7x9lKw38768UXcD4H9T7DRUTPmcrGOmb6DWE/edit?usp=sharing)
+
 ## Code Review Checklist
 [Google Doc](https://docs.google.com/document/d/1bpxfy-nf5u7Zf4hKvc7ZUUSoRVnqi0qStNeyfaBsuX0/edit#)
 
