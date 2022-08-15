@@ -1,0 +1,13 @@
+# Ignore Test Files
+tests/
+
+# Github Files
+.github/
+
+# Output filder
+dist/
+
+# Unnecessary file.
+Jenkinsfile
+firebase.json
+cypress.json
