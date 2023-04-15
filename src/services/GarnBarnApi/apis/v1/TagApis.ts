@@ -18,7 +18,7 @@ export default class TagApis extends api {
    * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
   get(id: number): Promise<AxiosResponse<Tag>> {
-    return this.sendRequest("GET", `${this.API_BASE_URL}/${id}/`) as Promise<
+    return this.sendRequest("GET", `${this.API_BASE_URL}/${id}`) as Promise<
       AxiosResponse<Tag>
     >;
   }
@@ -92,7 +92,7 @@ export default class TagApis extends api {
   update(id: number, tag: TagApi): Promise<AxiosResponse<Tag>> {
     return this.sendRequest(
       "PATCH",
-      `${this.API_BASE_URL}/${id}/`,
+      `${this.API_BASE_URL}/${id}`,
       tag
     ) as Promise<AxiosResponse<Tag>>;
   }
@@ -107,7 +107,7 @@ export default class TagApis extends api {
   delete(id: number): Promise<AxiosResponse> {
     return this.sendRequest(
       "DELETE",
-      `${this.API_BASE_URL}/${id}/`
+      `${this.API_BASE_URL}/${id}`
     ) as Promise<AxiosResponse>;
   }
 
