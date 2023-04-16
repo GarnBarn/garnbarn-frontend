@@ -234,8 +234,8 @@ export default class Assignments extends Vue {
       .then((apiResponse) => {
         this.informDialogBox.show({
           dialogBoxContent: {
-            title: "Assignment created",
-            content: `Your assignment has been created with id ${apiResponse.data.id}`,
+            title: "Assignment is now creating.",
+            content: `It may take up to 30 seconds for the assignment to be created.`,
           },
           dialogBoxActions: [
             {
