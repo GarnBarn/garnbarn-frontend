@@ -125,7 +125,7 @@ export class AssignmentApis extends api {
     }
     return this.sendRequest(
       "PATCH",
-      `${this.API_BASE_URL}/${id}/`,
+      `${this.API_BASE_URL}/${id}`,
       updateField
     ) as Promise<AxiosResponse<Assignment>>;
   }
@@ -138,6 +138,6 @@ export class AssignmentApis extends api {
    * @returns Promise of AxiosResponse  for the request in fulfilled state.
    */
   delete(id: number): Promise<AxiosResponse> {
-    return this.sendRequest("DELETE", `${this.API_BASE_URL}/${id}/`);
+    return this.sendRequest("DELETE", `${this.API_BASE_URL}/${id}`);
   }
 }
