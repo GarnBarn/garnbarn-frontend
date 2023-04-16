@@ -34,43 +34,6 @@
               <h3>UID:</h3>
               <p>{{ uid }}</p>
             </DetailCard>
-            <DetailCard title="Third party platform">
-              <h3>LINE:</h3>
-              <div v-if="!profile.platform.line">
-                <md-button class="line-green" @click="onClickLineLogin"
-                  ><img
-                    class="line-logo"
-                    src="@/assets/images/line_logo.png"
-                  />log in</md-button
-                >
-                <div>
-                  <i
-                    >Link your GarnBarn Account with LINE to recieve assignment
-                    notfication on LINE
-                  </i>
-                </div>
-              </div>
-              <div v-else>
-                <p>Linked with LINE account {{ profile.platform.line }}</p>
-                <p>
-                  <b>Important! </b>Please also add friend with
-                  <b>`GarnBarn`</b> Official Account inorder to recieve the
-                  assignment notification
-                </p>
-
-                <a href="https://lin.ee/kLlra2s" target="_blank"
-                  ><img
-                    src="https://scdn.line-apps.com/n/line_add_friends/btn/en.png"
-                    alt="เพิ่มเพื่อน"
-                    style="height: 35px; border-radius: 20px"
-                    border=""
-                /></a>
-                <br />
-                <md-button class="md-accent" @click="onClickUnlinkLine"
-                  >Unlink LINE Account</md-button
-                >
-              </div>
-            </DetailCard>
             <DetailCard title="Account Management & Credential">
               <h3>
                 ID Token:
