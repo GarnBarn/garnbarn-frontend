@@ -4,28 +4,6 @@
       <div class="md-title">Tag Created with id {{ tag.id }}</div>
     </md-card-header>
     <md-card-content>
-      <center>
-        <div class="md-subtitle">
-          This QR Code contained the secret key for TOTP generator.<br />
-          Please add it to your
-          <img
-            class="authenticator-logo"
-            src="@/assets/images/authenticator.png"
-          />
-          Authenticator App as it is required for the other to subscribe your
-          tag
-        </div>
-        <img
-          id="secret-qr-code"
-          :src="`https://chart.googleapis.com/chart?cht=qr&chl=${getAuthAppUrl()}&chs=180x180&choe=UTF-8`"
-        />
-        <p>Or manually enter secret: {{ tag.secretKeyTotp }}</p>
-        <md-divider></md-divider>
-        <h4 class="md-accent">
-          This secret will only be displayed at the first time.<br />
-          Loosing this key will lost tag subscriber control permanently
-        </h4>
-      </center>
     </md-card-content>
   </DialogBoxComponent>
 </template>

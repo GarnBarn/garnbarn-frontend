@@ -9,14 +9,6 @@
       <detail-card :title="detailCardTexts.author" v-if="tag.author">
         <slot name="authorPicture"></slot>
       </detail-card>
-      <detail-card :title="detailCardTexts.subscriber">
-        <div v-if="tag.subscriber && tag.subscriber.length !== 0" class="flex">
-          <slot name="subscriberPicture"></slot>
-        </div>
-        <div v-else>
-          <md-icon>minimize</md-icon>
-        </div>
-      </detail-card>
       <detail-card :title="detailCardTexts.reminderTime">
         <div v-if="tag.reminderTime && tag.reminderTime.length !== 0">
           <md-chip

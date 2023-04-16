@@ -27,23 +27,6 @@
             >
             </UserProfileIcon>
           </md-table-cell>
-          <md-table-cell md-label="Subscriber" @click.native="onSelected(item)">
-            <div
-              v-if="item.subscriber && item.subscriber.length !== 0"
-              class="row-flex"
-            >
-              <UserProfileIcon
-                v-for="[index, subscriberUid] of item.subscriber.entries()"
-                :key="index"
-                :uid="subscriberUid"
-                :garnBarnApiCaller="garnBarnAPICaller"
-              >
-              </UserProfileIcon>
-            </div>
-            <div v-else>
-              <md-icon>minimize</md-icon>
-            </div>
-          </md-table-cell>
           <md-table-cell md-label="Color" @click.native="onSelected(item)">
             <TagBoxChip :color="item.color" :text="item.color"></TagBoxChip>
           </md-table-cell>
@@ -56,11 +39,6 @@
               <md-button md-menu-trigger class="md-icon-button">
                 <md-icon> more_horiz </md-icon>
               </md-button>
-              <md-menu-content>
-                <md-menu-item @click="unsubscribe(item)">
-                  Unsubscribe
-                </md-menu-item>
-              </md-menu-content>
             </md-menu>
           </md-table-cell>
         </md-table-row>
@@ -81,11 +59,6 @@
           <md-button class="md-icon-button" @click="edit">
             <md-icon>add</md-icon>
             <md-tooltip> Create new Tag </md-tooltip>
-          </md-button>
-
-          <md-button class="md-icon-button" @click="enterSubscribeInfo">
-            <md-icon>notification_add</md-icon>
-            <md-tooltip> Subscribe to a Tag </md-tooltip>
           </md-button>
         </md-speed-dial-content>
       </md-speed-dial>
