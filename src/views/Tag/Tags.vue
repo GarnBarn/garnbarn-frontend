@@ -269,51 +269,7 @@ export default class Tags extends Vue {
       .then((apiResponse) => {
         this.responseCreatedTag = apiResponse.data;
         const secretQrCodeDialog = new DialogBox("secretQrDialog");
-        secretQrCodeDialog.show({
-          dialogBoxActions: [
-            {
-              buttonContent: "Close",
-              buttonClass: "md-secondary",
-              onClick: () => {
-                this.informDialogBox.show({
-                  dialogBoxContent: {
-                    title: "Are you sure?",
-                    content:
-                      "This will only show only at the first time you create the tag. Loosing this key will lost tag subscriber control permanently",
-                  },
-                  dialogBoxActions: [
-                    {
-                      buttonContent: "Yes",
-                      buttonClass: "md-primary",
-                      onClick: () => {
-                        if (
-                          !this.garnBarnAPICaller?.v1.assignments.getFirebaseUser()
-                        ) {
-                          return;
-                        }
-                        this.loadingDialogBox.show();
-                        this.tags = [];
-                        this.callback(
-                          this.garnBarnAPICaller?.v1.tags.getFirebaseUser(),
-                          this.loadingDialogBox
-                        );
-                        this.informDialogBox.dismiss();
-                        secretQrCodeDialog.dismiss();
-                      },
-                    },
-                    {
-                      buttonContent: "No",
-                      buttonClass: "md-secondary",
-                      onClick: () => {
-                        this.informDialogBox.dismiss();
-                      },
-                    },
-                  ],
-                });
-              },
-            },
-          ],
-        });
+        secretQrCodeDialog.show();
       })
       .catch((e) => {
         this.informDialogBox.show({

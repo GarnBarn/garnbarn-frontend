@@ -1,9 +1,14 @@
 <template>
   <DialogBoxComponent :dialogBoxId="'secretQrDialog'" :isCustomDialogBox="true">
     <md-card-header>
-      <div class="md-title">Tag Created with id {{ tag.id }}</div>
+      <div class="md-title">Tag is now creating.</div>
     </md-card-header>
     <md-card-content>
+      <center>
+        <div class="md-subtitle">
+          It may take up to 30 seconds for the tag to be created.
+        </div>
+      </center>
     </md-card-content>
   </DialogBoxComponent>
 </template>
