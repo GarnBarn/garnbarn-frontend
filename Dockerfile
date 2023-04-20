@@ -1,21 +1,23 @@
 # Builder
 FROM node:12-alpine AS builder
 
-WORKDIR /app/
+WORKDIR /app
 
-# Copy source code into container
-COPY . /
+# copy both 'package.json' and 'yarn.lock' (if available)
+COPY package*.json ./
+COPY yarn.lock ./
 
 # Run build command.
 RUN yarn install
-RUN yarn build
 
-# Server
-FROM httpd:2.4
+# copy project files and folders to the current working directory (i.e. 'app' folder)
+COPY . .
+RUN yarn run build
 
-# Copy built source code.
-COPY --from=builder dist/ /usr/local/apache2/htdocs/
+## production-stage
+FROM nginx:stable-alpine AS production-stage
 
-# Expose ports
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder dist /usr/share/nginx/html/
+
 EXPOSE 80
-
