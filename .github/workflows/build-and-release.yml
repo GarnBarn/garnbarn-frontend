@@ -1,0 +1,78 @@
+name: Build Docker Image and Release Github
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  release-on-github:
+    runs-on: ubuntu-latest
+    outputs:
+      newTag: ${{ steps.semver_rel.outputs.new_tag }}
+      previousTag: ${{ steps.semver_rel.outputs.previous_tag }}
+      changeLogs: ${{ steps.github_release.outputs.changelog }}
+    steps:
+      # Fetch all repository details (Including tag for semver).
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # Determan new version by using Semver logic.
+      - name: Semver Release
+        id: semver_rel
+        uses: hennejg/github-tag-action@v4.3.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Generate Change Log
+      - name: Release Changelog Builder
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fromTag: ${{ steps.semver_rel.outputs.previous_tag }}
+          toTag: ${{ steps.semver_rel.outputs.new_tag }}
+
+      # Create a release on Github Repo.
+      - name: Create Release
+        uses: mikepenz/action-gh-release@v0.2.0-a03 #softprops/action-gh-release
+        with:
+          body: ${{ steps.github_release.outputs.changelog }}
+          tag_name: ${{ steps.semver_rel.outputs.new_tag }}
+
+  build-docker-image:
+    runs-on: ubuntu-latest
+    needs: release-on-github
+    steps:
+      # Fetch all repository details (Including tag for semver).
+      - uses: actions/checkout@v3
+
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_COMMON_GO_PRIVATE_KEY }}
+
+      # Login to DockerHub by using the credentials.
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Setup BuildX
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Build Docker Image and push to docker hub.
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ format('ghcr.io/garnbarn/gb-assignment-service:{0}', needs.release-on-github.outputs.newTag) }},ghcr.io/garnbarn/gb-assignment-service:latest
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          platforms: |
+            linux/amd64
+            linux/arm64
+          ssh: |
+            default
