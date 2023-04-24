@@ -16,7 +16,7 @@ export class AssignmentApis extends api {
    * @returns Promise of AxiosResponse for the request in fulfilled state.
    */
   get(id: number): Promise<AxiosResponse<Assignment>> {
-    return this.sendRequest("GET", `${this.API_BASE_URL}/${id}/`) as Promise<
+    return this.sendRequest("GET", `${this.API_BASE_URL}/${id}`) as Promise<
       AxiosResponse<Assignment>
     >;
   }
