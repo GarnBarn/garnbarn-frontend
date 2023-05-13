@@ -31,7 +31,9 @@
               </div>
             </form>
           </div>
-          <div class="or"><p>or</p></div>
+          <div class="or">
+            <p>or</p>
+          </div>
           <section id="firebaseui-auth-container"></section>
         </md-card-actions>
       </md-card-media-actions>
@@ -62,7 +64,15 @@ export default class SignIn extends Vue {
   }
 
   login(): void {
-    // logic
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(this.username, this.password)
+      .then(() => {
+        this.$router.push('/home')
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
   }
 }
 </script>

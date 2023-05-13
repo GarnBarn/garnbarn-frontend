@@ -9,7 +9,7 @@
                 <md-card-actions>
                     <h3>Register to GarnBarn</h3>
                     <div>
-                        <form @submit.prevent="register" >
+                        <form @submit.prevent="register">
                             <div class="user">
                                 <label for="username">Username:</label>
                                 <input id="username" v-model="username" type="text" />
@@ -34,6 +34,7 @@
 </template>
 
 <script lang="ts">
+import firebase from "firebase";
 import { Vue, Component } from 'vue-property-decorator';
 
 @Component
@@ -43,52 +44,59 @@ export default class Register extends Vue {
     confirmPassword = '';
 
     register(): void {
-        if (this.password !== this.confirmPassword) {
-            // Passwords do not match
-            alert('Passwords do not match!');
-            return;
-        }
-
-        this.username = '';
-        this.password = '';
-        this.confirmPassword = '';
-        alert('Registration successful!');
+        firebase
+            .auth()
+            .createUserWithEmailAndPassword(this.username, this.password)
+            .then((res) => {
+                res.user!
+                    .updateProfile({
+                        displayName: this.username
+                    })
+                    .then(() => {
+                        this.$router.push('/login')
+                    });
+            })
+            .catch((error) => {
+                alert(error.message);
+            });
     }
 }
 </script>
 
 <style scoped>
 .registerBox {
-  padding-top: 5%;
-  padding-top: 5%;
+    padding-top: 5%;
+    padding-top: 5%;
 }
 
 .registerCard {
-  padding: 10px;
-  padding-top: 15px;
-  border-radius: 20px;
-  background-color: #f9f9f9;
-  display: inline-block;
-  vertical-align: top;
-  overflow: auto;
-  border: 1px solid rgba(#000, 0.12);
+    padding: 10px;
+    padding-top: 15px;
+    border-radius: 20px;
+    background-color: #f9f9f9;
+    display: inline-block;
+    vertical-align: top;
+    overflow: auto;
+    border: 1px solid rgba(#000, 0.12);
 }
 
 .garnbarnLogo {
-  width: 150px;
-  height: auto;
+    width: 150px;
+    height: auto;
 }
 
 hr.rounded {
-  margin-top: 5%;
-  margin-bottom: 5%;
-  margin-left: 10%;
-  margin-right: 10%;
-  border-top: 2px solid #bbb;
-  border-radius: 5px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+    border-top: 2px solid #bbb;
+    border-radius: 5px;
 }
 
-.ruser, .pass, .con-pass {
+.ruser,
+.pass,
+.con-pass {
     margin: 0.25rem;
 }
 </style>
