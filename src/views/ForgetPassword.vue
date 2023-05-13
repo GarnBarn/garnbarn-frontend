@@ -39,6 +39,7 @@ export default class ForgotPassword extends Vue {
             .sendPasswordResetEmail(this.email)
             .then(() => {
                 alert('Check your registered email to reset the password!')
+                this.$router.push('/signin')
             }).catch((error) => {
                 alert(error)
             })
