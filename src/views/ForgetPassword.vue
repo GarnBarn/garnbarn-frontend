@@ -27,15 +27,21 @@
   
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import firebase from "firebase";
 
 @Component
 export default class ForgotPassword extends Vue {
     email = '';
 
     submitForm(): void {
-        this.email = '';
-
-        alert('Password reset instructions sent to your email!');
+        firebase
+            .auth()
+            .sendPasswordResetEmail(this.email)
+            .then(() => {
+                alert('Check your registered email to reset the password!')
+            }).catch((error) => {
+                alert(error)
+            })
     }
 }
 </script>
@@ -60,8 +66,9 @@ export default class ForgotPassword extends Vue {
 .input-block {
     margin: 0.5rem;
 }
-.md-alignment-right{
-    justify-content: center !important; 
+
+.md-alignment-right {
+    justify-content: center !important;
 }
 </style>
   
