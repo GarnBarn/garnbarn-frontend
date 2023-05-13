@@ -11,6 +11,7 @@ import Account from "@/views/Account/Account.vue";
 import LinkAccount from "@/views/Account/LinkAccount.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 import Register from "@/views/Register.vue"
+import forgetPassword from "@/views/ForgetPassword.vue"
 
 Vue.use(VueRouter);
 
@@ -29,6 +30,11 @@ const routes: Array<RouteConfig> = [
     path: "/register",
     name: "Register",
     component: Register,
+  },
+  {
+    path: "/forgot-password",
+    name: "forgetPassword",
+    component: forgetPassword,
   },
   {
     path: "/home",

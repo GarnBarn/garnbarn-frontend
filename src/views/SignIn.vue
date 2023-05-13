@@ -24,7 +24,7 @@
                 <div>Don't have an account?<router-link to="/register">Register</router-link></div>
               </div>
               <div class="forget-password">
-                <router-link to="/forgot">Forgot your password?</router-link>
+                <router-link to="/forgot-password">Forgot your password?</router-link>
               </div>
               <div>
                 <button type="submit">Login</button>
