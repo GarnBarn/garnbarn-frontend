@@ -36,6 +36,7 @@
 <script lang="ts">
 import firebase from "firebase";
 import { Vue, Component } from 'vue-property-decorator';
+import sha1 from 'sha1';
 
 @Component
 export default class Register extends Vue {
@@ -43,7 +44,16 @@ export default class Register extends Vue {
     password = '';
     confirmPassword = '';
 
+    checkCompromisedPassword(): boolean {
+        const hashedPassword: string = sha1(this.password);
+        // todo send api 
+        return true
+    }
+
     register(): void {
+        if (!this.checkCompromisedPassword) {
+            alert('Your passoword is compromised')
+        }
         firebase
             .auth()
             .createUserWithEmailAndPassword(this.username, this.password)
