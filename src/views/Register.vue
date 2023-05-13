@@ -14,6 +14,10 @@
                                 <label for="username">Username:</label>
                                 <input id="username" v-model="username" type="text" />
                             </div>
+                            <div class="user">
+                                <label for="username">Email:</label>
+                                <input id="username" v-model="email" type="text" />
+                            </div>
                             <div class="pass">
                                 <label for="password">Password:</label>
                                 <input id="password" v-model="password" type="password" />
@@ -43,6 +47,7 @@ export default class Register extends Vue {
     username = '';
     password = '';
     confirmPassword = '';
+    email = ''
 
     checkCompromisedPassword(): boolean {
         const hashedPassword: string = sha1(this.password);
@@ -56,14 +61,14 @@ export default class Register extends Vue {
         }
         firebase
             .auth()
-            .createUserWithEmailAndPassword(this.username, this.password)
+            .createUserWithEmailAndPassword(this.email, this.password)
             .then((res) => {
                 res.user!
                     .updateProfile({
                         displayName: this.username
                     })
                     .then(() => {
-                        this.$router.push('/login')
+                        this.$router.push('/signin')
                     });
             })
             .catch((error) => {

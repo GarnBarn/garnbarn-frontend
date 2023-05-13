@@ -12,8 +12,8 @@
             <form @submit.prevent="login">
               <div class="auth">
                 <div>
-                  <label for="username">Username:</label>
-                  <input id="username" v-model="username" type="text" />
+                  <label for="username">Email:</label>
+                  <input id="username" v-model="email" type="text" />
                 </div>
                 <div class="password">
                   <label for="password">Password:</label>
@@ -49,7 +49,7 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class SignIn extends Vue {
-  username = '';
+  email = '';
   password = '';
 
   mounted(): void {
@@ -66,7 +66,7 @@ export default class SignIn extends Vue {
   login(): void {
     firebase
       .auth()
-      .signInWithEmailAndPassword(this.username, this.password)
+      .signInWithEmailAndPassword(this.email, this.password)
       .then(() => {
         this.$router.push('/home')
       })
