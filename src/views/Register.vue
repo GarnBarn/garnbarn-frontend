@@ -1,0 +1,90 @@
+<template>
+    <div class="registerBox">
+        <md-card class="registerCard">
+            <md-card-media-actions>
+                <md-card-media>
+                    <img src="@/assets/images/garnbarn-logo.png" class="garnbarnLogo" />
+                </md-card-media>
+
+                <md-card-actions>
+                    <h3>Register to GarnBarn</h3>
+                    <div>
+                        <form @submit.prevent="register">
+                            <div>
+                                <label for="username">Username:</label>
+                                <input id="username" v-model="username" type="text" />
+                            </div>
+                            <div>
+                                <label for="password">Password:</label>
+                                <input id="password" v-model="password" type="password" />
+                            </div>
+                            <div>
+                                <label for="confirmPassword">Confirm Password:</label>
+                                <input id="confirmPassword" v-model="confirmPassword" type="password" />
+                            </div>
+                            <div>
+                                <button type="submit">Register</button>
+                            </div>
+                        </form>
+                    </div>
+                </md-card-actions>
+            </md-card-media-actions>
+        </md-card>
+    </div>
+</template>
+
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+
+@Component
+export default class Register extends Vue {
+    username = '';
+    password = '';
+    confirmPassword = '';
+
+    register(): void {
+        if (this.password !== this.confirmPassword) {
+            // Passwords do not match
+            alert('Passwords do not match!');
+            return;
+        }
+
+        this.username = '';
+        this.password = '';
+        this.confirmPassword = '';
+        alert('Registration successful!');
+    }
+}
+</script>
+
+<style scoped>
+.registerBox {
+  padding-top: 5%;
+  padding-top: 5%;
+}
+
+.registerCard {
+  padding: 10px;
+  padding-top: 15px;
+  border-radius: 20px;
+  background-color: #f9f9f9;
+  display: inline-block;
+  vertical-align: top;
+  overflow: auto;
+  border: 1px solid rgba(#000, 0.12);
+}
+
+.garnbarnLogo {
+  width: 150px;
+  height: auto;
+}
+
+hr.rounded {
+  margin-top: 5%;
+  margin-bottom: 5%;
+  margin-left: 10%;
+  margin-right: 10%;
+  border-top: 2px solid #bbb;
+  border-radius: 5px;
+}
+</style>

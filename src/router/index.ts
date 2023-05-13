@@ -10,6 +10,7 @@ import TagDetailView from "@/views/Tag/TagDetailView.vue";
 import Account from "@/views/Account/Account.vue";
 import LinkAccount from "@/views/Account/LinkAccount.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
+import Register from "@/views/Register.vue"
 
 Vue.use(VueRouter);
 
@@ -23,6 +24,11 @@ const routes: Array<RouteConfig> = [
     path: "/signin",
     name: "SignIn",
     component: SignIn,
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: Register,
   },
   {
     path: "/home",
