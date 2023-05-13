@@ -9,16 +9,16 @@
                 <md-card-actions>
                     <h3>Register to GarnBarn</h3>
                     <div>
-                        <form @submit.prevent="register">
-                            <div>
+                        <form @submit.prevent="register" >
+                            <div class="user">
                                 <label for="username">Username:</label>
                                 <input id="username" v-model="username" type="text" />
                             </div>
-                            <div>
+                            <div class="pass">
                                 <label for="password">Password:</label>
                                 <input id="password" v-model="password" type="password" />
                             </div>
-                            <div>
+                            <div class="con-pass">
                                 <label for="confirmPassword">Confirm Password:</label>
                                 <input id="confirmPassword" v-model="confirmPassword" type="password" />
                             </div>
@@ -86,5 +86,9 @@ hr.rounded {
   margin-right: 10%;
   border-top: 2px solid #bbb;
   border-radius: 5px;
+}
+
+.ruser, .pass, .con-pass {
+    margin: 0.25rem;
 }
 </style>
